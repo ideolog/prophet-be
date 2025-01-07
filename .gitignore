@@ -1,0 +1,57 @@
+# Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+/env
+.venv/
+ENV/
+env/
+venv/
+env.bak/
+venv.bak/
+
+# Django specific
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+
+# Environment variables
+.env
+.env.*.local
+
+# Media and static files
+/media/
+.static/
+
+# IDE/editor-specific files
+.vscode/
+.idea/
+*.swp
+
+# MacOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database
+*.sql
+
+# Coverage reports
+/htmlcov/
+.coverage
+*.cover
+.hypothesis/
+.tox/
+
+# CSV folder
+/csv/
