@@ -33,22 +33,23 @@ from django.db import models
 
 class Claim(models.Model):
     text = models.TextField(help_text="The text of the claim submitted by the user.")
+    slug = models.SlugField(unique=True, blank=True, max_length=150, help_text="URL-friendly identifier.")
     verification_status = models.ForeignKey(
         'narratives.VerificationStatus',
         on_delete=models.PROTECT,
-        related_name="claims",
-        help_text="The current verification status of the claim."
+        related_name="claims"
     )
-    status_description = models.TextField(
-        blank=True,
-        null=True,
-        help_text="Description or reason for the current verification status."
-    )
+    status_description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.text)[:150]  # Limit slug length to 150
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.text[:50]  # Display the first 50 characters of the claim
+        return self.text[:50]
 
 class SchoolOfThoughtType(models.Model):
     # The name of the type (e.g., Theory, Scientific Discipline, Ideology, Religion)

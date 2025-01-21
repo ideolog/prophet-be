@@ -4,10 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 from .models import Narrative, Claim, VerificationStatus
 from .serializers import NarrativeSerializer, ClaimSerializer
 from .linguistic_module import check_claim_validity
 import time
+
+class ClaimDetailView(APIView):
+    def get(self, request, slug):
+        claim = get_object_or_404(Claim, slug=slug)
+        serializer = ClaimSerializer(claim)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ClaimListCreateView(APIView):
     def get(self, request):
