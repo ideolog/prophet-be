@@ -1,9 +1,61 @@
 from django.db import models
 from django.utils.text import slugify
+from django.utils.timezone import now
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
+
+
+class Claim(models.Model):
+    text = models.TextField(help_text="The text of the claim submitted by the user.")
+    slug = models.SlugField(unique=True, blank=True, max_length=150, help_text="URL-friendly identifier.")
+    verification_status = models.ForeignKey(
+        'narratives.VerificationStatus',
+        on_delete=models.PROTECT,
+        related_name="claims"
+    )
+    status_description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # New Fields
+    author = models.CharField(max_length=255,
+                              help_text="Wallet address (for user claims) or AI model name (for AI-generated claims).")
+    parent_claim = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE,
+                                     related_name="ai_variants")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.text)[:150]  # Limit slug length
+            unique_slug = base_slug
+            num = 1
+
+            # Ensure the slug is unique
+            while Claim.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{get_random_string(5)}"  # Add random suffix to avoid collision
+
+            self.slug = unique_slug
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.text[:50]
+
+class UserAccount(models.Model):
+    wallet_address = models.CharField(max_length=255, unique=True, help_text="Solana wallet address")
+    verification_status = models.ForeignKey(
+        'narratives.VerificationStatus',
+        on_delete=models.PROTECT,
+        related_name="users",
+        help_text="Verification status of the user"
+    )
+    created_at = models.DateTimeField(default=now, help_text="Account creation timestamp")
+    updated_at = models.DateTimeField(auto_now=True, help_text="Last update timestamp")
+
+    def __str__(self):
+        return f"{self.wallet_address} - {self.verification_status.name}"
+
 
 class VerificationStatus(models.Model):
     STATUS_CHOICES = [
@@ -11,6 +63,7 @@ class VerificationStatus(models.Model):
         ('pending_ai_review', 'Pending AI Review'),
         ('ai_reviewed', 'AI Reviewed'),
         ('user_approved', 'User Approved'),
+        ('ai_variants_generated', 'AI Variants Generated'),
         ('validator_review', 'Validator Review'),
         ('approved_for_blockchain', 'Approved for Blockchain'),
         ('published', 'Published'),
@@ -29,27 +82,6 @@ class VerificationStatus(models.Model):
     def __str__(self):
         return self.get_name_display()
 
-from django.db import models
-
-class Claim(models.Model):
-    text = models.TextField(help_text="The text of the claim submitted by the user.")
-    slug = models.SlugField(unique=True, blank=True, max_length=150, help_text="URL-friendly identifier.")
-    verification_status = models.ForeignKey(
-        'narratives.VerificationStatus',
-        on_delete=models.PROTECT,
-        related_name="claims"
-    )
-    status_description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.text)[:150]  # Limit slug length to 150
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.text[:50]
 
 class SchoolOfThoughtType(models.Model):
     # The name of the type (e.g., Theory, Scientific Discipline, Ideology, Religion)

@@ -1,6 +1,13 @@
 from django.contrib import admin
 from .models import *
 
+@admin.register(UserAccount)
+class UserAccountAdmin(admin.ModelAdmin):
+    list_display = ('wallet_address', 'verification_status', 'created_at', 'updated_at')  # Display key fields in the list view
+    list_display_links = ('wallet_address',)  # Make wallet address clickable
+    search_fields = ('wallet_address',)  # Enable search by wallet address
+    list_filter = ('verification_status',)  # Allow filtering by verification status
+    save_on_top = True  # Save button at the top of the page
 
 @admin.register(VerificationStatus)
 class VerificationStatusAdmin(admin.ModelAdmin):
