@@ -1,6 +1,14 @@
 from django.contrib import admin
 from .models import *
 
+@admin.register(Market)
+class MarketAdmin(admin.ModelAdmin):
+    list_display = ('claim', 'creator', 'created_at')  # Adjust fields as needed
+    list_display_links = ('claim',)
+    search_fields = ('claim__text', 'creator')  # Allows searching by claim text and creator
+    list_filter = ('created_at',)
+    save_on_top = True
+
 @admin.register(UserAccount)
 class UserAccountAdmin(admin.ModelAdmin):
     list_display = ('wallet_address', 'verification_status', 'created_at', 'updated_at')  # Display key fields in the list view

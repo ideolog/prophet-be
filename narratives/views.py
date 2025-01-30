@@ -5,6 +5,7 @@ from rest_framework import status
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now, timedelta
 from .models import *
 from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer
 from .ai_module import generate_ai_claims  # Ensure AI module is imported
@@ -42,9 +43,16 @@ from django.db.utils import IntegrityError
 class ClaimListCreateView(APIView):
     def get(self, request):
         """
-        Returns a list of all claims ordered by creation date.
+        Returns a filtered list of claims ordered by creation date.
+        If 'parent_claim' is provided as a query parameter, only return AI-generated claims for that parent.
         """
-        claims = Claim.objects.all().order_by('-created_at')
+        parent_claim_id = request.GET.get("parent_claim")
+
+        if parent_claim_id:
+            claims = Claim.objects.filter(parent_claim=parent_claim_id).order_by('-created_at')
+        else:
+            claims = Claim.objects.all().order_by('-created_at')
+
         serializer = ClaimSerializer(claims, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -115,8 +123,49 @@ class ClaimListCreateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class MarketCreateView(APIView):
+    def post(self, request, claim_id):
+        """
+        Allows the claim's author to create a market within 30 minutes of claim creation.
+        After 30 minutes, anyone with a wallet can create a market.
+        """
+        claim = get_object_or_404(Claim, id=claim_id)
 
+        # Ensure the claim is AI-verified before allowing market creation
+        if claim.verification_status.name not in ["ai_reviewed", "ai_variants_generated"]:
+            return Response({"error": "Claim must be AI-verified before market creation."}, status=status.HTTP_400_BAD_REQUEST)
 
+        wallet_address = request.data.get("wallet_address")
+        if not wallet_address:
+            return Response({"error": "Wallet address is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if a market already exists
+        existing_market = Market.objects.filter(claim=claim).first()
+        if existing_market:
+            return Response({"error": "Market already exists for this claim."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Enforce 30-minute exclusivity rule
+        time_since_creation = now() - claim.created_at
+        exclusive_to_author = time_since_creation <= timedelta(minutes=30)
+
+        if exclusive_to_author and claim.author != wallet_address:
+            return Response({"error": "Only the claim's author can create a market within 30 minutes of submission."}, status=status.HTTP_403_FORBIDDEN)
+
+        # ✅ Fetch "Market Created" status
+        market_created_status = get_object_or_404(VerificationStatus, name="market_created")
+
+        # ✅ Create market
+        market = Market.objects.create(
+            claim=claim,
+            creator=wallet_address
+        )
+
+        # ✅ Update claim status to "Market Created"
+        claim.verification_status = market_created_status
+        claim.status_description = "Market has been created for this claim."
+        claim.save()
+
+        return Response({"message": "Market created successfully.", "market_id": market.id, "claim_slug": claim.slug}, status=status.HTTP_201_CREATED)
 
 
 class NarrativeListView(generics.ListAPIView):
