@@ -327,3 +327,16 @@ class Modality(models.Model):
     def __str__(self):
         return self.name
 
+
+class Market(models.Model):
+    claim = models.OneToOneField(Claim, on_delete=models.CASCADE, related_name="market")
+    creator = models.CharField(max_length=255, help_text="Wallet address of the market creator.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Blockchain placeholders
+    contract_address = models.CharField(max_length=255, blank=True, null=True,
+                                        help_text="Future Smart Contract address.")
+    transaction_hash = models.CharField(max_length=255, blank=True, null=True, help_text="Blockchain transaction hash.")
+
+    def __str__(self):
+        return f"Market for {self.claim.text[:50]} by {self.creator}"

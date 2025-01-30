@@ -64,10 +64,12 @@ class ClaimListCreateView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        # Set default author if none is provided
+
+        # Set author of the claim to the wallet address if provided
+        ZERO_ADDRESS = "11111111111111111111111111111111"
+        wallet_address = request.data.get("author")
         data = request.data.copy()
-        if not data.get("author"):
-            data["author"] = "3vpi8QbrDVcSpTtVEoajRPNqzAdBadD4CBrH93uHm9FY"
+        data["author"] = wallet_address if wallet_address else ZERO_ADDRESS
 
         # Set default status for the new claim
         data['verification_status'] = pending_ai_status.id
