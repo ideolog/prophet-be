@@ -5,8 +5,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
-
-
+from decimal import Decimal
 
 class Claim(models.Model):
     text = models.TextField(help_text="The text of the claim submitted by the user.", unique=True)
@@ -328,16 +327,101 @@ class Modality(models.Model):
     def __str__(self):
         return self.name
 
-
 class Market(models.Model):
     claim = models.OneToOneField(Claim, on_delete=models.CASCADE, related_name="market")
     creator = models.CharField(max_length=255, help_text="Wallet address of the market creator.")
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Blockchain placeholders
-    contract_address = models.CharField(max_length=255, blank=True, null=True,
-                                        help_text="Future Smart Contract address.")
-    transaction_hash = models.CharField(max_length=255, blank=True, null=True, help_text="Blockchain transaction hash.")
+    contract_address = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text="Future Smart Contract address."
+    )
+    transaction_hash = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text="Blockchain transaction hash."
+    )
+
+    # Fixed supply for each side (up to 8 decimal places)
+    true_shares_remaining = models.DecimalField(
+        max_digits=20,
+        decimal_places=8,
+        default=Decimal('1000000000.0')
+    )
+    false_shares_remaining = models.DecimalField(
+        max_digits=20,
+        decimal_places=8,
+        default=Decimal('1000000000.0')
+    )
+
+    def current_price_for_side(self, side: str) -> Decimal:
+        """
+        Returns the *instant* price of 1 share on the specified side,
+        based on how many shares have been sold so far.
+
+        price(x) = base_price + slope * x,
+        where x is the count of shares already sold.
+        """
+        base_price = Decimal("0.0001")
+        slope = Decimal("0.0000001")
+        initial_shares = Decimal("1000000000.0")
+
+        if side == "TRUE":
+            current_remaining = self.true_shares_remaining
+        else:  # side == "FALSE"
+            current_remaining = self.false_shares_remaining
+
+        sold_shares = initial_shares - current_remaining
+        x = sold_shares  # already sold
+        price = base_price + (slope * x)
+
+        # Return price quantized to 8 decimals
+        return price.quantize(Decimal("0.00000001"))
+
+    def cost_to_buy_linear(self, side: str, shares_wanted: Decimal) -> Decimal:
+        """
+        (Unchanged) total cost for buying 'shares_wanted', integrating from x to x + Δ.
+        """
+        base_price = Decimal("0.0001")
+        slope = Decimal("0.0000001")
+        initial_shares = Decimal("1000000000.0")
+
+        if side == "TRUE":
+            current_remaining = self.true_shares_remaining
+        else:
+            current_remaining = self.false_shares_remaining
+
+        sold_shares = initial_shares - current_remaining
+        x = sold_shares
+        delta = shares_wanted
+
+        cost = base_price * delta + (slope / Decimal("2")) * ((x + delta) ** 2 - x ** 2)
+        return cost.quantize(Decimal("0.00000001"))
 
     def __str__(self):
         return f"Market for {self.claim.text[:50]} by {self.creator}"
+
+
+class MarketPosition(models.Model):
+    SIDE_CHOICES = [
+        ("TRUE", "True"),
+        ("FALSE", "False")
+    ]
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    market = models.ForeignKey(Market, on_delete=models.CASCADE)
+    side = models.CharField(max_length=5, choices=SIDE_CHOICES)
+
+    shares = models.DecimalField(
+        max_digits=20, decimal_places=8, default=Decimal('0.0')
+    )
+    cost_basis = models.DecimalField(
+        max_digits=20, decimal_places=8, default=Decimal('0.0')
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'market'], name='unique_user_market')
+        ]
+
+    def __str__(self):
+        return f"{self.user.wallet_address} - {self.side} - {self.shares} shares"

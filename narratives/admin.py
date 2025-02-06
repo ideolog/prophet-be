@@ -9,6 +9,18 @@ class MarketAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     save_on_top = True
 
+@admin.register(MarketPosition)
+class MarketPositionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'market', 'side', 'shares', 'cost_basis')
+    list_display_links = ('user',)
+    search_fields = (
+        'user__wallet_address',
+        'market__claim__text',
+        'side',
+    )
+    list_filter = ('side', 'market')
+    save_on_top = True
+
 @admin.register(UserAccount)
 class UserAccountAdmin(admin.ModelAdmin):
     list_display = ('wallet_address', 'verification_status', 'created_at', 'updated_at')  # Display key fields in the list view

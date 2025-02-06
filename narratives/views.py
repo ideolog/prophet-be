@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import now, timedelta
 from .models import *
-from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer
+from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer, MarketSerializer
 from .ai_module import generate_ai_claims  # Ensure AI module is imported
 import time
 import logging
@@ -171,3 +171,94 @@ class MarketCreateView(APIView):
 class NarrativeListView(generics.ListAPIView):
     queryset = Narrative.objects.all()
     serializer_class = NarrativeSerializer
+
+class MarketListView(APIView):
+    def get(self, request):
+        markets = Market.objects.all().order_by('-created_at')
+        serializer = MarketSerializer(markets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class MarketBuyView(APIView):
+    def post(self, request, market_id):
+        side = request.data.get("side")
+        amount_str = request.data.get("amount")  # number of shares the user wants to buy
+        wallet_address = request.data.get("wallet_address")
+
+        if not all([side, amount_str, wallet_address]):
+            return Response(
+                {"error": "side, amount, and wallet_address are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if side not in ["TRUE", "FALSE"]:
+            return Response({"error": "Invalid side choice."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Convert requested shares to Decimal
+        try:
+            requested_shares = Decimal(amount_str)
+            if requested_shares <= 0:
+                raise ValueError
+        except:
+            return Response({"error": "Amount must be a positive numeric value."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch market and user
+        market = get_object_or_404(Market, id=market_id)
+        user_account = get_object_or_404(UserAccount, wallet_address=wallet_address)
+
+        # OPTIONAL: Check if user already holds the opposite side. (Keeping your existing logic.)
+        try:
+            existing_position = MarketPosition.objects.get(user=user_account, market=market)
+            if existing_position.side != side:
+                return Response(
+                    {"error": "You already hold the opposite side. Please sell first."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            position = existing_position
+        except MarketPosition.DoesNotExist:
+            # No existing position => create one later
+            position = None
+
+        # Calculate the total cost using the bonding curve
+        cost = market.cost_to_buy_linear(side, requested_shares)
+
+        # (Optional) If you were tracking user SOL balance, you could check that here, e.g.:
+        # if user_account.sol_balance < cost:
+        #     return Response({"error": "Insufficient funds."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if enough shares remain
+        if side == "TRUE":
+            if market.true_shares_remaining < requested_shares:
+                return Response({"error": "Not enough TRUE shares available."}, status=status.HTTP_400_BAD_REQUEST)
+            market.true_shares_remaining -= requested_shares
+        else:  # side == "FALSE"
+            if market.false_shares_remaining < requested_shares:
+                return Response({"error": "Not enough FALSE shares available."}, status=status.HTTP_400_BAD_REQUEST)
+            market.false_shares_remaining -= requested_shares
+
+        market.save()
+
+        # Create or update the MarketPosition
+        if position is None:
+            position = MarketPosition.objects.create(
+                user=user_account,
+                market=market,
+                side=side,
+                shares=requested_shares,
+                cost_basis=cost
+            )
+        else:
+            position.shares += requested_shares
+            position.cost_basis += cost
+            position.save()
+
+        return Response({
+            "message": "Shares purchased successfully via bonding curve.",
+            "position_id": position.id,
+            "side": side,
+            "shares_bought": str(requested_shares),
+            "total_cost": str(cost),
+            "new_total_shares": str(position.shares),
+            "remaining_true": str(market.true_shares_remaining),
+            "remaining_false": str(market.false_shares_remaining),
+        }, status=status.HTTP_200_OK)
