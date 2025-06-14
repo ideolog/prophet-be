@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Claim, Market, Narrative, UserAccount, MarketPosition
+from .models import Claim, Market, UserAccount, MarketPosition
 
 class MarketSerializer(serializers.ModelSerializer):
     claim_text = serializers.CharField(source="claim.text", read_only=True)
@@ -58,11 +58,6 @@ class UserAccountSerializer(serializers.ModelSerializer):
         model = UserAccount
         fields = ["wallet_address", "verification_status_name", "balance", "created_at"]
 
-
-class NarrativeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Narrative
-        fields = ["slug", "description", "modality"]
 
 # serializers.py
 class MarketPositionSerializer(serializers.ModelSerializer):

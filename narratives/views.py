@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from datetime import timedelta
 from .models import *
-from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer, MarketSerializer
+from .serializers import ClaimSerializer, UserAccountSerializer, MarketSerializer
 from .ai_module import generate_ai_claims, extract_narrative_claims
 # Ensure AI module is imported
 import time
@@ -170,9 +170,6 @@ class MarketCreateView(APIView):
         return Response({"message": "Market created successfully.", "market_id": market.id, "claim_slug": claim.slug}, status=status.HTTP_201_CREATED)
 
 
-class NarrativeListView(generics.ListAPIView):
-    queryset = Narrative.objects.all()
-    serializer_class = NarrativeSerializer
 
 class MarketListView(APIView):
     def get(self, request):
