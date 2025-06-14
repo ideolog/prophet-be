@@ -40,7 +40,7 @@ def generate_ai_claims(original_claim, ai_verified_status, ai_model="OpenAI"):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=200
+            max_tokens=1000
         )
 
         # Extract AI-generated claims from response
@@ -68,3 +68,57 @@ def generate_ai_claims(original_claim, ai_verified_status, ai_model="OpenAI"):
     except Exception as e:
         print(f"❌ OpenAI API error: {e}")
         return False  # AI generation failed
+
+def extract_narrative_claims(text):
+    """
+    Uses OpenAI to extract narrative claims from a given text and returns them as a list of strings.
+    """
+    system_prompt = (
+        "You are a Narrative Claim Extractor.\n"
+        "Your task is to analyze political speeches, legal statements, government press releases, and public statements by political figures, and extract a list of **narrative or ideological claims** expressed in the text.\n"
+        "Your goal is to extract the underlying worldview, assumptions, and value-based assertions made in the text — not merely factual statements.\n"
+        "A narrative claim is an assertion about the world, society, politics, groups, or values that reflects an ideological stance, belief, or implied truth.\n"
+        "Do NOT extract plain facts (like dates, numbers, laws passed) unless they are used to support an ideological narrative.\n"
+        "Extract claims that are emotional, ideological, value-based, or that imply a good-vs-evil or us-vs-them framing.\n"
+        "Each claim must be a short, independent sentence that clearly expresses an ideological or narrative assertion.\n"
+        "Rewrite the claim as a clear and simple assertion — do not quote from the original text.\n"
+        "Avoid listing multiple claims in one sentence (no 'and', 'or').\n"
+        "Ignore normative statements about future intentions unless they imply a current narrative about the world.\n"
+        "If the text is purely factual or neutral, return an empty list.\n"
+        "If the text contains narrative claims, return them in the following JSON format:\n"
+        "{ \"narrative_claims\": [ \"Claim 1.\", \"Claim 2.\", \"Claim 3.\", \"Claim 4.\" ] }\n"
+        "Return only the JSON object — do not add any explanation, introduction, or comments. Your entire output must be only the JSON object."
+    )
+
+    try:
+        client = openai.OpenAI(api_key=openai.api_key)
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Here is the text:\n{text}\nPlease extract narrative claims and return them in JSON."}
+            ],
+            temperature=0.3,
+            max_tokens=500
+        )
+
+        gpt_output = response.choices[0].message.content.strip()
+
+        import json
+        try:
+            narrative_data = json.loads(gpt_output)
+        except json.JSONDecodeError:
+            import re
+            json_match = re.search(r"\{[\s\S]*\}", gpt_output)
+            if json_match:
+                narrative_data = json.loads(json_match.group(0))
+            else:
+                print(f"❌ Failed to parse GPT output as JSON: {gpt_output}")
+                return None  # Failure — let view handle it
+
+        return narrative_data.get("narrative_claims", [])
+
+    except Exception as e:
+        print(f"❌ OpenAI API error in narrative extraction: {e}")
+        return None  # Failure — let view handle it

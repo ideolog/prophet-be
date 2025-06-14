@@ -1,0 +1,611 @@
+[
+    {
+        "name": "Transhumanism",
+        "description": "A 21st-century ideology pushing tech—like AI and biohacking—to transcend human limits, dreaming of a post-biological future.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "transhumanism"
+    },
+    {
+        "name": "Accelerationism",
+        "description": "A modern ideology betting that turbocharging capitalism or tech will spark radical change—utopia or collapse, take your pick.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "accelerationism"
+    },
+    {
+        "name": "Panpsychism",
+        "description": "A revived philosophy suggesting consciousness isn’t just human but hums in all matter—a 21st-century mind-bender.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "panpsychism"
+    },
+    {
+        "name": "Scientism",
+        "description": "A 20th-century ideology doubling down in the 21st, crowning science as the ultimate truth-teller over all else.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "scientism"
+    },
+    {
+        "name": "Logical Positivism",
+        "description": "A 20th-century philosophy slashing untestable ideas as nonsense, still influencing science’s hard-nosed vibe.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "logical-positivism"
+    },
+    {
+        "name": "Structuralism",
+        "description": "A 20th-century theory decoding culture through hidden patterns, still lurking in linguistics and anthropology.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "structuralism"
+    },
+    {
+        "name": "Post-structuralism",
+        "description": "A late-20th-century twist claiming meaning’s a moving target, feeding into today’s postmodern debates.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-structuralism"
+    },
+    {
+        "name": "Semiotics",
+        "description": "A 20th-century science of signs, thriving in the 21st to unpack ads, memes, and media overload.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "semiotics"
+    },
+    {
+        "name": "Analytic Philosophy",
+        "description": "A 20th-century logic-chopping approach dominating English-speaking academia, still sharp in AI ethics debates.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "analytic-philosophy"
+    },
+    {
+        "name": "Continental Philosophy",
+        "description": "A 20th-century European brew of big ideas, fueling 21st-century takes on power, identity, and tech.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "continental-philosophy"
+    },
+    {
+        "name": "Rationalism",
+        "description": "A 19th-century philosophy trusting reason over senses, still kicking in math and AI’s foundations.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "rationalism"
+    },
+    {
+        "name": "Empiricism",
+        "description": "A 19th-century view tying truth to experience, underpinning today’s data-driven science obsession.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "empiricism"
+    },
+    {
+        "name": "Critical Rationalism",
+        "description": "Popper’s 20th-century idea that knowledge grows by debunking, not proving—still guides scientific skepticism.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "critical-rationalism"
+    },
+    {
+        "name": "Behaviorism",
+        "description": "A 20th-century psychology fixated on actions over thoughts, echoing in AI training and ad targeting.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "behaviorism"
+    },
+    {
+        "name": "Gestalt Psychology",
+        "description": "A 20th-century theory of seeing wholes over parts, alive in UX design and cognitive science today.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "gestalt-psychology"
+    },
+    {
+        "name": "Evolutionary Psychology",
+        "description": "A late-20th-century science tying modern quirks to ancient survival, hot in 21st-century brain studies.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "evolutionary-psychology"
+    },
+    {
+        "name": "Jungian Psychology",
+        "description": "Jung’s 20th-century dive into archetypes and the unconscious, still inspiring therapy and pop culture.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "jungian-psychology"
+    },
+    {
+        "name": "Georgism",
+        "description": "A 19th-century push to tax land over labor, popping up in 21st-century urban policy chats.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "georgism"
+    },
+    {
+        "name": "Anarcho-capitalism",
+        "description": "A 20th-century ideology dreaming of a stateless market utopia, buzzing in crypto and libertarian circles.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "anarcho-capitalism"
+    },
+    {
+        "name": "Cybernetics",
+        "description": "A 20th-century science of systems and feedback, reborn in 21st-century robotics and network theory.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "cybernetics"
+    },
+    {
+        "name": "Game Theory",
+        "description": "A 20th-century math of strategy, ruling 21st-century economics, AI, and geopolitics.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "game-theory"
+    },
+    {
+        "name": "String Theory",
+        "description": "A late-20th-century physics gamble on tiny strings, still chasing the holy grail of unification.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "string-theory"
+    },
+    {
+        "name": "Chaos Theory",
+        "description": "A 20th-century discovery of order in disorder, thriving in climate models and market predictions.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "chaos-theory"
+    },
+    {
+        "name": "Object-Oriented Ontology",
+        "description": "A 21st-century philosophy leveling all things—humans, rocks, code—as equal players in reality.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "object-oriented-ontology"
+    },
+    {
+        "name": "Speculative Realism",
+        "description": "A 21st-century push to rethink reality beyond human lenses, shaking up philosophy’s cozy habits.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "speculative-realism"
+    },
+    {
+        "name": "Primitivism",
+        "description": "A 20th-century ideology pining for pre-tech simplicity, resurfacing in off-grid and anti-tech movements.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "primitivism"
+    },
+    {
+        "name": "Postcolonialism",
+        "description": "A 20th-century lens on colonial scars, thriving in 21st-century fights over culture and reparations.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "postcolonialism"
+    },
+    {
+        "name": "Egalitarianism",
+        "description": "A 19th-century ideal of universal equality, fueling 21st-century battles over rights and wealth gaps.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "egalitarianism"
+    },
+    {
+        "name": "Technological Singularity",
+        "description": "A 21st-century theory of AI surpassing us, hyped by tech prophets and debated in boardrooms.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "technological-singularity"
+    },
+    {
+        "name": "Biocentrism",
+        "description": "A 21st-century philosophy hinting life shapes the cosmos, not just the other way around.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "biocentrism"
+    },
+    {
+        "name": "Deep Ecology",
+        "description": "A late-20th-century call to value all life equally, loud in 21st-century green activism.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "deep-ecology"
+    },
+    {
+        "name": "Cosmopolitanism",
+        "description": "A 19th-century vision of global citizenship, reborn in 21st-century borderless dreams.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "cosmopolitanism"
+    },
+    {
+        "name": "Autonomism",
+        "description": "A 20th-century radical push for self-rule, alive in 21st-century squats and co-ops.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "autonomism"
+    },
+    {
+        "name": "Ecofeminism",
+        "description": "A 20th-century fusion linking women’s and nature’s liberation, thriving in climate justice today.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "ecofeminism"
+    },
+    {
+        "name": "Libertarian Socialism",
+        "description": "A 20th-century hybrid of freedom and equality, whispering in 21st-century co-op experiments.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "libertarian-socialism"
+    },
+    {
+        "name": "Agorism",
+        "description": "A 20th-century libertarian plot to outmaneuver the state via black markets, buzzing in crypto hubs.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "agorism"
+    },
+    {
+        "name": "Mutualism",
+        "description": "A 19th-century anarchist trade dream, flickering in 21st-century worker-owned ventures.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "mutualism"
+    },
+    {
+        "name": "Solarpunk",
+        "description": "A 21st-century vision of green tech and beauty, countering dystopia with sustainable hope.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "solarpunk"
+    },
+    {
+        "name": "Afrocentrism",
+        "description": "A 20th-century reclaiming of African roots, powering 21st-century cultural pride movements.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "afrocentrism"
+    },
+    {
+        "name": "Pan-Africanism",
+        "description": "A 20th-century unity call for Africans worldwide, still fueling diaspora politics and pride.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "pan-africanism"
+    },
+    {
+        "name": "Zapatismo",
+        "description": "A late-20th-century indigenous rebellion in Mexico, inspiring 21st-century anti-globalist fights.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "zapatismo"
+    },
+    {
+        "name": "Digital Minimalism",
+        "description": "A 21st-century philosophy slashing tech clutter for focus, a lifeline in the smartphone age.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "digital-minimalism"
+    },
+    {
+        "name": "Climate Justice",
+        "description": "A 21st-century ideology demanding fair fixes for climate change, spotlighting the Global South.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "climate-justice"
+    },
+    {
+        "name": "Neurodiversity",
+        "description": "A 21st-century movement celebrating brain differences—autism, ADHD—as natural, not defects.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "neurodiversity"
+    },
+    {
+        "name": "Memetics",
+        "description": "A late-20th-century theory of ideas as viruses, exploding in 21st-century meme culture analysis.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "memetics"
+    },
+    {
+        "name": "Effective Altruism",
+        "description": "A 21st-century push to maximize good through data-driven charity, a nerdy twist on do-gooding.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "effective-altruism"
+    },
+    {
+        "name": "Posthumanism",
+        "description": "A 21st-century philosophy rethinking humanity’s role as tech and nature blur—less ‘us vs. them.’",
+        "type": 6,
+        "parent_school": null,
+        "slug": "posthumanism"
+    },
+    {
+        "name": "Complexity Theory",
+        "description": "A 20th-century science of messy systems, thriving in 21st-century climate and AI modeling.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "complexity-theory"
+    },
+    {
+        "name": "Media Ecology",
+        "description": "A 20th-century theory on how media shapes us, hotter than ever in the digital deluge.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "media-ecology"
+    },
+    {
+        "name": "Post-Keynesianism",
+        "description": "A 20th-century economic reboot of Keynes, pushing government muscle in 21st-century crises.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "post-keynesianism"
+    },
+    {
+        "name": "Degrowth",
+        "description": "A 21st-century ideology rejecting endless growth for a smaller, sustainable economy—less is more.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "degrowth"
+    },
+    {
+        "name": "Platform Cooperativism",
+        "description": "A 21st-century fix for gig work—worker-owned digital platforms to ditch corporate overlords.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "platform-cooperativism"
+    },
+    {
+        "name": "Dataism",
+        "description": "A 21st-century belief that data flows rule all, from biology to society—algorithms as the new gods.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "dataism"
+    },
+    {
+        "name": "Queer Ecology",
+        "description": "A 21st-century mash-up of queer theory and nature, challenging straight-and-narrow views of ecosystems.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "queer-ecology"
+    },
+    {
+        "name": "Techno-optimism",
+        "description": "A 21st-century cheer for tech solving all woes—think Silicon Valley’s sunny gospel.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "techno-optimism"
+    },
+    {
+        "name": "Techno-pessimism",
+        "description": "A 21st-century gloom warning tech’s runaway train will crash society—dystopia now.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "techno-pessimism"
+    },
+    {
+        "name": "Biohacking",
+        "description": "A 21st-century DIY movement tweaking the body—think implants and gene edits—for peak performance.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "biohacking"
+    },
+    {
+        "name": "Universal Basic Income (UBI)",
+        "description": "A 20th-century idea reborn in the 21st—cash for all, no strings, to fix inequality and AI job loss.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "universal-basic-income"
+    },
+    {
+        "name": "Dark Pool Theory",
+        "description": "A 21st-century conspiracy vibe—secret elites pull strings via hidden networks and tech.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "dark-pool-theory"
+    },
+    {
+        "name": "Network Theory",
+        "description": "A 20th-century science of connections, booming in 21st-century social media and epidemiology.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "network-theory"
+    },
+    {
+        "name": "Decentralized Autonomous Organizations (DAOs)",
+        "description": "A 21st-century ideology of blockchain-run groups—no bosses, just code and votes.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "decentralized-autonomous-organizations"
+    },
+    {
+        "name": "Critical Data Studies",
+        "description": "A 21st-century lens on how data’s power shapes justice, privacy, and truth—Big Tech under the microscope.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "critical-data-studies"
+    },
+    {
+        "name": "Algorithmic Bias",
+        "description": "A 21st-century theory exposing how AI mirrors human flaws, amplifying racism or sexism in code.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "algorithmic-bias"
+    },
+    {
+        "name": "Surveillance Capitalism",
+        "description": "A 21st-century critique of tech giants mining our lives for profit—privacy’s the new battleground.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "surveillance-capitalism"
+    },
+    {
+        "name": "Affect Theory",
+        "description": "A 20th-century idea of emotions as forces, surging in 21st-century art and politics analysis.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "affect-theory"
+    },
+    {
+        "name": "New Materialism",
+        "description": "A 21st-century philosophy giving matter agency—stuff like plastic or code isn’t just passive.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "new-materialism"
+    },
+    {
+        "name": "Hypernormalization",
+        "description": "A 21st-century theory of a fake-normal world—power hides chaos behind a bland facade.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "hypernormalization"
+    },
+    {
+        "name": "Permaculture",
+        "description": "A 20th-century design philosophy for sustainable living, blooming in 21st-century eco-circles.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "permaculture"
+    },
+    {
+        "name": "Antinatalism",
+        "description": "A 21st-century stance against procreation—life’s suffering outweighs its joys, so why start it?",
+        "type": 6,
+        "parent_school": null,
+        "slug": "antinatalism"
+    },
+    {
+        "name": "Positivism",
+        "description": "A 19th-century faith in observable facts, still underpinning 21st-century science’s core.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "positivism"
+    },
+    {
+        "name": "Actor-Network Theory",
+        "description": "A 20th-century idea tying humans and objects in webs of influence, big in 21st-century tech studies.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "actor-network-theory"
+    },
+    {
+        "name": "Biopolitics",
+        "description": "A 20th-century theory of power over bodies and lives, hot in 21st-century health and surveillance debates.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "biopolitics"
+    },
+    {
+        "name": "Digital Sociology",
+        "description": "A 21st-century science probing how online life rewires society—think TikTok and tribes.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "digital-sociology"
+    },
+    {
+        "name": "Cyberfeminism",
+        "description": "A 20th-century feminist take on tech, thriving in 21st-century battles over digital equity.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "cyberfeminism"
+    },
+    {
+        "name": "Longtermism",
+        "description": "A 21st-century ideology prioritizing future generations—billions unborn outweigh us now.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "longtermism"
+    },
+    {
+        "name": "Quantum Computing Theory",
+        "description": "A 21st-century leap in computation, using quantum weirdness to crack impossible problems.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "quantum-computing-theory"
+    },
+    {
+        "name": "Post-scarcity",
+        "description": "A 21st-century vision where tech abundance kills want—utopia or pipe dream?",
+        "type": 4,
+        "parent_school": null,
+        "slug": "post-scarcity"
+    },
+    {
+        "name": "Disability Justice",
+        "description": "A 21st-century movement smashing ableism, demanding inclusion beyond mere access.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "disability-justice"
+    },
+    {
+        "name": "Critical Animal Studies",
+        "description": "A 21st-century push to rethink human-animal bonds, challenging meat norms and zoos.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "critical-animal-studies"
+    },
+    {
+        "name": "Speculative Fiction Theory",
+        "description": "A 20th-century lens on sci-fi as a mirror, booming in 21st-century climate and tech tales.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "speculative-fiction-theory"
+    },
+    {
+        "name": "Info-War Theory",
+        "description": "A 21st-century take on weaponized info—disinfo and hacks as the new battlefield.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "info-war-theory"
+    },
+    {
+        "name": "Resilience Theory",
+        "description": "A 20th-century idea of bouncing back, key in 21st-century climate and crisis planning.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "resilience-theory"
+    },
+    {
+        "name": "Synthetic Biology",
+        "description": "A 21st-century science crafting life from scratch—think lab-grown meat and designer bugs.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "synthetic-biology"
+    },
+    {
+        "name": "Decolonial Theory",
+        "description": "A 20th-century push to unravel colonial mindsets, loud in 21st-century global south voices.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "decolonial-theory"
+    },
+    {
+        "name": "Techno-libertarianism",
+        "description": "A 21st-century creed fusing tech innovation with hands-off freedom—think Musk’s vibe.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "techno-libertarianism"
+    },
+    {
+        "name": "Hyperstition",
+        "description": "A 21st-century theory of ideas making themselves real—fiction turns fact in a feedback loop.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "hyperstition"
+    },
+    {
+        "name": "Eco-socialism",
+        "description": "A 20th-century blend of green and red, pushing collective action for a planet-friendly future.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "eco-socialism"
+    }
+]

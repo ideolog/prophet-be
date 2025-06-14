@@ -1,0 +1,1069 @@
+[
+{
+    "model": "narratives.schoolofthought",
+    "pk": 5,
+    "fields": {
+        "name": "Biology",
+        "description": "The study of living organisms and their interactions with the environment.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "biology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 6,
+    "fields": {
+        "name": "Astronomy",
+        "description": "The study of celestial bodies and the universe beyond Earth's atmosphere.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "astronomy"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 7,
+    "fields": {
+        "name": "Psychology",
+        "description": "The science of behavior and mental processes.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "psychology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 8,
+    "fields": {
+        "name": "Environmental Science",
+        "description": "The study of the environment and how to protect it.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "environmental-science"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 9,
+    "fields": {
+        "name": "Mathematics",
+        "description": "The abstract study of numbers, patterns, and structures.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "mathematics"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 10,
+    "fields": {
+        "name": "Geology",
+        "description": "The science of the Earth, its materials, processes, and history.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "geology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 11,
+    "fields": {
+        "name": "Sociology",
+        "description": "The study of social behavior, organizations, and institutions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "sociology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 12,
+    "fields": {
+        "name": "Economics",
+        "description": "The study of production, consumption, and distribution of goods and services.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "economics"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 13,
+    "fields": {
+        "name": "Computer Science",
+        "description": "The study of computational systems, algorithms, and data processing.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "computer-science"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 14,
+    "fields": {
+        "name": "Medicine",
+        "description": "The science of diagnosing, treating, and preventing illness.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "medicine"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 15,
+    "fields": {
+        "name": "Engineering",
+        "description": "The application of scientific principles to design and build systems, machines, and structures.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "engineering"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 16,
+    "fields": {
+        "name": "Anthropology",
+        "description": "The study of humans, their behavior, and societies.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "anthropology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 17,
+    "fields": {
+        "name": "Political Science",
+        "description": "The study of governments, political systems, and public policies.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "political-science"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 18,
+    "fields": {
+        "name": "Physics",
+        "description": "The study of matter, energy, and the fundamental forces of nature.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "physics"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 19,
+    "fields": {
+        "name": "Chemistry",
+        "description": "The science of substances, their properties, and reactions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "chemistry"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 20,
+    "fields": {
+        "name": "Christianity",
+        "description": "A monotheistic religion based on the life and teachings of Jesus Christ.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "christianity"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 21,
+    "fields": {
+        "name": "Islam",
+        "description": "A monotheistic religion that believes in Allah and follows the teachings of the Prophet Muhammad.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "islam"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 22,
+    "fields": {
+        "name": "Hinduism",
+        "description": "An ancient religion originating in India, characterized by a belief in reincarnation and a supreme being with many forms.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "hinduism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 23,
+    "fields": {
+        "name": "Buddhism",
+        "description": "A religion and philosophy founded by Siddhartha Gautama (the Buddha) focused on achieving enlightenment and escaping suffering.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "buddhism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 24,
+    "fields": {
+        "name": "Judaism",
+        "description": "A monotheistic religion of the Jewish people, based on the Torah and other Hebrew scriptures.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "judaism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 25,
+    "fields": {
+        "name": "Sikhism",
+        "description": "A monotheistic religion founded in Punjab by Guru Nanak, emphasizing equality and devotion to God.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "sikhism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 26,
+    "fields": {
+        "name": "Shinto",
+        "description": "The traditional religion of Japan, centered on the worship of kami (spirits) and nature.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "shinto"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 27,
+    "fields": {
+        "name": "Taoism",
+        "description": "A philosophical and religious tradition of Chinese origin emphasizing living in harmony with the Tao.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "taoism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 28,
+    "fields": {
+        "name": "Confucianism",
+        "description": "A philosophy and system of ethics originating in China, based on the teachings of Confucius.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "confucianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 29,
+    "fields": {
+        "name": "Zoroastrianism",
+        "description": "An ancient Persian religion founded by Zoroaster, emphasizing dualism between good and evil.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "zoroastrianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 30,
+    "fields": {
+        "name": "Jainism",
+        "description": "An ancient Indian religion advocating for non-violence, truth, and asceticism.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "jainism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 31,
+    "fields": {
+        "name": "Baha'i Faith",
+        "description": "A monotheistic religion emphasizing the spiritual unity of all humankind, founded by Bahá'u'lláh.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "bahai-faith"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 32,
+    "fields": {
+        "name": "Animism",
+        "description": "A belief system that all things, including animals, plants, and inanimate objects, have a spirit.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "animism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 33,
+    "fields": {
+        "name": "Paganism",
+        "description": "A broad term for polytheistic religions often associated with ancient or indigenous traditions.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "paganism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 34,
+    "fields": {
+        "name": "Druze",
+        "description": "A monotheistic religion originating in the Middle East, combining elements of Islam and other philosophies.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "druze"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 35,
+    "fields": {
+        "name": "Rastafarianism",
+        "description": "A religion originating in Jamaica, emphasizing African heritage and the worship of Haile Selassie.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "rastafarianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 36,
+    "fields": {
+        "name": "Scientology",
+        "description": "A modern religion founded by L. Ron Hubbard, focusing on self-improvement and spiritual enlightenment.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "scientology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 37,
+    "fields": {
+        "name": "Unitarian Universalism",
+        "description": "A liberal religion characterized by a free and responsible search for truth and meaning.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "unitarian-universalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 38,
+    "fields": {
+        "name": "Vodou",
+        "description": "A syncretic religion practiced primarily in Haiti, blending African traditions with Christianity.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "vodou"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 39,
+    "fields": {
+        "name": "Cao Dai",
+        "description": "A syncretic religion originating in Vietnam, combining elements of many world religions.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "cao-dai"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 40,
+    "fields": {
+        "name": "Tenrikyo",
+        "description": "A Japanese religion founded by Miki Nakayama, focused on the divine nature of humanity.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "tenrikyo"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 41,
+    "fields": {
+        "name": "Raelism",
+        "description": "A UFO religion founded by Claude Vorilhon, teaching that life on Earth was created by extraterrestrial beings.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "raelism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 42,
+    "fields": {
+        "name": "Wicca",
+        "description": "A modern pagan religion focused on nature worship, magic, and personal spiritual growth.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "wicca"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 43,
+    "fields": {
+        "name": "Atheism",
+        "description": "A lack of belief in gods or deities, often characterized by skepticism or rejection of religious claims.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "atheism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 44,
+    "fields": {
+        "name": "Agnosticism",
+        "description": "A belief that the existence of gods or deities is unknown or unknowable, often involving skepticism or doubt.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "agnosticism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 45,
+    "fields": {
+        "name": "Humanism",
+        "description": "A philosophical and ethical stance emphasizing the value and agency of human beings, often rejecting supernatural beliefs.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "humanism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 46,
+    "fields": {
+        "name": "Existentialism",
+        "description": "A philosophical movement emphasizing individual freedom, choice, and responsibility in a seemingly indifferent universe.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "existentialism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 47,
+    "fields": {
+        "name": "Stoicism",
+        "description": "A school of philosophy founded in ancient Greece, emphasizing self-control, virtue, and acceptance of fate.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "stoicism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 48,
+    "fields": {
+        "name": "Hedonism",
+        "description": "A philosophical stance emphasizing pleasure and happiness as the highest good.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "hedonism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 49,
+    "fields": {
+        "name": "Nihilism",
+        "description": "A philosophical belief that life is without objective meaning, purpose, or intrinsic value.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "nihilism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 50,
+    "fields": {
+        "name": "Utilitarianism",
+        "description": "A moral theory emphasizing the greatest happiness for the greatest number of people.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "utilitarianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 51,
+    "fields": {
+        "name": "Objectivism",
+        "description": "A philosophical system developed by Ayn Rand, emphasizing rational self-interest and individualism.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "objectivism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 52,
+    "fields": {
+        "name": "Feminism",
+        "description": "A social and political movement advocating for the rights and equality of women.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "feminism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 53,
+    "fields": {
+        "name": "Socialism",
+        "description": "A political and economic system advocating for collective ownership and control of the means of production.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "socialism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 54,
+    "fields": {
+        "name": "Capitalism",
+        "description": "An economic system based on private ownership of the means of production and the pursuit of profit.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "capitalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 55,
+    "fields": {
+        "name": "Communism",
+        "description": "A political and economic system advocating for a classless society and common ownership of the means of production.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "communism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 56,
+    "fields": {
+        "name": "Libertarianism",
+        "description": "A political philosophy emphasizing individual liberty, free markets, and limited government intervention.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "libertarianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 57,
+    "fields": {
+        "name": "Anarchism",
+        "description": "A political philosophy advocating for the abolition of hierarchical authority and the establishment of voluntary cooperation.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "anarchism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 58,
+    "fields": {
+        "name": "Fascism",
+        "description": "A far-right political ideology emphasizing authoritarianism, nationalism, and the supremacy of the state.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "fascism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 59,
+    "fields": {
+        "name": "Environmentalism",
+        "description": "A political and social movement advocating for the protection and preservation of the natural environment.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "environmentalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 60,
+    "fields": {
+        "name": "Nationalism",
+        "description": "A political ideology emphasizing the interests and culture of a particular nation, often to the exclusion of others.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "nationalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 61,
+    "fields": {
+        "name": "Pacifism",
+        "description": "A belief in non-violence and opposition to war or conflict as a means of resolving disputes.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "pacifism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 62,
+    "fields": {
+        "name": "Liberalism",
+        "description": "A political and social philosophy emphasizing individual rights, democracy, and the rule of law.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "liberalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 63,
+    "fields": {
+        "name": "Conservatism",
+        "description": "A political philosophy emphasizing tradition, authority, and the preservation of established institutions.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "conservatism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 64,
+    "fields": {
+        "name": "Protectionism",
+        "description": "The economic policy of restricting imports from other countries through methods such as tariffs on imported goods, import quotas, and a variety of other government regulations.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "protectionism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 65,
+    "fields": {
+        "name": "Interventionism",
+        "description": "The belief that a state or group of states has the moral, political, or strategic obligation to actively intervene in the affairs of other nations—through military force, economic pressure, or diplomatic coercion—to achieve specific ends deemed universally beneficial or essential to the intervener’s worldview.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "interventionism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 66,
+    "fields": {
+        "name": "Populims",
+        "description": "A political ideology that emphasizes the will of \"the people\" against a perceived elite or establishment, often transcending traditional left-right divides.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "populism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 68,
+    "fields": {
+        "name": "Populism",
+        "description": "A political ideology that emphasizes the will of 'the people' against a perceived elite or establishment, often transcending traditional left-right divides.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "populism-1-6Fc"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 69,
+    "fields": {
+        "name": "Technocracy",
+        "description": "An ideology advocating for governance by experts, typically scientists or engineers, based on technical knowledge rather than political affiliation.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "technocracy"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 70,
+    "fields": {
+        "name": "Globalism",
+        "description": "An ideology promoting interconnectedness, free trade, and supranational cooperation over national sovereignty.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "globalism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 71,
+    "fields": {
+        "name": "Isolationism",
+        "description": "A policy or ideology favoring non-involvement in international affairs, prioritizing domestic focus and self-sufficiency.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "isolationism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 72,
+    "fields": {
+        "name": "Progressivism",
+        "description": "A political and social ideology advocating for reform, modernization, and social justice, often challenging traditional structures.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "progressivism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 73,
+    "fields": {
+        "name": "Pragmatism",
+        "description": "A philosophical approach emphasizing practical consequences and real-world applications as the basis for truth and meaning.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "pragmatism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 74,
+    "fields": {
+        "name": "Absurdism",
+        "description": "A philosophy, linked to existentialism, asserting that the universe is inherently meaningless, yet humans must create their own purpose.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "absurdism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 75,
+    "fields": {
+        "name": "Epicureanism",
+        "description": "An ancient Greek philosophy teaching that pleasure (moderately pursued) and the avoidance of pain are the highest goods.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "epicureanism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 76,
+    "fields": {
+        "name": "Phenomenology",
+        "description": "A philosophical method focusing on the structures of experience and consciousness as they appear to the individual.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "phenomenology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 77,
+    "fields": {
+        "name": "Postmodernism",
+        "description": "A philosophical and cultural movement questioning grand narratives, objective truth, and embracing relativism and diversity.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "postmodernism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 78,
+    "fields": {
+        "name": "Falun Gong",
+        "description": "A modern Chinese spiritual practice blending Buddhist and Taoist elements, emphasizing meditation, morality, and energy cultivation.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "falun-gong"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 79,
+    "fields": {
+        "name": "Yazidism",
+        "description": "An ancient monotheistic religion from the Kurdish region, centered on the worship of a supreme God and reverence for the Peacock Angel.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "yazidism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 80,
+    "fields": {
+        "name": "Theosophy",
+        "description": "A spiritual movement founded by Helena Blavatsky, blending Eastern and Western esoteric traditions to explore universal wisdom.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "theosophy"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 81,
+    "fields": {
+        "name": "Sufism",
+        "description": "A mystical branch of Islam focused on spiritual purification, divine love, and direct experience of God.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "sufism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 82,
+    "fields": {
+        "name": "Satanism (LaVeyan)",
+        "description": "A modern atheistic religion founded by Anton LaVey, emphasizing individualism, skepticism, and symbolic rebellion against traditional norms.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "satanism-laveyan"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 83,
+    "fields": {
+        "name": "Neuroscience",
+        "description": "The scientific study of the nervous system, brain function, and their relation to behavior and cognition.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "neuroscience"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 84,
+    "fields": {
+        "name": "Linguistics",
+        "description": "The scientific study of language, its structure, evolution, and social use.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "linguistics"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 85,
+    "fields": {
+        "name": "Archaeology",
+        "description": "The study of human history and prehistory through the excavation and analysis of artifacts and physical remains.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "archaeology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 86,
+    "fields": {
+        "name": "Ecology",
+        "description": "The scientific study of interactions between organisms and their environments.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "ecology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 87,
+    "fields": {
+        "name": "Statistics",
+        "description": "The science of collecting, analyzing, and interpreting numerical data to understand patterns and make predictions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "statistics"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 88,
+    "fields": {
+        "name": "Evolution (Darwinism)",
+        "description": "A scientific theory proposing that species develop through natural selection and adaptation over time.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "evolution-darwinism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 89,
+    "fields": {
+        "name": "Psychoanalysis (Freudianism)",
+        "description": "A theory and therapeutic method developed by Sigmund Freud, emphasizing the unconscious mind, repression, and early experiences.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "psychoanalysis-freudianism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 90,
+    "fields": {
+        "name": "Relativity",
+        "description": "Albert Einstein’s theory describing the relationship between space, time, gravity, and energy, revolutionizing physics.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "relativity"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 91,
+    "fields": {
+        "name": "Quantum Theory",
+        "description": "A scientific framework explaining the behavior of matter and energy at microscopic scales, challenging classical physics.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "quantum-theory"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 92,
+    "fields": {
+        "name": "Systems Theory",
+        "description": "An interdisciplinary theory studying complex systems, their interactions, and emergent properties across natural and social sciences.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "systems-theory"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 93,
+    "fields": {
+        "name": "Woke Ideology",
+        "description": "A social and political stance emphasizing awareness of systemic injustices—particularly around race, gender, and class—and advocating for progressive change to address them. Often tied to concepts like intersectionality and critical theory.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "woke-ideology"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 94,
+    "fields": {
+        "name": "LGBT Movement",
+        "description": "A social and political movement advocating for the rights, recognition, and equality of lesbian, gay, bisexual, and transgender individuals, often extending to broader queer identities. Emphasizes liberation from traditional norms and legal protections.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "lgbt-movement"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 95,
+    "fields": {
+        "name": "Queer Theory",
+        "description": "An intellectual framework and ideology questioning fixed categories of gender and sexuality, advocating for fluidity and the deconstruction of normative social structures. Rooted in postmodernism and often linked to LGBT activism.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "queer-theory"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 96,
+    "fields": {
+        "name": "Intersectionality",
+        "description": "An ideology and analytical framework asserting that overlapping social identities (e.g., race, gender, class) create unique experiences of oppression or privilege, requiring holistic approaches to justice. Popularized by Kimberlé Crenshaw.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "intersectionality"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 97,
+    "fields": {
+        "name": "Transgender Rights Movement",
+        "description": "A social and political movement focused on securing equality, healthcare access, and societal acceptance for transgender and gender-nonconforming individuals, often challenging binary gender norms.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "transgender-rights-movement"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 98,
+    "fields": {
+        "name": "Social Justice Movement",
+        "description": "A broad ideology and movement advocating for equitable distribution of resources, opportunities, and rights, with a focus on dismantling systemic inequalities based on race, gender, class, or other markers.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "social-justice-movement"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 99,
+    "fields": {
+        "name": "Antifa (Anti-Fascism)",
+        "description": "A decentralized political movement and ideology opposing fascism, racism, and authoritarianism through direct action, often including protest and confrontation. Rejects hierarchical organization.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "antifa-anti-fascism"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 100,
+    "fields": {
+        "name": "Critical Race Theory (CRT)",
+        "description": "An academic and ideological framework asserting that racism is embedded in legal, social, and economic systems, requiring structural change beyond individual prejudice. Originated in legal scholarship.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "critical-race-theory-crt"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 101,
+    "fields": {
+        "name": "Men’s Rights Movement",
+        "description": "A social and political movement advocating for the rights and interests of men, often focusing on issues like family law, gender roles, and perceived biases against men in modern society.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "mens-rights-movement"
+    }
+},
+{
+    "model": "narratives.schoolofthought",
+    "pk": 102,
+    "fields": {
+        "name": "Inclusivism",
+        "description": "An ideology promoting the inclusion of diverse identities and perspectives in social, political, and cultural spaces, often tied to policies like affirmative action or diversity quotas.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "inclusivism"
+    }
+}
+]

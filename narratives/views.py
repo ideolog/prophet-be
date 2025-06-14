@@ -8,7 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now, timedelta
 from .models import *
 from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer, MarketSerializer
-from .ai_module import generate_ai_claims  # Ensure AI module is imported
+from .ai_module import generate_ai_claims, extract_narrative_claims
+# Ensure AI module is imported
 import time
 import logging
 from django.db.utils import IntegrityError
@@ -182,7 +183,7 @@ class MarketListView(APIView):
 class MarketBuyView(APIView):
     def post(self, request, market_id):
         side = request.data.get("side")
-        amount_str = request.data.get("amount")  # number of shares the user wants to buy
+        amount_str = request.data.get("amount")  # Number of shares the user wants to buy
         wallet_address = request.data.get("wallet_address")
 
         if not all([side, amount_str, wallet_address]):
@@ -206,7 +207,7 @@ class MarketBuyView(APIView):
         market = get_object_or_404(Market, id=market_id)
         user_account = get_object_or_404(UserAccount, wallet_address=wallet_address)
 
-        # OPTIONAL: Check if user already holds the opposite side. (Keeping your existing logic.)
+        # Check if user already holds the opposite side
         try:
             existing_position = MarketPosition.objects.get(user=user_account, market=market)
             if existing_position.side != side:
@@ -216,15 +217,18 @@ class MarketBuyView(APIView):
                 )
             position = existing_position
         except MarketPosition.DoesNotExist:
-            # No existing position => create one later
-            position = None
+            position = None  # No existing position => create later
 
         # Calculate the total cost using the bonding curve
         cost = market.cost_to_buy_linear(side, requested_shares)
 
-        # (Optional) If you were tracking user SOL balance, you could check that here, e.g.:
-        # if user_account.sol_balance < cost:
-        #     return Response({"error": "Insufficient funds."}, status=status.HTTP_400_BAD_REQUEST)
+        # **NEW: Check if the user has enough SOL**
+        if user_account.balance < cost:
+            return Response({"error": "Insufficient balance."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # **NEW: Deduct SOL from user balance**
+        user_account.balance -= cost
+        user_account.save()
 
         # Check if enough shares remain
         if side == "TRUE":
@@ -261,4 +265,49 @@ class MarketBuyView(APIView):
             "new_total_shares": str(position.shares),
             "remaining_true": str(market.true_shares_remaining),
             "remaining_false": str(market.false_shares_remaining),
+            "updated_balance": str(user_account.balance),  # ✅ Make sure balance is included
         }, status=status.HTTP_200_OK)
+
+
+class UserAccountDetailView(APIView):
+    def get(self, request, wallet_address):
+        user = get_object_or_404(UserAccount, wallet_address=wallet_address)
+        serializer = UserAccountSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class MyPositionsView(APIView):
+    def get(self, request, wallet_address):
+        user = get_object_or_404(UserAccount, wallet_address=wallet_address)
+        positions = MarketPosition.objects.filter(user=user).select_related("market", "market__claim")
+
+        data = []
+        for position in positions:
+            market = position.market
+            claim = market.claim
+            data.append({
+                "claim_id": claim.id,
+                "claim_text": claim.text,
+                "claim_slug": claim.slug,
+                "side": position.side,
+                "shares": str(position.shares),
+                "cost_basis": str(position.cost_basis),
+                "share_percentage": "TODO",  # We will calculate this later
+                "yield": "0.00",  # Placeholder for future implementation
+            })
+
+        return Response(data, status=status.HTTP_200_OK)
+
+from .ai_module import extract_narrative_claims  # Import your new function
+
+class NarrativeExtractionView(APIView):
+    def post(self, request, *args, **kwargs):
+        text = request.data.get("text", "")
+        if not text:
+            return Response({"error": "Text is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        narrative_claims = extract_narrative_claims(text)
+
+        if narrative_claims is None:
+            return Response({"error": "Failed to extract narrative claims."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"narrative_claims": narrative_claims}, status=status.HTTP_200_OK)

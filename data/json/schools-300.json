@@ -1,0 +1,506 @@
+[
+    {
+        "name": "Techno-agnosticism",
+        "description": "A 21st-century stance refusing to worship or demonize tech—judge it by results, not hype.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "techno-agnosticism"
+    },
+    {
+        "name": "Critical AI Studies",
+        "description": "A 21st-century field dissecting artificial intelligence’s social fallout—who wins, who loses?",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-ai-studies"
+    },
+    {
+        "name": "Hyperconnectivity Theory",
+        "description": "A 21st-century idea that constant online links—X, Zoom—rewire brains and societies, for better or worse.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "hyperconnectivity-theory"
+    },
+    {
+        "name": "Radical Localism",
+        "description": "A 21st-century ideology doubling down on community control—global’s out, nearby’s in.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-localism"
+    },
+    {
+        "name": "Computational Sociology",
+        "description": "A 21st-century science crunching big data to map social trends—think X posts predicting riots.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "computational-sociology"
+    },
+    {
+        "name": "Post-privacy Theory",
+        "description": "A 21st-century take that privacy’s dead—cameras and trackers rule, so adapt or hide.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-privacy-theory"
+    },
+    {
+        "name": "Techlash",
+        "description": "A 21st-century ideology turning on Big Tech—too much power, too little soul, time to fight back.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "techlash"
+    },
+    {
+        "name": "Radical Uncertainty",
+        "description": "A 21st-century philosophy embracing the unknown—plans fail, so roll with the chaos.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "radical-uncertainty"
+    },
+    {
+        "name": "Green Capitalism",
+        "description": "A 21st-century ideology betting markets can save the planet—profit meets solar panels.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "green-capitalism"
+    },
+    {
+        "name": "Critical Surveillance Studies",
+        "description": "A 21st-century theory exposing how cameras and algorithms cage us—privacy’s a myth now.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-surveillance-studies"
+    },
+    {
+        "name": "Data Sovereignty",
+        "description": "A 21st-century ideology demanding control over your bits—nations and people vs. cloud giants.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "data-sovereignty"
+    },
+    {
+        "name": "Automation Anxiety",
+        "description": "A 21st-century theory of dread—robots swipe jobs, leaving humans scrambling for meaning.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "automation-anxiety"
+    },
+    {
+        "name": "Eco-libertarianism",
+        "description": "A 21st-century hybrid freeing nature via markets—less state, more green entrepreneurship.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "eco-libertarianism"
+    },
+    {
+        "name": "Post-digital Humanism",
+        "description": "A 21st-century philosophy keeping humanity’s heart alive in a world drowning in code.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "post-digital-humanism"
+    },
+    {
+        "name": "Platform Socialism",
+        "description": "A 21st-century ideology hijacking tech platforms—like Uber—for public good, not private gain.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "platform-socialism"
+    },
+    {
+        "name": "Cyber-war Theory",
+        "description": "A 21st-century study of digital battlegrounds—hacks and bots as the new bombs.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "cyber-war-theory"
+    },
+    {
+        "name": "Critical Design",
+        "description": "A 20th-century theory, thriving now, using weird objects to question tech’s march—think dystopian prototypes.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-design"
+    },
+    {
+        "name": "Commons-based Peer Production",
+        "description": "A 21st-century ideology of shared creation—Wikipedia’s model, but for everything.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "commons-based-peer-production"
+    },
+    {
+        "name": "Techno-realism",
+        "description": "A late-20th-century stance, loud now, cutting through tech hype with cold, hard skepticism.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "techno-realism"
+    },
+    {
+        "name": "Post-neoliberalism",
+        "description": "A 21st-century ideology hunting for what’s next—markets plus something fairer, maybe.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "post-neoliberalism"
+    },
+    {
+        "name": "Climate Realism",
+        "description": "A 21st-century theory facing facts—warming’s here, adapt or sink, no utopia coming.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "climate-realism"
+    },
+    {
+        "name": "Behavioral Economics",
+        "description": "A 20th-century science, big now, showing how we’re irrational—nudges beat logic in money games.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "behavioral-economics"
+    },
+    {
+        "name": "Digital Ethics",
+        "description": "A 21st-century philosophy tackling online right and wrong—privacy, bots, and cancel culture.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "digital-ethics"
+    },
+    {
+        "name": "Shock Doctrine",
+        "description": "A 21st-century theory of crisis as a capitalist goldmine—disasters open doors for profit.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "shock-doctrine"
+    },
+    {
+        "name": "Alter-globalization",
+        "description": "A 21st-century ideology tweaking globalism—fair trade and local vibes over corporate steamrollers.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "alter-globalization"
+    },
+    {
+        "name": "Critical Internet Studies",
+        "description": "A 21st-century field unpacking the web’s power—who controls it, who gets screwed?",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-internet-studies"
+    },
+    {
+        "name": "Cyber-libertarianism",
+        "description": "A 20th-century ideology, hot now, dreaming of a free net—no rules, just code and chaos.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "cyber-libertarianism"
+    },
+    {
+        "name": "Deliberative Democracy",
+        "description": "A 20th-century idea, growing now, pushing talk over votes—citizens hash it out, not just check boxes.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "deliberative-democracy"
+    },
+    {
+        "name": "Social Acceleration Theory",
+        "description": "A 21st-century look at life speeding up—tech and time crush us, no pause button in sight.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "social-acceleration-theory"
+    },
+    {
+        "name": "Open Democracy",
+        "description": "A 21st-century ideology cracking government wide—transparency and participation, no secrets.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "open-democracy"
+    },
+    {
+        "name": "Future Studies",
+        "description": "A 20th-century science, thriving now, forecasting trends—climate, AI, whatever’s next.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "future-studies"
+    },
+    {
+        "name": "Post-labor Theory",
+        "description": "A 21st-century vision where work’s optional—automation frees us, if we don’t mess it up.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-labor-theory"
+    },
+    {
+        "name": "Steampunk",
+        "description": "A 20th-century retro-fantasy, alive in 21st-century art—Victorian tech meets wild imagination.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "steampunk"
+    },
+    {
+        "name": "Anti-surveillance Movement",
+        "description": "A 21st-century rebellion dodging cameras and trackers—privacy’s worth the fight.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "anti-surveillance-movement"
+    },
+    {
+        "name": "Critical Indigenous Studies",
+        "description": "A 21st-century theory amplifying native voices—colonialism’s scars meet modern resistance.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-indigenous-studies"
+    },
+    {
+        "name": "Filter Bubble Theory",
+        "description": "A 21st-century idea that algorithms trap us in echo chambers—X feeds you what you already like.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "filter-bubble-theory"
+    },
+    {
+        "name": "Green Anarchism",
+        "description": "A 20th-century ideology, active now, smashing state and industry for a wild, free Earth.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "green-anarchism"
+    },
+    {
+        "name": "Neuroeconomics",
+        "description": "A 21st-century science blending brain scans and cash—why we buy dumb stuff.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "neuroeconomics"
+    },
+    {
+        "name": "Anti-consumerism",
+        "description": "A 20th-century ideology, loud in the 21st, rejecting buy-buy-buy for simpler, saner living.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "anti-consumerism"
+    },
+    {
+        "name": "Radical Simplicity",
+        "description": "A 21st-century lifestyle ideology stripping life to basics—less stuff, more peace.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-simplicity"
+    },
+    {
+        "name": "Dark Enlightenment",
+        "description": "A 21st-century fringe philosophy dumping democracy for tech-driven order—edgy and grim.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "dark-enlightenment"
+    },
+    {
+        "name": "Social Ecology",
+        "description": "A 20th-century theory, alive now, linking eco-woes to social hierarchies—fix one, fix both.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "social-ecology"
+    },
+    {
+        "name": "Eco-populism",
+        "description": "A 21st-century ideology rallying the masses for green causes—people power meets planet love.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "eco-populism"
+    },
+    {
+        "name": "Digital Citizenship",
+        "description": "A 21st-century ideology redefining rights and duties online—X isn’t just a playground.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "digital-citizenship"
+    },
+    {
+        "name": "Liberation Theology",
+        "description": "A 20th-century faith, still kicking, where God sides with the poor—religion meets revolution.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "liberation-theology"
+    },
+    {
+        "name": "Overton Window Theory",
+        "description": "A 20th-century idea, big now, tracking how wild ideas—like UBI—go mainstream.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "overton-window-theory"
+    },
+    {
+        "name": "Citizen Science",
+        "description": "A 21st-century movement where regular folks—like you—crunch data for breakthroughs.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "citizen-science"
+    },
+    {
+        "name": "Intersectional Environmentalism",
+        "description": "A 21st-century ideology tying race, class, and climate—green wins need justice too.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "intersectional-environmentalism"
+    },
+    {
+        "name": "Urban Informatics",
+        "description": "A 21st-century science using data to decode cities—traffic, smog, and all.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "urban-informatics"
+    },
+    {
+        "name": "Techno-aesthetics",
+        "description": "A 21st-century theory of beauty in circuits—think sleek gadgets and glitch art.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "techno-aesthetics"
+    },
+    {
+        "name": "Eco-technocracy",
+        "description": "A 21st-century ideology where green experts steer the ship—tech nerds save the planet.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "eco-technocracy"
+    },
+    {
+        "name": "Post-democracy",
+        "description": "A 21st-century theory that voting’s a sham—power’s elsewhere, in boardrooms and algorithms.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-democracy"
+    },
+    {
+        "name": "Critical Tourism Studies",
+        "description": "A 21st-century look at travel’s dark side—selfies and resorts vs. locals and land.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-tourism-studies"
+    },
+    {
+        "name": "Open Innovation",
+        "description": "A 21st-century ideology tossing corporate walls—crowds and rivals co-build the next big thing.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "open-innovation"
+    },
+    {
+        "name": "Digital Labor Theory",
+        "description": "A 21st-century idea that your likes and scrolls are unpaid work—tech firms cash in.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "digital-labor-theory"
+    },
+    {
+        "name": "Green Urbanism",
+        "description": "A 21st-century ideology greening cities—parks, bikes, and solar, not just concrete.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "green-urbanism"
+    },
+    {
+        "name": "Post-humanitarianism",
+        "description": "A 21st-century theory rethinking aid—tech and locals lead, not white saviors.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-humanitarianism"
+    },
+    {
+        "name": "Critical Food Studies",
+        "description": "A 21st-century probe into eats—power, culture, and who gets fed shape every bite.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-food-studies"
+    },
+    {
+        "name": "Radical Wellness",
+        "description": "A 21st-century ideology flipping self-care—health’s a right, not a luxury product.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-wellness"
+    },
+    {
+        "name": "Post-religion",
+        "description": "A 21st-century theory of faith’s fade—spirituality’s personal, not pew-bound.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-religion"
+    },
+    {
+        "name": "Critical Fashion Studies",
+        "description": "A 21st-century look at clothes—sweatshops, trends, and identity stitch the story.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-fashion-studies"
+    },
+    {
+        "name": "Eco-futurism",
+        "description": "A 21st-century ideology blending green dreams with sci-fi—sustainable tomorrow, today.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "eco-futurism"
+    },
+    {
+        "name": "Social Impact Theory",
+        "description": "A 20th-century idea, big now, measuring how groups sway us—X mobs prove it.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "social-impact-theory"
+    },
+    {
+        "name": "Critical Heritage Studies",
+        "description": "A 21st-century field asking whose past gets saved—museums aren’t neutral.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-heritage-studies"
+    },
+    {
+        "name": "Radical Pedagogy",
+        "description": "A 20th-century ideology, alive now, turning schools into freedom labs—teach to liberate.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-pedagogy"
+    },
+    {
+        "name": "Post-carbon Theory",
+        "description": "A 21st-century vision of life after oil—energy’s new, society’s reborn.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-carbon-theory"
+    },
+    {
+        "name": "Critical Public Health",
+        "description": "A 21st-century theory digging into health’s politics—pandemics hit the poor hardest.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-public-health"
+    },
+    {
+        "name": "Radical Agroecology",
+        "description": "A 21st-century ideology growing food with nature—corporations out, farmers in.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-agroecology"
+    },
+    {
+        "name": "Digital Ecology",
+        "description": "A 21st-century science of online ecosystems—think X as a jungle, not just a tool.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "digital-ecology"
+    },
+    {
+        "name": "Post-globalization",
+        "description": "A 21st-century theory of world ties fraying—local rises as global stumbles.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "post-globalization"
+    },
+    {
+        "name": "Critical Sports Studies",
+        "description": "A 21st-century look at games—power, race, and cash behind every goal.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "critical-sports-studies"
+    },
+    {
+        "name": "Radical Urbanism",
+        "description": "A 21st-century ideology reimagining cities—people over profit, streets for all.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "radical-urbanism"
+    }
+]

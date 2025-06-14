@@ -6,7 +6,10 @@ from .views import (
     WalletLoginView,
     MarketCreateView,
     MarketListView,
-    MarketBuyView
+    MarketBuyView,
+    UserAccountDetailView,
+    MyPositionsView,
+    NarrativeExtractionView
 )
 
 urlpatterns = [
@@ -17,4 +20,8 @@ urlpatterns = [
     path("markets/create/<int:claim_id>/", MarketCreateView.as_view(), name="market-create"),
     path("markets/", MarketListView.as_view(), name="market-list"),
     path('markets/<int:market_id>/buy/', MarketBuyView.as_view(), name='market-buy'),
+    path("users/<str:wallet_address>/", UserAccountDetailView.as_view(), name="user-detail"),
+    path("users/<str:wallet_address>/positions/", MyPositionsView.as_view(), name="user-positions"),
+    path('narrative-extraction/', NarrativeExtractionView.as_view(), name='narrative-extraction'),
+
 ]

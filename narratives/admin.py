@@ -45,23 +45,16 @@ class ClaimAdmin(admin.ModelAdmin):
 
 @admin.register(SchoolOfThoughtType)
 class SchoolOfThoughtTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+    list_display = ('name', 'id', 'description')
     list_display_links = ('name',)
     search_fields = ('name', 'description')
     save_on_top = True
 
 @admin.register(SchoolOfThought)
 class SchoolOfThoughtAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'type')
+    list_display = ('name', 'id', 'description', 'type')
     list_display_links = ('name',)
     search_fields = ('name', 'description')
-    save_on_top = True
-
-@admin.register(Narrative)
-class NarrativeAdmin(admin.ModelAdmin):
-    list_display = ('slug', )
-    list_display_links = ('slug',)
-    search_fields = ('slug', 'description')
     save_on_top = True
 
 @admin.register(Value)

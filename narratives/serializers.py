@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Claim, Market, Narrative, UserAccount
+from .models import Claim, Market, Narrative, UserAccount, MarketPosition
 
 class MarketSerializer(serializers.ModelSerializer):
     claim_text = serializers.CharField(source="claim.text", read_only=True)
@@ -51,13 +51,48 @@ class ClaimSerializer(serializers.ModelSerializer):
         ]
 
 class UserAccountSerializer(serializers.ModelSerializer):
-    verification_status_name = serializers.CharField(source='verification_status.name', read_only=True)
+    verification_status_name = serializers.CharField(source="verification_status.name", read_only=True)
+    balance = serializers.DecimalField(max_digits=20, decimal_places=8, read_only=True)  # Add balance
 
     class Meta:
         model = UserAccount
-        fields = ["wallet_address", "verification_status_name", "created_at"]
+        fields = ["wallet_address", "verification_status_name", "balance", "created_at"]
+
 
 class NarrativeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Narrative
         fields = ["slug", "description", "modality"]
+
+# serializers.py
+class MarketPositionSerializer(serializers.ModelSerializer):
+    claim_text = serializers.CharField(source="market.claim.text", read_only=True)
+    claim_slug = serializers.CharField(source="market.claim.slug", read_only=True)
+    total_shares = serializers.SerializerMethodField()  # NEW FIELD for total market shares
+
+    class Meta:
+        model = MarketPosition
+        fields = ["claim_text", "claim_slug", "side", "shares", "cost_basis", "total_shares"]
+
+    def get_total_shares(self, obj):
+        """Returns the total shares in the market for the given side."""
+        if obj.side == "TRUE":
+            return Market.objects.get(id=obj.market.id).true_shares_remaining
+        else:
+            return Market.objects.get(id=obj.market.id).false_shares_remaining
+
+
+    def get_side_display(self, obj):
+        """Returns 'TRUE' in green or 'FALSE' in red."""
+        return f"<span style='color: {'green' if obj.side == 'TRUE' else 'red'}'>{obj.side}</span>"
+
+    def get_shares_percentage(self, obj):
+        """Calculate the percentage of shares the user holds in this market."""
+        total_shares = obj.market.true_shares_remaining + obj.market.false_shares_remaining
+        if total_shares > 0:
+            return round((obj.shares / total_shares) * 100, 2)
+        return 0.0
+
+    def get_yield_value(self, obj):
+        """Placeholder: Always return 0 for now."""
+        return 0.0

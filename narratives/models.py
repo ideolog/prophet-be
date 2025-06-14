@@ -49,11 +49,15 @@ class UserAccount(models.Model):
         related_name="users",
         help_text="Verification status of the user"
     )
+    balance = models.DecimalField(
+        max_digits=20, decimal_places=8, default=Decimal('1000.0'),
+        help_text="User's balance in SOL tokens"
+    )
     created_at = models.DateTimeField(default=now, help_text="Account creation timestamp")
     updated_at = models.DateTimeField(auto_now=True, help_text="Last update timestamp")
 
     def __str__(self):
-        return f"{self.wallet_address} - {self.verification_status.name}"
+        return f"{self.wallet_address} - {self.balance} SOL"
 
 
 class VerificationStatus(models.Model):
@@ -112,6 +116,15 @@ class SchoolOfThought(models.Model):
 
     def __str__(self):
         return self.name
+
+@receiver(pre_save, sender=SchoolOfThought)
+def create_schoolofthought_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        base_slug = slugify(instance.name)
+        unique_slug = base_slug
+        while SchoolOfThought.objects.filter(slug=unique_slug).exists():
+            unique_slug = f"{base_slug}-{get_random_string(5)}"
+        instance.slug = unique_slug
 
 
 class Value(models.Model):
@@ -425,3 +438,4 @@ class MarketPosition(models.Model):
 
     def __str__(self):
         return f"{self.user.wallet_address} - {self.side} - {self.shares} shares"
+

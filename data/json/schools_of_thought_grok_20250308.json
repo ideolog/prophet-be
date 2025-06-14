@@ -1,0 +1,674 @@
+[
+    {
+        "name": "Interventionism",
+        "description": "The belief that a state or group of states has the moral, political, or strategic obligation to actively intervene in the affairs of other nations—through military force, economic pressure, or diplomatic coercion—to achieve specific ends deemed universally beneficial or essential to the intervener’s worldview.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "interventionism"
+    },
+    {
+        "name": "Protectionism",
+        "description": "The economic policy of restricting imports from other countries through methods such as tariffs on imported goods, import quotas, and a variety of other government regulations.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "protectionism"
+    },
+    {
+        "name": "Conservatism",
+        "description": "A political philosophy emphasizing tradition, authority, and the preservation of established institutions.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "conservatism"
+    },
+    {
+        "name": "Liberalism",
+        "description": "A political and social philosophy emphasizing individual rights, democracy, and the rule of law.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "liberalism"
+    },
+    {
+        "name": "Pacifism",
+        "description": "A belief in non-violence and opposition to war or conflict as a means of resolving disputes.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "pacifism"
+    },
+    {
+        "name": "Nationalism",
+        "description": "A political ideology emphasizing the interests and culture of a particular nation, often to the exclusion of others.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "nationalism"
+    },
+    {
+        "name": "Environmentalism",
+        "description": "A political and social movement advocating for the protection and preservation of the natural environment.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "environmentalism"
+    },
+    {
+        "name": "Fascism",
+        "description": "A far-right political ideology emphasizing authoritarianism, nationalism, and the supremacy of the state.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "fascism"
+    },
+    {
+        "name": "Anarchism",
+        "description": "A political philosophy advocating for the abolition of hierarchical authority and the establishment of voluntary cooperation.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "anarchism"
+    },
+    {
+        "name": "Libertarianism",
+        "description": "A political philosophy emphasizing individual liberty, free markets, and limited government intervention.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "libertarianism"
+    },
+    {
+        "name": "Communism",
+        "description": "A political and economic system advocating for a classless society and common ownership of the means of production.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "communism"
+    },
+    {
+        "name": "Capitalism",
+        "description": "An economic system based on private ownership of the means of production and the pursuit of profit.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "capitalism"
+    },
+    {
+        "name": "Socialism",
+        "description": "A political and economic system advocating for collective ownership and control of the means of production.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "socialism"
+    },
+    {
+        "name": "Feminism",
+        "description": "A social and political movement advocating for the rights and equality of women.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "feminism"
+    },
+    {
+        "name": "Objectivism",
+        "description": "A philosophical system developed by Ayn Rand, emphasizing rational self-interest and individualism.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "objectivism"
+    },
+    {
+        "name": "Utilitarianism",
+        "description": "A moral theory emphasizing the greatest happiness for the greatest number of people.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "utilitarianism"
+    },
+    {
+        "name": "Nihilism",
+        "description": "A philosophical belief that life is without objective meaning, purpose, or intrinsic value.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "nihilism"
+    },
+    {
+        "name": "Hedonism",
+        "description": "A philosophical stance emphasizing pleasure and happiness as the highest good.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "hedonism"
+    },
+    {
+        "name": "Stoicism",
+        "description": "A school of philosophy founded in ancient Greece, emphasizing self-control, virtue, and acceptance of fate.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "stoicism"
+    },
+    {
+        "name": "Existentialism",
+        "description": "A philosophical movement emphasizing individual freedom, choice, and responsibility in a seemingly indifferent universe.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "existentialism"
+    },
+    {
+        "name": "Humanism",
+        "description": "A philosophical and ethical stance emphasizing the value and agency of human beings, often rejecting supernatural beliefs.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "humanism"
+    },
+    {
+        "name": "Agnosticism",
+        "description": "A belief that the existence of gods or deities is unknown or unknowable, often involving skepticism or doubt.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "agnosticism"
+    },
+    {
+        "name": "Atheism",
+        "description": "A lack of belief in gods or deities, often characterized by skepticism or rejection of religious claims.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "atheism"
+    },
+    {
+        "name": "Wicca",
+        "description": "A modern pagan religion focused on nature worship, magic, and personal spiritual growth.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "wicca"
+    },
+    {
+        "name": "Raelism",
+        "description": "A UFO religion founded by Claude Vorilhon, teaching that life on Earth was created by extraterrestrial beings.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "raelism"
+    },
+    {
+        "name": "Tenrikyo",
+        "description": "A Japanese religion founded by Miki Nakayama, focused on the divine nature of humanity.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "tenrikyo"
+    },
+    {
+        "name": "Cao Dai",
+        "description": "A syncretic religion originating in Vietnam, combining elements of many world religions.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "cao-dai"
+    },
+    {
+        "name": "Vodou",
+        "description": "A syncretic religion practiced primarily in Haiti, blending African traditions with Christianity.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "vodou"
+    },
+    {
+        "name": "Unitarian Universalism",
+        "description": "A liberal religion characterized by a free and responsible search for truth and meaning.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "unitarian-universalism"
+    },
+    {
+        "name": "Scientology",
+        "description": "A modern religion founded by L. Ron Hubbard, focusing on self-improvement and spiritual enlightenment.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "scientology"
+    },
+    {
+        "name": "Rastafarianism",
+        "description": "A religion originating in Jamaica, emphasizing African heritage and the worship of Haile Selassie.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "rastafarianism"
+    },
+    {
+        "name": "Druze",
+        "description": "A monotheistic religion originating in the Middle East, combining elements of Islam and other philosophies.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "druze"
+    },
+    {
+        "name": "Paganism",
+        "description": "A broad term for polytheistic religions often associated with ancient or indigenous traditions.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "paganism"
+    },
+    {
+        "name": "Animism",
+        "description": "A belief system that all things, including animals, plants, and inanimate objects, have a spirit.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "animism"
+    },
+    {
+        "name": "Baha'i Faith",
+        "description": "A monotheistic religion emphasizing the spiritual unity of all humankind, founded by Bahá'u'lláh.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "bahai-faith"
+    },
+    {
+        "name": "Jainism",
+        "description": "An ancient Indian religion advocating for non-violence, truth, and asceticism.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "jainism"
+    },
+    {
+        "name": "Zoroastrianism",
+        "description": "An ancient Persian religion founded by Zoroaster, emphasizing dualism between good and evil.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "zoroastrianism"
+    },
+    {
+        "name": "Confucianism",
+        "description": "A philosophy and system of ethics originating in China, based on the teachings of Confucius.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "confucianism"
+    },
+    {
+        "name": "Taoism",
+        "description": "A philosophical and religious tradition of Chinese origin emphasizing living in harmony with the Tao.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "taoism"
+    },
+    {
+        "name": "Shinto",
+        "description": "The traditional religion of Japan, centered on the worship of kami (spirits) and nature.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "shinto"
+    },
+    {
+        "name": "Sikhism",
+        "description": "A monotheistic religion founded in Punjab by Guru Nanak, emphasizing equality and devotion to God.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "sikhism"
+    },
+    {
+        "name": "Judaism",
+        "description": "A monotheistic religion of the Jewish people, based on the Torah and other Hebrew scriptures.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "judaism"
+    },
+    {
+        "name": "Buddhism",
+        "description": "A religion and philosophy founded by Siddhartha Gautama (the Buddha) focused on achieving enlightenment and escaping suffering.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "buddhism"
+    },
+    {
+        "name": "Hinduism",
+        "description": "An ancient religion originating in India, characterized by a belief in reincarnation and a supreme being with many forms.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "hinduism"
+    },
+    {
+        "name": "Islam",
+        "description": "A monotheistic religion that believes in Allah and follows the teachings of the Prophet Muhammad.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "islam"
+    },
+    {
+        "name": "Christianity",
+        "description": "A monotheistic religion based on the life and teachings of Jesus Christ.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "christianity"
+    },
+    {
+        "name": "Chemistry",
+        "description": "The science of substances, their properties, and reactions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "chemistry"
+    },
+    {
+        "name": "Physics",
+        "description": "The study of matter, energy, and the fundamental forces of nature.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "physics"
+    },
+    {
+        "name": "Political Science",
+        "description": "The study of governments, political systems, and public policies.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "political-science"
+    },
+    {
+        "name": "Anthropology",
+        "description": "The study of humans, their behavior, and societies.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "anthropology"
+    },
+    {
+        "name": "Engineering",
+        "description": "The application of scientific principles to design and build systems, machines, and structures.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "engineering"
+    },
+    {
+        "name": "Medicine",
+        "description": "The science of diagnosing, treating, and preventing illness.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "medicine"
+    },
+    {
+        "name": "Computer Science",
+        "description": "The study of computational systems, algorithms, and data processing.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "computer-science"
+    },
+    {
+        "name": "Economics",
+        "description": "The study of production, consumption, and distribution of goods and services.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "economics"
+    },
+    {
+        "name": "Sociology",
+        "description": "The study of social behavior, organizations, and institutions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "sociology"
+    },
+    {
+        "name": "Geology",
+        "description": "The science of the Earth, its materials, processes, and history.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "geology"
+    },
+    {
+        "name": "Mathematics",
+        "description": "The abstract study of numbers, patterns, and structures.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "mathematics"
+    },
+    {
+        "name": "Environmental Science",
+        "description": "The study of the environment and how to protect it.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "environmental-science"
+    },
+    {
+        "name": "Psychology",
+        "description": "The science of behavior and mental processes.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "psychology"
+    },
+    {
+        "name": "Astronomy",
+        "description": "The study of celestial bodies and the universe beyond Earth's atmosphere.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "astronomy"
+    },
+    {
+        "name": "Biology",
+        "description": "The study of living organisms and their interactions with the environment.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "biology"
+    },
+    {
+        "name": "Populism",
+        "description": "A political ideology that emphasizes the will of 'the people' against a perceived elite or establishment, often transcending traditional left-right divides.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "populism"
+    },
+    {
+        "name": "Technocracy",
+        "description": "An ideology advocating for governance by experts, typically scientists or engineers, based on technical knowledge rather than political affiliation.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "technocracy"
+    },
+    {
+        "name": "Globalism",
+        "description": "An ideology promoting interconnectedness, free trade, and supranational cooperation over national sovereignty.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "globalism"
+    },
+    {
+        "name": "Isolationism",
+        "description": "A policy or ideology favoring non-involvement in international affairs, prioritizing domestic focus and self-sufficiency.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "isolationism"
+    },
+    {
+        "name": "Progressivism",
+        "description": "A political and social ideology advocating for reform, modernization, and social justice, often challenging traditional structures.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "progressivism"
+    },
+    {
+        "name": "Pragmatism",
+        "description": "A philosophical approach emphasizing practical consequences and real-world applications as the basis for truth and meaning.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "pragmatism"
+    },
+    {
+        "name": "Absurdism",
+        "description": "A philosophy, linked to existentialism, asserting that the universe is inherently meaningless, yet humans must create their own purpose.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "absurdism"
+    },
+    {
+        "name": "Epicureanism",
+        "description": "An ancient Greek philosophy teaching that pleasure (moderately pursued) and the avoidance of pain are the highest goods.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "epicureanism"
+    },
+    {
+        "name": "Phenomenology",
+        "description": "A philosophical method focusing on the structures of experience and consciousness as they appear to the individual.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "phenomenology"
+    },
+    {
+        "name": "Postmodernism",
+        "description": "A philosophical and cultural movement questioning grand narratives, objective truth, and embracing relativism and diversity.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "postmodernism"
+    },
+    {
+        "name": "Falun Gong",
+        "description": "A modern Chinese spiritual practice blending Buddhist and Taoist elements, emphasizing meditation, morality, and energy cultivation.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "falun-gong"
+    },
+    {
+        "name": "Yazidism",
+        "description": "An ancient monotheistic religion from the Kurdish region, centered on the worship of a supreme God and reverence for the Peacock Angel.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "yazidism"
+    },
+    {
+        "name": "Theosophy",
+        "description": "A spiritual movement founded by Helena Blavatsky, blending Eastern and Western esoteric traditions to explore universal wisdom.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "theosophy"
+    },
+    {
+        "name": "Sufism",
+        "description": "A mystical branch of Islam focused on spiritual purification, divine love, and direct experience of God.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "sufism"
+    },
+    {
+        "name": "Satanism (LaVeyan)",
+        "description": "A modern atheistic religion founded by Anton LaVey, emphasizing individualism, skepticism, and symbolic rebellion against traditional norms.",
+        "type": 1,
+        "parent_school": null,
+        "slug": "satanism-laveyan"
+    },
+    {
+        "name": "Neuroscience",
+        "description": "The scientific study of the nervous system, brain function, and their relation to behavior and cognition.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "neuroscience"
+    },
+    {
+        "name": "Linguistics",
+        "description": "The scientific study of language, its structure, evolution, and social use.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "linguistics"
+    },
+    {
+        "name": "Archaeology",
+        "description": "The study of human history and prehistory through the excavation and analysis of artifacts and physical remains.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "archaeology"
+    },
+    {
+        "name": "Ecology",
+        "description": "The scientific study of interactions between organisms and their environments.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "ecology"
+    },
+    {
+        "name": "Statistics",
+        "description": "The science of collecting, analyzing, and interpreting numerical data to understand patterns and make predictions.",
+        "type": 3,
+        "parent_school": null,
+        "slug": "statistics"
+    },
+    {
+        "name": "Evolution (Darwinism)",
+        "description": "A scientific theory proposing that species develop through natural selection and adaptation over time.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "evolution-darwinism"
+    },
+    {
+        "name": "Psychoanalysis (Freudianism)",
+        "description": "A theory and therapeutic method developed by Sigmund Freud, emphasizing the unconscious mind, repression, and early experiences.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "psychoanalysis-freudianism"
+    },
+    {
+        "name": "Relativity",
+        "description": "Albert Einstein’s theory describing the relationship between space, time, gravity, and energy, revolutionizing physics.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "relativity"
+    },
+    {
+        "name": "Quantum Theory",
+        "description": "A scientific framework explaining the behavior of matter and energy at microscopic scales, challenging classical physics.",
+        "type": 2,
+        "parent_school": null,
+        "slug": "quantum-theory"
+    },
+    {
+        "name": "Systems Theory",
+        "description": "An interdisciplinary theory studying complex systems, their interactions, and emergent properties across natural and social sciences.",
+        "type": 6,
+        "parent_school": null,
+        "slug": "systems-theory"
+    },
+    {
+        "name": "Woke Ideology",
+        "description": "A social and political stance emphasizing awareness of systemic injustices—particularly around race, gender, and class—and advocating for progressive change to address them. Often tied to concepts like intersectionality and critical theory.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "woke-ideology"
+    },
+    {
+        "name": "LGBT Movement",
+        "description": "A social and political movement advocating for the rights, recognition, and equality of lesbian, gay, bisexual, and transgender individuals, often extending to broader queer identities. Emphasizes liberation from traditional norms and legal protections.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "lgbt-movement"
+    },
+    {
+        "name": "Queer Theory",
+        "description": "An intellectual framework and ideology questioning fixed categories of gender and sexuality, advocating for fluidity and the deconstruction of normative social structures. Rooted in postmodernism and often linked to LGBT activism.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "queer-theory"
+    },
+    {
+        "name": "Intersectionality",
+        "description": "An ideology and analytical framework asserting that overlapping social identities (e.g., race, gender, class) create unique experiences of oppression or privilege, requiring holistic approaches to justice. Popularized by Kimberlé Crenshaw.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "intersectionality"
+    },
+    {
+        "name": "Transgender Rights Movement",
+        "description": "A social and political movement focused on securing equality, healthcare access, and societal acceptance for transgender and gender-nonconforming individuals, often challenging binary gender norms.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "transgender-rights-movement"
+    },
+    {
+        "name": "Social Justice Movement",
+        "description": "A broad ideology and movement advocating for equitable distribution of resources, opportunities, and rights, with a focus on dismantling systemic inequalities based on race, gender, class, or other markers.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "social-justice-movement"
+    },
+    {
+        "name": "Antifa (Anti-Fascism)",
+        "description": "A decentralized political movement and ideology opposing fascism, racism, and authoritarianism through direct action, often including protest and confrontation. Rejects hierarchical organization.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "antifa-anti-fascism"
+    },
+    {
+        "name": "Critical Race Theory (CRT)",
+        "description": "An academic and ideological framework asserting that racism is embedded in legal, social, and economic systems, requiring structural change beyond individual prejudice. Originated in legal scholarship.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "critical-race-theory-crt"
+    },
+    {
+        "name": "Men’s Rights Movement",
+        "description": "A social and political movement advocating for the rights and interests of men, often focusing on issues like family law, gender roles, and perceived biases against men in modern society.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "mens-rights-movement"
+    },
+    {
+        "name": "Inclusivism",
+        "description": "An ideology promoting the inclusion of diverse identities and perspectives in social, political, and cultural spaces, often tied to policies like affirmative action or diversity quotas.",
+        "type": 4,
+        "parent_school": null,
+        "slug": "inclusivism"
+    }
+]
