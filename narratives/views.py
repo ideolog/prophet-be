@@ -5,7 +5,8 @@ from rest_framework import status
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now
+from datetime import timedelta
 from .models import *
 from .serializers import NarrativeSerializer, ClaimSerializer, UserAccountSerializer, MarketSerializer
 from .ai_module import generate_ai_claims, extract_narrative_claims
