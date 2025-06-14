@@ -1,3 +1,4 @@
+from .categories import Topic, Person, Organization
 from .claims import Claim, VerificationStatus
 from .users import UserAccount
 from .markets import Market, MarketPosition
