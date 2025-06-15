@@ -3,6 +3,19 @@ from django.utils.text import slugify
 from django.utils.crypto import get_random_string
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+import unicodedata
+import hashlib
+import string
+import re
+
+def generate_fingerprint(text):
+    text = text.strip()
+    text = unicodedata.normalize('NFKD', text)
+    text = ''.join(c for c in text if not unicodedata.combining(c))  # remove diacritics
+    text = ''.join(c for c in text if c.isprintable() and not unicodedata.category(c).startswith('C'))  # remove control chars
+    text = re.sub(r'\W+', '', text.lower())  # strip punctuation, lowercase
+    return hashlib.md5(text.encode('utf-8')).hexdigest()
+
 
 
 class Genre(models.Model):
@@ -31,6 +44,7 @@ class RawText(models.Model):
     author = models.CharField(max_length=255, blank=True, null=True)
     published_at = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True)
+    content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Normalized hash of the content for duplicate detection")
 
     def __str__(self):
         return f"{self.title or self.content[:50]}"
@@ -39,11 +53,15 @@ class RawText(models.Model):
 # Slug creation signals
 @receiver(pre_save, sender=Source)
 @receiver(pre_save, sender=RawText)
-def create_slug(sender, instance, *args, **kwargs):
+def create_slug_and_fingerprint(sender, instance, *args, **kwargs):
     if not instance.slug:
-        base_slug = slugify(getattr(instance, "name", None) or getattr(instance, "title", None) or instance.content[:50])
+        base_slug = slugify(getattr(instance, "title", None) or getattr(instance, "name", None) or instance.content[:50])
         unique_slug = base_slug
-        ModelClass = sender
-        while ModelClass.objects.filter(slug=unique_slug).exists():
+        while sender.objects.filter(slug=unique_slug).exists():
             unique_slug = f"{base_slug}-{get_random_string(5)}"
         instance.slug = unique_slug
+
+    if isinstance(instance, RawText) and not instance.content_fingerprint and instance.content:
+        instance.content_fingerprint = generate_fingerprint(instance.content)
+
+

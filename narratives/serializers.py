@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Claim, Market, UserAccount, MarketPosition
+from .models import Claim, Market, UserAccount, MarketPosition, RawText
+
+class RawTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RawText
+        fields = '__all__'
 
 class MarketSerializer(serializers.ModelSerializer):
     claim_text = serializers.CharField(source="claim.text", read_only=True)
