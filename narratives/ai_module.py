@@ -34,7 +34,7 @@ def generate_ai_claims(original_claim, ai_verified_status, ai_model="OpenAI"):
         client = openai.OpenAI(api_key=openai.api_key)  # Initialize OpenAI client
 
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": "You are an AI assistant that refines claims for grammar and clarity."},
                 {"role": "user", "content": prompt}
@@ -75,26 +75,46 @@ def extract_narrative_claims(text):
     """
     system_prompt = (
         "You are a Narrative Claim Extractor.\n"
-        "Your task is to analyze political speeches, legal statements, government press releases, and public statements by political figures, and extract a list of **narrative or ideological claims** expressed in the text.\n"
-        "Your goal is to extract the underlying worldview, assumptions, and value-based assertions made in the text — not merely factual statements.\n"
-        "A narrative claim is an assertion about the world, society, politics, groups, or values that reflects an ideological stance, belief, or implied truth.\n"
-        "Do NOT extract plain facts (like dates, numbers, laws passed) unless they are used to support an ideological narrative.\n"
-        "Extract claims that are emotional, ideological, value-based, or that imply a good-vs-evil or us-vs-them framing.\n"
-        "Each claim must be a short, independent sentence that clearly expresses an ideological or narrative assertion.\n"
-        "Rewrite the claim as a clear and simple assertion — do not quote from the original text.\n"
-        "Avoid listing multiple claims in one sentence (no 'and', 'or').\n"
-        "Ignore normative statements about future intentions unless they imply a current narrative about the world.\n"
-        "If the text is purely factual or neutral, return an empty list.\n"
-        "If the text contains narrative claims, return them in the following JSON format:\n"
-        "{ \"narrative_claims\": [ \"Claim 1.\", \"Claim 2.\", \"Claim 3.\", \"Claim 4.\" ] }\n"
-        "Return only the JSON object — do not add any explanation, introduction, or comments. Your entire output must be only the JSON object."
+        "Your task is to analyze political speeches, government press releases, legal statements, social media posts, "
+        "and public addresses by political figures, and extract a list of NARRATIVE or IDEOLOGICAL CLAIMS.\n\n"
+
+        "🎯 Your goal is to extract the **underlying worldview, assumptions, and value-based assertions** expressed in the text.\n"
+        "These are statements that reflect beliefs about how the world works, what is right or wrong, or who is to blame or praised.\n\n"
+
+        "✅ EXTRACT claims that include:\n"
+        "- 💥 Enemy accusations (e.g., 'This war was started by Russia.')\n"
+        "- ⚙️ Cause-effect logic (e.g., 'The Ukrainian revolution caused Russia to defend Russian people.')\n"
+        "- 🧠 Worldview formulas / magic methods (e.g., 'Industrialization is the path to prosperity.')\n"
+        "- 🏛️ Regime characteristics (e.g., 'Bolivia is ruled by a corrupt dictatorship.')\n"
+        "- 🆚 Us-vs-them framing (e.g., 'Global elites are trying to control ordinary citizens.')\n"
+        "- 🧭 Value assertions (e.g., 'Freedom of speech is under attack in the West.')\n\n"
+
+        "🚫 DO NOT EXTRACT:\n"
+        "- ✔️ Polite sentiments (e.g., 'Minnesota is a great place with great people.')\n"
+        "- 📅 Factual updates (e.g., 'A law was passed yesterday.')\n"
+        "- 🔮 Future intentions (e.g., 'We will defeat our enemies.')\n"
+        "- 🙏 Moral platitudes (e.g., 'Violence is bad.')\n"
+        "- 🤝 Praise without ideology (e.g., 'Our soldiers are brave.')\n\n"
+
+        "✍️ Guidelines:\n"
+        "- Rewrite each extracted idea as a short, **clear, independent sentence**.\n"
+        "- Do not quote directly.\n"
+        "- No conjunctions like 'and', 'but', or 'or'. One claim per sentence.\n"
+        "- Do not include questions, commands, or future promises.\n"
+        "- Avoid any claim containing words like 'will', 'shall', 'is going to', or other future tense constructions.\n"
+        "- Include only claims about the present or past — or those expressing ideological beliefs, accusations, or judgments.\n\n"
+
+        "📦 Output format:\n"
+        "Return ONLY a JSON object in the following format:\n"
+        "{ \"narrative_claims\": [\"Claim 1.\", \"Claim 2.\", \"Claim 3.\"] }\n"
+        "Return ONLY the JSON — no extra text, explanation, or commentary."
     )
 
     try:
         client = openai.OpenAI(api_key=openai.api_key)
 
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Here is the text:\n{text}\nPlease extract narrative claims and return them in JSON."}
