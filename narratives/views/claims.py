@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from ..ai_module import generate_ai_claims, extract_narrative_claims
+from narratives.utils.ai_module import generate_ai_claims, extract_narrative_claims
 from ..models import Claim, VerificationStatus
 from ..serializers import ClaimSerializer
 import logging

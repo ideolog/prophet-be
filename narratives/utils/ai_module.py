@@ -2,7 +2,7 @@ import openai
 import os
 import re
 from django.utils.text import slugify
-from .models import Claim
+from narratives.models import Claim
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
