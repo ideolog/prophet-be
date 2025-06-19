@@ -9,7 +9,8 @@ from .views import (
     UserAccountDetailView,
     MyPositionsView,
     GenerateClaimsFromTextView,
-    RawTextHashDuplicateCheck
+    RawTextHashDuplicateCheck,
+    RawTextCreateView,
 )
 
 
@@ -23,5 +24,6 @@ urlpatterns = [
     path('markets/<int:market_id>/buy/', MarketBuyView.as_view(), name='market-buy'),
     path("users/<str:wallet_address>/", UserAccountDetailView.as_view(), name="user-detail"),
     path("users/<str:wallet_address>/positions/", MyPositionsView.as_view(), name="user-positions"),
+    path("rawtexts/", RawTextCreateView.as_view(), name="rawtext-create"),
     path('rawtexts/check-duplicate/', RawTextHashDuplicateCheck.as_view(), name='rawtext-check-duplicate'),  # ✅
 ]

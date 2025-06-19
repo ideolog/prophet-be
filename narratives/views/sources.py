@@ -31,3 +31,12 @@ class RawTextHashDuplicateCheck(APIView):
         duplicate_exists = RawText.objects.filter(content_fingerprint=fingerprint).exists()
 
         return Response({"duplicate": duplicate_exists}, status=status.HTTP_200_OK)
+
+# views/sources.py
+class RawTextCreateView(APIView):
+    def post(self, request):
+        serializer = RawTextSerializer(data=request.data)
+        if serializer.is_valid():
+            rawtext = serializer.save()
+            return Response(RawTextSerializer(rawtext).data, status=201)
+        return Response(serializer.errors, status=400)
