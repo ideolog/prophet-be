@@ -1,4 +1,5 @@
 from django.db import models
+from narratives.models import Person
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
 from django.db.models.signals import pre_save
@@ -41,7 +42,7 @@ class RawText(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     subtitle = models.CharField(max_length=255, blank=True, null=True)
     content = models.TextField()
-    author = models.CharField(max_length=255, blank=True, null=True)
+    author = models.ForeignKey('Person', on_delete=models.SET_NULL, blank=True, null=True, related_name='rawtexts')
     published_at = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True)
     content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Normalized hash of the content for duplicate detection")
