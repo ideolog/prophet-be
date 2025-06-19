@@ -92,3 +92,35 @@ class RawTextAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content', 'author')
     list_filter = ('source', 'genre', 'published_at')
     save_on_top = True
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ("name", "type", "parent_location", "slug")
+    list_display_links = ("name",)
+    search_fields = ("name", "slug")
+    list_filter = ("type",)
+    save_on_top = True
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ("full_name", "slug")
+    list_display_links = ("full_name",)
+    search_fields = ("full_name", "slug")
+    prepopulated_fields = {"slug": ("full_name",)}
+    save_on_top = True
+
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    list_display_links = ("name",)
+    search_fields = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
+
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    list_display_links = ("name",)
+    search_fields = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
