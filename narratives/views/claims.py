@@ -1,13 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.db import transaction
 from django.shortcuts import get_object_or_404
-from narratives.utils.ai_module import generate_ai_claims, extract_narrative_claims
+from narratives.utils.ai_module import extract_narrative_claims
+from narratives.utils.text import generate_fingerprint
 from ..models import Claim, VerificationStatus
 from ..serializers import ClaimSerializer
 import logging
-import time
 
 logger = logging.getLogger(__name__)
 
@@ -22,80 +21,86 @@ class ClaimDetailView(APIView):
 class ClaimListCreateView(APIView):
     def get(self, request):
         parent_claim_id = request.GET.get("parent_claim")
-
         if parent_claim_id:
             claims = Claim.objects.filter(parent_claim=parent_claim_id).order_by('-created_at')
         else:
             claims = Claim.objects.all().order_by('-created_at')
-
         serializer = ClaimSerializer(claims, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        time.sleep(1)
-
+        """
+        Allows to submit single manually-entered claim.
+        """
         try:
-            default_status = VerificationStatus.objects.get(name='unverified')
             pending_ai_status = VerificationStatus.objects.get(name='pending_ai_review')
-            rejected_status = VerificationStatus.objects.get(name='rejected')
-            ai_verified_status = VerificationStatus.objects.get(name='ai_reviewed')
-            ai_variants_status = VerificationStatus.objects.get(name='ai_variants_generated')
-        except VerificationStatus.DoesNotExist as e:
-            logger.error(f"Missing verification status: {e}")
-            return Response(
-                {"error": "One or more required verification statuses are missing."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        except VerificationStatus.DoesNotExist:
+            logger.error("Verification statuses missing.")
+            return Response({"error": "Verification statuses missing."}, status=500)
 
-        ZERO_ADDRESS = "11111111111111111111111111111111"
-        wallet_address = request.data.get("author")
-        data = request.data.copy()
-        data["author"] = wallet_address if wallet_address else ZERO_ADDRESS
-        data['verification_status'] = pending_ai_status.id
+        submitter = request.data.get("submitter") or "UNKNOWN"
+        text = request.data.get("text", "").strip()
+        if not text:
+            return Response({"error": "Text is required."}, status=400)
 
-        serializer = ClaimSerializer(data=data)
-        if serializer.is_valid():
-            with transaction.atomic():
-                try:
-                    existing_claim = Claim.objects.filter(text=data['text']).first()
-                    if existing_claim:
-                        duplicate_claim = serializer.save(
-                            verification_status=rejected_status,
-                            status_description="Duplicate claim detected."
-                        )
-                        return Response(
-                            ClaimSerializer(duplicate_claim).data,
-                            status=status.HTTP_201_CREATED
-                        )
+        fingerprint = generate_fingerprint(text)
+        existing_claim = Claim.objects.filter(content_fingerprint=fingerprint).first()
+        if existing_claim:
+            serializer = ClaimSerializer(existing_claim)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-                    claim = serializer.save()
-                    generate_ai_claims(claim, ai_verified_status)
-
-                    claim.verification_status = ai_variants_status
-                    claim.status_description = "AI-generated alternatives are available."
-                    claim.save()
-
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-                except Exception as e:
-                    logger.error(f"Error processing claim: {e}")
-                    return Response(
-                        {"error": "An unexpected error occurred on the server."},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                    )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        claim = Claim.objects.create(
+            text=text,
+            verification_status=pending_ai_status,
+            submitter=submitter,
+            content_fingerprint=fingerprint
+        )
+        serializer = ClaimSerializer(claim)
+        return Response(serializer.data, status=201)
 
 
 class GenerateClaimsFromTextView(APIView):
-    def post(self, request, *args, **kwargs):
-        text = request.data.get("text", "")
+    """
+    Extracts narrative claims from input text using AI, saves new claims, returns full list.
+    """
+
+    def post(self, request):
+        text = request.data.get("text", "").strip()
         if not text:
-            return Response({"error": "Text is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Text is required."}, status=400)
 
-        narrative_claims = extract_narrative_claims(text)
-
+        narrative_claims, provider, model = extract_narrative_claims(text)
         if narrative_claims is None:
-            return Response({"error": "Failed to extract narrative claims."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": "AI extraction failed."}, status=500)
 
-        return Response({"narrative_claims": narrative_claims}, status=status.HTTP_200_OK)
+        try:
+            ai_verified_status = VerificationStatus.objects.get(name='ai_reviewed')
+        except VerificationStatus.DoesNotExist:
+            return Response({"error": "AI verification status missing."}, status=500)
+
+        saved_claims = []
+
+        for claim_text in narrative_claims:
+            cleaned_text = claim_text.strip()
+            if not cleaned_text:
+                continue
+
+            fingerprint = generate_fingerprint(cleaned_text)
+            existing_claim = Claim.objects.filter(content_fingerprint=fingerprint).first()
+
+            if existing_claim:
+                saved_claims.append(existing_claim)
+            else:
+                claim = Claim.objects.create(
+                    text=cleaned_text,
+                    verification_status=ai_verified_status,
+                    submitter=provider,  # Now clearly "submitter"
+                    ai_model=model,
+                    generated_by_ai=True,
+                    content_fingerprint=fingerprint,
+                    status_description="Extracted by AI"
+                )
+                saved_claims.append(claim)
+
+        serializer = ClaimSerializer(saved_claims, many=True)
+        return Response({"narrative_claims": serializer.data}, status=201)

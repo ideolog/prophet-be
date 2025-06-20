@@ -32,11 +32,18 @@ class RawTextHashDuplicateCheck(APIView):
 
         return Response({"duplicate": duplicate_exists}, status=status.HTTP_200_OK)
 
-# views/sources.py
+
 class RawTextCreateView(APIView):
     def post(self, request):
         serializer = RawTextSerializer(data=request.data)
         if serializer.is_valid():
-            rawtext = serializer.save()
-            return Response(RawTextSerializer(rawtext).data, status=201)
-        return Response(serializer.errors, status=400)
+            content = serializer.validated_data.get("content")
+            fingerprint = generate_fingerprint(content)
+
+            existing = RawText.objects.filter(content_fingerprint=fingerprint).first()
+            if existing:
+                return Response(RawTextSerializer(existing).data, status=status.HTTP_200_OK)
+
+            rawtext = serializer.save(content_fingerprint=fingerprint)
+            return Response(RawTextSerializer(rawtext).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

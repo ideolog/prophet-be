@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 from django.utils.crypto import get_random_string
+from narratives.utils.text import generate_fingerprint
+from narratives.models import Person  # ✅ we reuse existing Person model
 
 class VerificationStatus(models.Model):
     STATUS_CHOICES = [
@@ -32,18 +34,18 @@ class VerificationStatus(models.Model):
 class Claim(models.Model):
     text = models.TextField(unique=True)
     slug = models.SlugField(unique=True, blank=True, max_length=150)
-    verification_status = models.ForeignKey(
-        'VerificationStatus',
-        on_delete=models.PROTECT,
-        related_name="claims"
-    )
+    verification_status = models.ForeignKey('VerificationStatus', on_delete=models.PROTECT, related_name="claims")
     status_description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    author = models.CharField(max_length=255)
+
+    submitter = models.CharField(max_length=255)  # ✅ renamed from author
+    attributed_persons = models.ManyToManyField(Person, blank=True, related_name="associated_claims")
+
     parent_claim = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name="ai_variants")
     generated_by_ai = models.BooleanField(default=False)
     ai_model = models.CharField(max_length=50, blank=True, null=True)
+    content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -52,6 +54,10 @@ class Claim(models.Model):
             while Claim.objects.filter(slug=unique_slug).exists():
                 unique_slug = f"{base_slug}-{get_random_string(5)}"
             self.slug = unique_slug
+
+        if self.text and not self.content_fingerprint:
+            self.content_fingerprint = generate_fingerprint(self.text)
+
         super().save(*args, **kwargs)
 
     def __str__(self):
