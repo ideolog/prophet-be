@@ -2,14 +2,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
+
 from narratives.utils.ai_module import extract_narrative_claims
 from narratives.utils.text import generate_fingerprint
 from ..models import Claim, VerificationStatus
 from ..serializers import ClaimSerializer
+from ..serializers.request_bodies import (
+    ClaimCreateRequestSerializer, GenerateClaimsRequestSerializer
+)
 import logging
 
 logger = logging.getLogger(__name__)
-
 
 class ClaimDetailView(APIView):
     def get(self, request, claim_id):
@@ -17,21 +21,10 @@ class ClaimDetailView(APIView):
         serializer = ClaimSerializer(claim)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class ClaimListCreateView(APIView):
-    def get(self, request):
-        parent_claim_id = request.GET.get("parent_claim")
-        if parent_claim_id:
-            claims = Claim.objects.filter(parent_claim=parent_claim_id).order_by('-created_at')
-        else:
-            claims = Claim.objects.all().order_by('-created_at')
-        serializer = ClaimSerializer(claims, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(request_body=ClaimCreateRequestSerializer, responses={201: ClaimSerializer()})
     def post(self, request):
-        """
-        Allows to submit single manually-entered claim.
-        """
         try:
             pending_ai_status = VerificationStatus.objects.get(name='pending_ai_review')
         except VerificationStatus.DoesNotExist:
@@ -58,12 +51,18 @@ class ClaimListCreateView(APIView):
         serializer = ClaimSerializer(claim)
         return Response(serializer.data, status=201)
 
+    def get(self, request):
+        parent_claim_id = request.GET.get("parent_claim")
+        if parent_claim_id:
+            claims = Claim.objects.filter(parent_claim=parent_claim_id).order_by('-created_at')
+        else:
+            claims = Claim.objects.all().order_by('-created_at')
+        serializer = ClaimSerializer(claims, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GenerateClaimsFromTextView(APIView):
-    """
-    Extracts narrative claims from input text using AI, saves new claims, returns full list.
-    """
 
+    @swagger_auto_schema(request_body=GenerateClaimsRequestSerializer, responses={201: ClaimSerializer(many=True)})
     def post(self, request):
         text = request.data.get("text", "").strip()
         if not text:
@@ -94,7 +93,7 @@ class GenerateClaimsFromTextView(APIView):
                 claim = Claim.objects.create(
                     text=cleaned_text,
                     verification_status=ai_verified_status,
-                    submitter=provider,  # Now clearly "submitter"
+                    submitter=provider,
                     ai_model=model,
                     generated_by_ai=True,
                     content_fingerprint=fingerprint,

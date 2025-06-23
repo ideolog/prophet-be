@@ -5,11 +5,15 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import now
 from decimal import Decimal
 from datetime import timedelta
+from drf_yasg.utils import swagger_auto_schema
+
 from ..models import Market, Claim, UserAccount, MarketPosition, VerificationStatus
 from ..serializers import MarketSerializer
-
+from ..serializers.request_bodies import MarketCreateRequestSerializer, MarketBuyRequestSerializer
 
 class MarketCreateView(APIView):
+
+    @swagger_auto_schema(request_body=MarketCreateRequestSerializer, responses={201: "Market created"})
     def post(self, request, claim_id):
         claim = get_object_or_404(Claim, id=claim_id)
 
@@ -43,15 +47,15 @@ class MarketCreateView(APIView):
 
         return Response({"message": "Market created successfully.", "market_id": market.id, "claim_slug": claim.slug}, status=status.HTTP_201_CREATED)
 
-
 class MarketListView(APIView):
     def get(self, request):
         markets = Market.objects.all().order_by('-created_at')
         serializer = MarketSerializer(markets, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
 class MarketBuyView(APIView):
+
+    @swagger_auto_schema(request_body=MarketBuyRequestSerializer, responses={200: "Shares purchased"})
     def post(self, request, market_id):
         side = request.data.get("side")
         amount_str = request.data.get("amount")

@@ -2,9 +2,9 @@ from rest_framework import serializers
 from ..models import Market, MarketPosition
 
 class MarketSerializer(serializers.ModelSerializer):
-    claim_text = serializers.CharField(source="claim.text", read_only=True)
-    claim_slug = serializers.CharField(source="claim.slug", read_only=True)
-    status = serializers.CharField(source="claim.verification_status.get_name_display", read_only=True)
+    claim_text = serializers.ReadOnlyField(source="claim.text")
+    claim_slug = serializers.ReadOnlyField(source="claim.slug")
+    status = serializers.ReadOnlyField(source="claim.verification_status.get_name_display")
     current_true_price = serializers.SerializerMethodField()
     current_false_price = serializers.SerializerMethodField()
 
@@ -22,9 +22,10 @@ class MarketSerializer(serializers.ModelSerializer):
     def get_current_false_price(self, obj):
         return obj.current_price_for_side("FALSE")
 
+
 class MarketPositionSerializer(serializers.ModelSerializer):
-    claim_text = serializers.CharField(source="market.claim.text", read_only=True)
-    claim_slug = serializers.CharField(source="market.claim.slug", read_only=True)
+    claim_text = serializers.ReadOnlyField(source="market.claim.text")
+    claim_slug = serializers.ReadOnlyField(source="market.claim.slug")
     total_shares = serializers.SerializerMethodField()
 
     class Meta:
@@ -32,6 +33,8 @@ class MarketPositionSerializer(serializers.ModelSerializer):
         fields = ["claim_text", "claim_slug", "side", "shares", "cost_basis", "total_shares"]
 
     def get_total_shares(self, obj):
-        if obj.side == "TRUE":
-            return Market.objects.get(id=obj.market.id).true_shares_remaining
-        return Market.objects.get(id=obj.market.id).false_shares_remaining
+        return (
+            obj.market.true_shares_remaining
+            if obj.side == "TRUE"
+            else obj.market.false_shares_remaining
+        )

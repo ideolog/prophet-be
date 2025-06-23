@@ -1,27 +1,29 @@
-# views/sources.py
-
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 
 from ..models import RawText
 from ..serializers import RawTextSerializer
 from ..utils.text import generate_fingerprint
-
+from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
 
 class RawTextListView(generics.ListAPIView):
     queryset = RawText.objects.all().order_by('-id')
     serializer_class = RawTextSerializer
-
 
 class RawTextDetailView(generics.RetrieveAPIView):
     queryset = RawText.objects.all()
     serializer_class = RawTextSerializer
     lookup_field = 'id'
 
-
 class RawTextHashDuplicateCheck(APIView):
+
+    @swagger_auto_schema(
+        request_body=RawTextDuplicateCheckRequestSerializer,
+        responses={200: "Duplicate check result"}
+    )
     def post(self, request):
         content = request.data.get("content", "")
         if not content:
@@ -32,8 +34,12 @@ class RawTextHashDuplicateCheck(APIView):
 
         return Response({"duplicate": duplicate_exists}, status=status.HTTP_200_OK)
 
-
 class RawTextCreateView(APIView):
+
+    @swagger_auto_schema(
+        request_body=RawTextSerializer,
+        responses={201: RawTextSerializer()}
+    )
     def post(self, request):
         serializer = RawTextSerializer(data=request.data)
         if serializer.is_valid():

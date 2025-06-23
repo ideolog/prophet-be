@@ -6,7 +6,7 @@ class ClaimSerializer(serializers.ModelSerializer):
     verification_status_display = serializers.CharField(source="verification_status.get_name_display", read_only=True)
     parent_claim = serializers.PrimaryKeyRelatedField(queryset=Claim.objects.all(), allow_null=True, required=False)
     attributed_persons = serializers.PrimaryKeyRelatedField(
-        queryset=Person.objects.all(), many=True, required=False, allow_null=True
+        queryset=Person.objects.all(), many=True, required=False
     )
 
     class Meta:
@@ -20,11 +20,15 @@ class ClaimSerializer(serializers.ModelSerializer):
             "verification_status_display",
             "status_description",
             "submitter",
-            "attributed_persons",  # ✅ new m2m field
+            "attributed_persons",
             "parent_claim",
             "generated_by_ai",
             "ai_model",
             "content_fingerprint",
             "created_at",
             "updated_at"
+        ]
+        read_only_fields = [
+            "id", "slug", "verification_status_name", "verification_status_display",
+            "content_fingerprint", "created_at", "updated_at"
         ]
