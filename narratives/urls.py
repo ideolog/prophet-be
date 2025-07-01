@@ -10,6 +10,7 @@ from .views import (
     # RawText
     RawTextHashDuplicateCheck,
     RawTextCreateView,
+    RawTextMassProcessingView,
 
     # Markets
     MarketCreateView,
@@ -31,6 +32,8 @@ urlpatterns = [
     # RAWTEXT
     path('rawtexts/', RawTextCreateView.as_view(), name='rawtext-create'),
     path('rawtexts/check-duplicate/', RawTextHashDuplicateCheck.as_view(), name='rawtext-check-duplicate'),
+    path("rawtexts/process-mass/", RawTextMassProcessingView.as_view(), name="rawtext-mass-process"),
+
 
     # MARKETS
     path("markets/create/<int:claim_id>/", MarketCreateView.as_view(), name="market-create"),
