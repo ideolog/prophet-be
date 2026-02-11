@@ -8,9 +8,9 @@ from ..models import RawText
 from ..serializers import RawTextSerializer
 from ..utils.text import generate_fingerprint
 from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
-from claims.models import Claim, VerificationStatus
+from narratives.models import Claim, VerificationStatus
 from narratives.models.sources import RawText, RawTextProcessing
-from narratives.utils.ai import extract_claims_from_text  # You must define this helper
+from narratives.utils.ai_module import extract_narrative_claims  # You must define this helper
 
 class RawTextListView(generics.ListAPIView):
     queryset = RawText.objects.all().order_by('-id')
