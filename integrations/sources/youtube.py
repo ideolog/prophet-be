@@ -1,17 +1,20 @@
-# integrations/sources/youtube.py
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 
 class YouTubeIntegration:
     def fetch_content(self, source_config):
         video_id = source_config["video_id"]
-        # если хочешь язык: source_config.get("languages", ["en"])
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)  # или fetch(...) как в доке
-        return {"video_id": video_id, "transcript": transcript}
+        language = source_config.get("language", "en")
+
+        api = YouTubeTranscriptApi()
+        fetched = api.fetch(video_id, languages=[language])
+        # Возвращаем fetched без to_raw_data()
+        return {"video_id": video_id, "transcript": fetched}
 
     def normalize_to_rawtext(self, raw_data, source_config):
         video_id = raw_data["video_id"]
         formatter = TextFormatter()
+        # Передаём весь FetchedTranscript в форматтер
         text = formatter.format_transcript(raw_data["transcript"])
 
         return [{
