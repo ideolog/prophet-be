@@ -25,7 +25,8 @@ class IntegrationRunView(APIView):
         # Prepare source config
         source_config = {
             "timezone": source.timezone,
-            "page": page
+            "page": page,
+            **(request.data or {}),
         }
 
         raw_data = integration.fetch_content(source_config=source_config)
