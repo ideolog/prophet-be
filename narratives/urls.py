@@ -9,8 +9,9 @@ from .views import (
 
     # RawText
     RawTextHashDuplicateCheck,
-    RawTextCreateView,
+    RawTextListCreateView,
     RawTextMassProcessingView,
+    RawTextDetailView,
 
     # Markets
     MarketCreateView,
@@ -30,9 +31,10 @@ urlpatterns = [
     path('claims/generate-from-text/', GenerateClaimsFromTextView.as_view(), name='generate-claims-from-text'),
 
     # RAWTEXT
-    path('rawtexts/', RawTextCreateView.as_view(), name='rawtext-create'),
+    path('rawtexts/', RawTextListCreateView.as_view(), name='rawtext-create'),
     path('rawtexts/check-duplicate/', RawTextHashDuplicateCheck.as_view(), name='rawtext-check-duplicate'),
     path("rawtexts/process-mass/", RawTextMassProcessingView.as_view(), name="rawtext-mass-process"),
+    path('rawtexts/<int:id>/', RawTextDetailView.as_view(), name='rawtext-detail'),
 
 
     # MARKETS

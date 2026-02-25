@@ -16,10 +16,29 @@ class RawTextListView(generics.ListAPIView):
     queryset = RawText.objects.all().order_by('-id')
     serializer_class = RawTextSerializer
 
+class RawTextListCreateView(generics.ListCreateAPIView):
+    queryset = RawText.objects.all().order_by("-id")
+    serializer_class = RawTextSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        content = serializer.validated_data.get("content")
+        fingerprint = generate_fingerprint(content)
+
+        existing = RawText.objects.filter(content_fingerprint=fingerprint).first()
+        if existing:
+            return Response(self.get_serializer(existing).data, status=status.HTTP_200_OK)
+
+        rawtext = serializer.save(content_fingerprint=fingerprint)
+        return Response(self.get_serializer(rawtext).data, status=status.HTTP_201_CREATED)
+
 class RawTextDetailView(generics.RetrieveAPIView):
     queryset = RawText.objects.all()
     serializer_class = RawTextSerializer
-    lookup_field = 'id'
+    lookup_field = "id"
+
 
 class RawTextHashDuplicateCheck(APIView):
 
@@ -36,27 +55,6 @@ class RawTextHashDuplicateCheck(APIView):
         duplicate_exists = RawText.objects.filter(content_fingerprint=fingerprint).exists()
 
         return Response({"duplicate": duplicate_exists}, status=status.HTTP_200_OK)
-
-class RawTextCreateView(APIView):
-
-    @swagger_auto_schema(
-        request_body=RawTextSerializer,
-        responses={201: RawTextSerializer()}
-    )
-    def post(self, request):
-        serializer = RawTextSerializer(data=request.data)
-        if serializer.is_valid():
-            content = serializer.validated_data.get("content")
-            fingerprint = generate_fingerprint(content)
-
-            existing = RawText.objects.filter(content_fingerprint=fingerprint).first()
-            if existing:
-                return Response(RawTextSerializer(existing).data, status=status.HTTP_200_OK)
-
-            rawtext = serializer.save(content_fingerprint=fingerprint)
-            return Response(RawTextSerializer(rawtext).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class RawTextMassProcessingView(APIView):

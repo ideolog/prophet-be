@@ -1,51 +1,81 @@
-import openai
 import os
 import json
 import re
-from django.utils.text import slugify
+import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def extract_narrative_claims(text):
-    """
-    Uses OpenAI to extract narrative claims from input text.
-    Returns a tuple: (list of extracted claims, provider, model).
-    """
+# -------------------------
+# PROMPTS
+# -------------------------
 
+SYSTEM_PROMPT_CRYPTO = (
+    "You are a Crypto Narrative Claim Extractor.\n"
+    "Your task is to analyze crypto market analysis videos, podcasts, interviews and blog posts, and extract a list of NARRATIVE CLAIMS about blockchain and cryptocurrency.\n\n"
+    "🎯 Your goal is to extract statements that reflect beliefs, predictions or assumptions about cryptocurrencies, blockchain technology, market dynamics, valuations, adoption, regulation and their societal impact.\n\n"
+    "✅ EXTRACT claims that include:\n"
+    "- 📈 Predictions about price movements or market cycles (e.g., 'Bitcoin will reach $100k soon').\n"
+    "- 🔍 Assertions about network fundamentals or technological superiority (e.g., 'Ethereum’s shift to proof-of-stake makes it the most scalable chain').\n"
+    "- 🤝 Claims about adoption and use cases (e.g., 'DeFi will replace traditional banking').\n"
+    "- 📜 Regulatory or political statements affecting crypto (e.g., 'SEC enforcement actions are stifling innovation').\n"
+    "- 🧠 Narratives about macro-economic factors influencing crypto (e.g., 'Crypto is a hedge against inflation').\n\n"
+    "🚫 DO NOT EXTRACT:\n"
+    "- ✅ Простые новостные сообщения и факты (e.g., 'Coinbase listed a new token today').\n"
+    "- 🔄 Технические описания без мнения (e.g., 'Ethereum forked at block 12M').\n"
+    "- 🙌 Общие лозунги без конкретного утверждения (e.g., 'Cryptocurrency is awesome').\n\n"
+    "✍️ Guidelines:\n"
+    "- Rewrite each extracted idea as a short, clear, independent sentence.\n"
+    "- Avoid direct quotes; paraphrase in a neutral tone.\n"
+    "- Do not join multiple ideas with 'and', 'but' or 'or'; one claim per sentence.\n"
+    "- Include statements reflecting present or past beliefs; include future predictions only if they are explicit price or adoption forecasts.\n\n"
+    "📦 Output format:\n"
+    "Return ONLY a JSON object like: { \"narrative_claims\": [\"Claim 1.\", \"Claim 2.\", …] }\n"
+    "Return ONLY the JSON — no extra text or commentary."
+)
+
+SYSTEM_PROMPT_IDEOLOGY = (
+    "You are a Narrative Claim Extractor.\n"
+    "Your task is to analyze political speeches, government press releases, legal statements, social media posts, "
+    "and public addresses by political figures, and extract a list of NARRATIVE or IDEOLOGICAL CLAIMS.\n\n"
+    "🎯 Your goal is to extract the **underlying worldview, assumptions, and value-based assertions** expressed in the text.\n"
+    "These are statements that reflect beliefs about how the world works, what is right or wrong, or who is to blame or praised.\n\n"
+    "✅ EXTRACT claims that include:\n"
+    "- 💥 Enemy accusations (e.g., 'This war was started by Russia.')\n"
+    "- ⚙️ Cause-effect logic (e.g., 'The Ukrainian revolution caused Russia to defend Russian people.')\n"
+    "- 🧠 Worldview formulas (e.g., 'Industrialization is the path to prosperity.')\n"
+    "- 🏛️ Regime characteristics (e.g., 'Bolivia is ruled by a corrupt dictatorship.')\n"
+    "- 🆚 Us-vs-them framing (e.g., 'Global elites are trying to control ordinary citizens.')\n"
+    "- 🧭 Value assertions (e.g., 'Freedom of speech is under attack in the West.')\n\n"
+    "🚫 DO NOT EXTRACT:\n"
+    "- ✔️ Polite sentiments (e.g., 'Minnesota is a great place with great people.')\n"
+    "- 📅 Factual updates (e.g., 'A law was passed yesterday.')\n"
+    "- 🔮 Future intentions (e.g., 'We will defeat our enemies.')\n"
+    "- 🙏 Moral platitudes (e.g., 'Violence is bad.')\n"
+    "- 🤝 Praise without ideology (e.g., 'Our soldiers are brave.')\n\n"
+    "✍️ Guidelines:\n"
+    "- Rewrite each extracted idea as a short, **clear, independent sentence**.\n"
+    "- Do not quote directly.\n"
+    "- No conjunctions like 'and', 'but', or 'or'. One claim per sentence.\n"
+    "- Do not include questions, commands, or future promises.\n"
+    "- Avoid any claim containing words like 'will', 'shall', 'is going to', or other future tense constructions.\n"
+    "- Include only claims about the present or past — or those expressing ideological beliefs, accusations, or judgments.\n\n"
+    "📦 Output format:\n"
+    "Return ONLY a JSON object in the following format:\n"
+    "{ \"narrative_claims\": [\"Claim 1.\", \"Claim 2.\", \"Claim 3.\"] }\n"
+    "Return ONLY the JSON — no extra text, explanation, or commentary."
+)
+
+
+# -------------------------
+# INTERNAL HELPER
+# -------------------------
+
+def _extract_with_prompt(text: str, system_prompt: str, model: str = "gpt-4o"):
+    """
+    Calls OpenAI Chat Completions and parses JSON response.
+    Returns: (claims: list[str] | None, provider: str, model: str)
+    """
     provider = "OpenAI"
-    model = "gpt-4o"
-
-    system_prompt = (
-        "You are a Narrative Claim Extractor.\n"
-        "Your task is to analyze political speeches, government press releases, legal statements, social media posts, "
-        "and public addresses by political figures, and extract a list of NARRATIVE or IDEOLOGICAL CLAIMS.\n\n"
-        "🎯 Your goal is to extract the **underlying worldview, assumptions, and value-based assertions** expressed in the text.\n"
-        "These are statements that reflect beliefs about how the world works, what is right or wrong, or who is to blame or praised.\n\n"
-        "✅ EXTRACT claims that include:\n"
-        "- 💥 Enemy accusations (e.g., 'This war was started by Russia.')\n"
-        "- ⚙️ Cause-effect logic (e.g., 'The Ukrainian revolution caused Russia to defend Russian people.')\n"
-        "- 🧠 Worldview formulas (e.g., 'Industrialization is the path to prosperity.')\n"
-        "- 🏛️ Regime characteristics (e.g., 'Bolivia is ruled by a corrupt dictatorship.')\n"
-        "- 🆚 Us-vs-them framing (e.g., 'Global elites are trying to control ordinary citizens.')\n"
-        "- 🧭 Value assertions (e.g., 'Freedom of speech is under attack in the West.')\n\n"
-        "🚫 DO NOT EXTRACT:\n"
-        "- ✔️ Polite sentiments (e.g., 'Minnesota is a great place with great people.')\n"
-        "- 📅 Factual updates (e.g., 'A law was passed yesterday.')\n"
-        "- 🔮 Future intentions (e.g., 'We will defeat our enemies.')\n"
-        "- 🙏 Moral platitudes (e.g., 'Violence is bad.')\n"
-        "- 🤝 Praise without ideology (e.g., 'Our soldiers are brave.')\n\n"
-        "✍️ Guidelines:\n"
-        "- Rewrite each extracted idea as a short, **clear, independent sentence**.\n"
-        "- Do not quote directly.\n"
-        "- No conjunctions like 'and', 'but', or 'or'. One claim per sentence.\n"
-        "- Do not include questions, commands, or future promises.\n"
-        "- Avoid any claim containing words like 'will', 'shall', 'is going to', or other future tense constructions.\n"
-        "- Include only claims about the present or past — or those expressing ideological beliefs, accusations, or judgments.\n\n"
-        "📦 Output format:\n"
-        "Return ONLY a JSON object in the following format:\n"
-        "{ \"narrative_claims\": [\"Claim 1.\", \"Claim 2.\", \"Claim 3.\"] }\n"
-        "Return ONLY the JSON — no extra text, explanation, or commentary."
-    )
 
     try:
         client = openai.OpenAI(api_key=openai.api_key)
@@ -57,23 +87,54 @@ def extract_narrative_claims(text):
                 {"role": "user", "content": f"Here is the text:\n{text}\nPlease extract narrative claims and return them in JSON."}
             ],
             temperature=0.3,
-            max_tokens=500
+            max_tokens=700,
         )
 
-        gpt_output = response.choices[0].message.content.strip()
+        gpt_output = (response.choices[0].message.content or "").strip()
 
+        # 1) try direct JSON parse
         try:
-            narrative_data = json.loads(gpt_output)
+            data = json.loads(gpt_output)
         except json.JSONDecodeError:
+            # 2) fallback: extract {...} block
             json_match = re.search(r"\{[\s\S]*\}", gpt_output)
-            if json_match:
-                narrative_data = json.loads(json_match.group(0))
-            else:
+            if not json_match:
                 print(f"❌ Failed to parse GPT output as JSON: {gpt_output}")
                 return None, provider, model
+            data = json.loads(json_match.group(0))
 
-        return narrative_data.get("narrative_claims", []), provider, model
+        claims = data.get("narrative_claims", [])
+        # normalize basic stuff
+        if not isinstance(claims, list):
+            return None, provider, model
+        claims = [c.strip() for c in claims if isinstance(c, str) and c.strip()]
+
+        return claims, provider, model
 
     except Exception as e:
         print(f"❌ OpenAI API error in narrative extraction: {e}")
         return None, provider, model
+
+
+# -------------------------
+# PUBLIC API (USED BY VIEWS)
+# -------------------------
+
+def extract_narrative_claims(text: str):
+    """
+    Main extractor used by backend right now.
+    Uses ONLY crypto prompt (blockchain narratives).
+    """
+    return _extract_with_prompt(text=text, system_prompt=SYSTEM_PROMPT_CRYPTO, model="gpt-4o")
+
+
+# -------------------------
+# KEEP FOR LATER (NOT USED NOW)
+# -------------------------
+
+def extract_narrative_claims_ideology(text: str):
+    """
+    Ideology extractor kept for later use.
+    Not referenced anywhere for now.
+    """
+    return _extract_with_prompt(text=text, system_prompt=SYSTEM_PROMPT_IDEOLOGY, model="gpt-4o")
