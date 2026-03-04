@@ -38,6 +38,9 @@ def create_location_slug(sender, instance, *args, **kwargs):
 class Topic(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True, blank=True)
+    parents = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="sub_topics")
+    description = models.TextField(blank=True, null=True)
+    keywords = models.JSONField(default=list, blank=True, help_text="Keywords for LLM/search to identify this topic")
 
     def __str__(self):
         return self.name

@@ -48,6 +48,9 @@ urlpatterns = [
     path('rawtexts/<int:id>/', RawTextDetailView.as_view(), name='rawtext-detail'),
     path('rawtexts/<int:id>/redownload/', RawTextRedownloadView.as_view(), name='rawtext-redownload'),
 
+    # TOPICS
+    path('topics/', TopicListView.as_view(), name='topic-list'),
+
 
     # MARKETS
     path("markets/create/<int:claim_id>/", MarketCreateView.as_view(), name="market-create"),

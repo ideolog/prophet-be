@@ -2,6 +2,26 @@ from rest_framework import serializers
 from ..models import RawText, Source
 from narratives.utils.text import generate_fingerprint
 
+class TopicSerializer(serializers.ModelSerializer):
+    parents_count = serializers.IntegerField(source='parents.count', read_only=True)
+    sub_topics_count = serializers.IntegerField(source='sub_topics.count', read_only=True)
+    keywords_count = serializers.SerializerMethodField()
+    level = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Topic
+        fields = [
+            "id", "name", "slug", "description", "keywords", 
+            "parents_count", "sub_topics_count", "keywords_count", "level"
+        ]
+
+    def get_keywords_count(self, obj):
+        return len(obj.keywords) if isinstance(obj.keywords, list) else 0
+
+    def get_level(self, obj):
+        # Level 0 if no parents, else 1 (simplified for now)
+        return 0 if obj.parents.count() == 0 else 1
+
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source

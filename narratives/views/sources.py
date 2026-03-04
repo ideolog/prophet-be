@@ -202,6 +202,13 @@ class RawTextRedownloadView(APIView):
             return Response({"error": f"Failed to redownload: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class RawTextRedownloadView(APIView):
+    # ... (existing code) ...
+
+class TopicListView(generics.ListAPIView):
+    queryset = Topic.objects.all().order_by('name')
+    serializer_class = TopicSerializer
+
 class RawTextHashDuplicateCheck(APIView):
 
     @swagger_auto_schema(
