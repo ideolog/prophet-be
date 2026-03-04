@@ -71,6 +71,7 @@ WSGI_APPLICATION = 'prophet_be.wsgi.application'
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+YOUTUBE_API_KEY = env("YOUTUBE_API_KEY", default=None)
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -119,6 +120,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -5,7 +5,7 @@ from integrations.translators.whitehouse_translator import WhiteHouseTranslator
 class WhiteHouseScraper(IntegrationModule):
     name = "WhiteHouseScraper"
 
-    def fetch_content(self, source_config):
+    def fetch_content(self, source, source_config):
         base_url = "https://www.whitehouse.gov/briefings-statements/"
         page = source_config.get("page", 1)
 
@@ -23,7 +23,7 @@ class WhiteHouseScraper(IntegrationModule):
 
         return response.text
 
-    def normalize_to_rawtext(self, raw_html, source_config):
+    def normalize_to_rawtext(self, raw_html, source=None, source_config=None):
         translator = WhiteHouseTranslator()
         timezone = source_config.get("timezone", "UTC")
         return translator.parse(raw_html, source_timezone=timezone)

@@ -1,4 +1,4 @@
 from .claims import ClaimListCreateView, ClaimDetailView, GenerateClaimsFromTextView
 from .markets import MarketCreateView, MarketListView, MarketBuyView
 from .users import WalletLoginView, UserAccountDetailView, MyPositionsView
-from .sources import RawTextListView, RawTextDetailView, RawTextHashDuplicateCheck, RawTextListCreateView, RawTextMassProcessingView
+from .sources import RawTextListView, RawTextDetailView, RawTextHashDuplicateCheck, RawTextListCreateView, RawTextMassProcessingView, SourceListView, SourceDetailView, YouTubeSourceAddView, RawTextRedownloadView

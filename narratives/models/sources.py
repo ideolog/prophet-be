@@ -1,5 +1,7 @@
+# narratives/models/sources.py
+
 from django.db import models
-from narratives.models import Person
+from narratives.models import Person, Topic
 from django.utils.text import slugify
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -17,13 +19,37 @@ class Genre(models.Model):
 
 
 class Source(models.Model):
-    name = models.CharField(max_length=255, unique=True, help_text="The name of the source, e.g., X, TruthSocial, Whitehouse.gov")
+    PLATFORM_CHOICES = [
+        ('direct', 'Direct/RSS'),
+        ('youtube', 'YouTube Channel'),
+        ('twitter', 'Twitter/X Account'),
+        ('telegram', 'Telegram Channel'),
+    ]
+
+    name = models.CharField(max_length=255, unique=True, help_text="The name of the source, e.g., Vitalik Buterin")
+    platform = models.CharField(max_length=50, choices=PLATFORM_CHOICES, default='direct')
+    handle = models.CharField(max_length=255, blank=True, null=True, help_text="Handle of the channel/account, e.g., @vitalik")
+    external_id = models.CharField(max_length=255, blank=True, null=True, help_text="External ID of the channel/account")
+    description = models.TextField(blank=True, null=True, help_text="Description of the channel/source")
+    subscriber_count = models.PositiveIntegerField(default=0, help_text="Number of subscribers/followers")
+    avatar_url = models.URLField(blank=True, null=True, help_text="URL of the channel/source avatar image")
+
+    is_new = models.BooleanField(default=True, help_text="Whether this source was just added")
+    created_at = models.DateTimeField(default=timezone.now)
+
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True, related_name="sources")
+
+    owner_person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True, related_name="owned_sources")
+    owner_organization = models.ForeignKey('narratives.Organization', on_delete=models.SET_NULL, blank=True, null=True, related_name="owned_sources")
+
     url = models.URLField(blank=True, null=True)
+    rss_url = models.URLField(blank=True, null=True, help_text="Optional RSS feed URL for this source")
+    avatar_file = models.ImageField(upload_to='sources/avatars/', blank=True, null=True, help_text="Uploaded avatar image")
     timezone = models.CharField(max_length=50, default="UTC", help_text="Timezone of the source, e.g. America/New_York")
     slug = models.SlugField(unique=True, blank=True, max_length=300)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.platform})"
 
 
 class RawText(models.Model):
@@ -35,6 +61,9 @@ class RawText(models.Model):
     source_url = models.URLField(blank=True, null=True, help_text="Original source URL for reference")
     author = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True, related_name='rawtexts')
     published_at = models.DateTimeField(blank=True, null=True)
+    is_new = models.BooleanField(default=True, help_text="Whether this article was just imported")
+    is_updated = models.BooleanField(default=False, help_text="Whether this article was updated with new info")
+    created_at = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True, max_length=300)
     content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Normalized hash of the content for duplicate detection")
 

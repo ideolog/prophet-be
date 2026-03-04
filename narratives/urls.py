@@ -2,6 +2,11 @@
 
 from django.urls import path
 from .views import (
+    # Sources
+    SourceListView,
+    SourceDetailView,
+    YouTubeSourceAddView,
+
     # Claims
     ClaimListCreateView,
     ClaimDetailView,
@@ -12,6 +17,7 @@ from .views import (
     RawTextListCreateView,
     RawTextMassProcessingView,
     RawTextDetailView,
+    RawTextRedownloadView,
 
     # Markets
     MarketCreateView,
@@ -25,6 +31,11 @@ from .views import (
 )
 
 urlpatterns = [
+    # SOURCES
+    path('sources/', SourceListView.as_view(), name='source-list-create'),
+    path('sources/<int:id>/', SourceDetailView.as_view(), name='source-detail'),
+    path('sources/youtube-add/', YouTubeSourceAddView.as_view(), name='source-youtube-add'),
+
     # CLAIMS
     path('claims/', ClaimListCreateView.as_view(), name='claim-list-create'),
     path('claims/<int:claim_id>/', ClaimDetailView.as_view(), name='claim-detail'),
@@ -33,8 +44,9 @@ urlpatterns = [
     # RAWTEXT
     path('rawtexts/', RawTextListCreateView.as_view(), name='rawtext-create'),
     path('rawtexts/check-duplicate/', RawTextHashDuplicateCheck.as_view(), name='rawtext-check-duplicate'),
-    path("rawtexts/process-mass/", RawTextMassProcessingView.as_view(), name="rawtext-mass-process"),
+    path('rawtexts/process-mass/', RawTextMassProcessingView.as_view(), name='rawtext-mass-process'),
     path('rawtexts/<int:id>/', RawTextDetailView.as_view(), name='rawtext-detail'),
+    path('rawtexts/<int:id>/redownload/', RawTextRedownloadView.as_view(), name='rawtext-redownload'),
 
 
     # MARKETS
