@@ -11,5 +11,8 @@ from .sources import (
     SourceDetailView, 
     YouTubeSourceAddView, 
     RawTextRedownloadView,
-    TopicListView
+    RawTextFindTopicsView,
+    PendingTopicActionView,
+    TopicListView,
+    TopicDetailView
 )

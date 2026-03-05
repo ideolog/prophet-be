@@ -18,6 +18,8 @@ from .views import (
     RawTextMassProcessingView,
     RawTextDetailView,
     RawTextRedownloadView,
+    RawTextFindTopicsView,
+    PendingTopicActionView,
 
     # Markets
     MarketCreateView,
@@ -28,6 +30,10 @@ from .views import (
     WalletLoginView,
     UserAccountDetailView,
     MyPositionsView,
+
+    # Topics
+    TopicListView,
+    TopicDetailView,
 )
 
 urlpatterns = [
@@ -47,9 +53,12 @@ urlpatterns = [
     path('rawtexts/process-mass/', RawTextMassProcessingView.as_view(), name='rawtext-mass-process'),
     path('rawtexts/<int:id>/', RawTextDetailView.as_view(), name='rawtext-detail'),
     path('rawtexts/<int:id>/redownload/', RawTextRedownloadView.as_view(), name='rawtext-redownload'),
+    path('rawtexts/<int:id>/find-topics/', RawTextFindTopicsView.as_view(), name='rawtext-find-topics'),
+    path('pending-topics/<int:id>/action/', PendingTopicActionView.as_view(), name='pending-topic-action'),
 
     # TOPICS
     path('topics/', TopicListView.as_view(), name='topic-list'),
+    path('topics/<int:id>/', TopicDetailView.as_view(), name='topic-detail'),
 
 
     # MARKETS

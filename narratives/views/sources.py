@@ -2,20 +2,20 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from googleapiclient.discovery import build
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 
-from ..models import RawText, Source
-from ..serializers import RawTextSerializer, SourceSerializer
+from ..models import RawText, Source, Topic, PendingTopic
+from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, PendingTopicSerializer
 from ..utils.text import generate_fingerprint
 from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
 from narratives.models import Claim, VerificationStatus
-from narratives.models.sources import RawText, RawTextProcessing, Source
-from narratives.utils.ai_module import extract_narrative_claims  # You must define this helper
+from narratives.models.sources import RawText, RawTextProcessing, Source, PendingTopic
+from narratives.utils.ai_module import extract_narrative_claims, suggest_topics_for_text
 
 class SourceListView(generics.ListCreateAPIView):
     queryset = Source.objects.all().order_by('-created_at')
@@ -129,9 +129,6 @@ class YouTubeSourceAddView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class RawTextListView(generics.ListAPIView):
     queryset = RawText.objects.all().order_by('-id')
     serializer_class = RawTextSerializer
@@ -158,6 +155,83 @@ class RawTextDetailView(generics.RetrieveAPIView):
     queryset = RawText.objects.all()
     serializer_class = RawTextSerializer
     lookup_field = "id"
+
+class RawTextFindTopicsView(APIView):
+    def post(self, request, id):
+        rawtext = get_object_or_404(RawText, id=id)
+        
+        # Get all topics with their keywords
+        topics = Topic.objects.all()
+        topics_data = [
+            {"id": t.id, "name": t.name, "keywords": t.keywords}
+            for t in topics
+        ]
+        
+        # Call LLM to suggest topics
+        suggestions = suggest_topics_for_text(rawtext.content, topics_data)
+        
+        created_count = 0
+        for sug in suggestions:
+            topic_id = sug.get("topic_id")
+            context = sug.get("context")
+            matched_keyword = sug.get("matched_keyword")
+            
+            if topic_id and context:
+                try:
+                    topic = Topic.objects.get(id=topic_id)
+                    _, created = PendingTopic.objects.get_or_create(
+                        rawtext=rawtext,
+                        topic=topic,
+                        defaults={
+                            "context": context, 
+                            "status": "pending",
+                            "matched_keyword": matched_keyword
+                        }
+                    )
+                    if created:
+                        created_count += 1
+                except Topic.DoesNotExist:
+                    continue
+        
+        return Response({
+            "message": f"Found {len(suggestions)} suggestions, created {created_count} new pending topics.",
+            "suggestions_count": len(suggestions)
+        }, status=status.HTTP_200_OK)
+
+class PendingTopicActionView(APIView):
+    def post(self, request, id):
+        pending = get_object_or_404(PendingTopic, id=id)
+        action = request.data.get("action") # 'approve' or 'decline'
+        
+        if action == 'approve':
+            pending.status = 'approved'
+            pending.save()
+            # Here you might want to actually link the topic to the RawText if you have a ManyToMany
+            # For now we just mark it as approved in the pending table
+            return Response({"message": "Topic approved"}, status=status.HTTP_200_OK)
+        elif action == 'decline':
+            pending.status = 'declined'
+            pending.save()
+            return Response({"message": "Topic declined"}, status=status.HTTP_200_OK)
+        elif action == 'remove_keyword':
+            keyword = pending.matched_keyword
+            if not keyword:
+                return Response({"error": "No keyword associated with this suggestion"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            topic = pending.topic
+            if keyword == topic.name:
+                return Response({"error": "Cannot remove the topic name itself as a keyword"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if keyword in topic.keywords:
+                topic.keywords = [kw for kw in topic.keywords if kw != keyword]
+                topic.save()
+                pending.status = 'declined'
+                pending.save()
+                return Response({"message": f"Keyword '{keyword}' removed from topic '{topic.name}'"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": f"Keyword '{keyword}' not found in topic keywords"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
 class RawTextRedownloadView(APIView):
     def post(self, request, id):
@@ -201,13 +275,14 @@ class RawTextRedownloadView(APIView):
         except Exception as e:
             return Response({"error": f"Failed to redownload: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class RawTextRedownloadView(APIView):
-    # ... (existing code) ...
-
 class TopicListView(generics.ListAPIView):
     queryset = Topic.objects.all().order_by('name')
     serializer_class = TopicSerializer
+
+class TopicDetailView(generics.RetrieveAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+    lookup_field = "id"
 
 class RawTextHashDuplicateCheck(APIView):
 

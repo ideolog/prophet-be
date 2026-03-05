@@ -86,6 +86,27 @@ class RawTextProcessing(models.Model):
     def __str__(self):
         return f"{self.rawtext.slug} - {self.model_used} ({self.status})"
 
+
+class PendingTopic(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('declined', 'Declined'),
+    ]
+
+    rawtext = models.ForeignKey(RawText, on_delete=models.CASCADE, related_name="pending_topics")
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="pending_rawtexts")
+    matched_keyword = models.CharField(max_length=255, blank=True, null=True, help_text="The exact keyword that triggered the match")
+    context = models.TextField(help_text="The sentence or snippet where the topic was found")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('rawtext', 'topic')
+
+    def __str__(self):
+        return f"{self.rawtext.id} -> {self.topic.name} ({self.status})"
+
 # Slug creation signal (safely updated)
 @receiver(pre_save, sender=Source)
 @receiver(pre_save, sender=RawText)

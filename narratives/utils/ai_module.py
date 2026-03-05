@@ -138,3 +138,81 @@ def extract_narrative_claims_ideology(text: str):
     Not referenced anywhere for now.
     """
     return _extract_with_prompt(text=text, system_prompt=SYSTEM_PROMPT_IDEOLOGY, model="gpt-4o")
+
+
+def suggest_topics_for_text(text: str, topics_data: list):
+    """
+    Suggests topics for a given text using FlashText for high performance.
+    No LLM calls to save tokens and avoid quota issues.
+    """
+    from flashtext import KeywordProcessor
+    import re
+
+    keyword_processor = KeywordProcessor(case_sensitive=False)
+    
+    # Map keywords/names to topic IDs
+    # We store the original keyword to return it later
+    keyword_to_topic = {} # { "keyword": topic_id }
+    
+    for t in topics_data:
+        topic_id = str(t['id'])
+        # Add topic name as a keyword
+        name = t['name']
+        keyword_processor.add_keyword(name, (topic_id, name))
+        # Add all keywords
+        for kw in t.get('keywords', []):
+            if kw.strip():
+                keyword_processor.add_keyword(kw.strip(), (topic_id, kw.strip()))
+
+    # Extract keywords with their positions
+    # Returns: [((topic_id, original_kw), start, end), ...]
+    keywords_found = keyword_processor.extract_keywords(text, span_info=True)
+    
+    if not keywords_found:
+        return []
+
+    # Process findings to get unique topics and their context
+    suggestions = []
+    seen_topics = set()
+    
+    # Split text into sentences for better context extraction
+    sentences = []
+    for m in re.finditer(r'[^.!?]+[.!?]?', text):
+        sentences.append({
+            'text': m.group(),
+            'start': m.start(),
+            'end': m.end()
+        })
+
+    for (topic_id_str, matched_kw), start, end in keywords_found:
+        topic_id = int(topic_id_str)
+        if topic_id in seen_topics:
+            continue
+            
+        # Find the sentence containing this span
+        context = ""
+        for s in sentences:
+            if s['start'] <= start and s['end'] >= end:
+                context = s['text'].strip()
+                break
+        
+        # Ensure the keyword is actually in the context for highlighting
+        if context and matched_kw.lower() not in context.lower():
+            context = "" # Force fallback if keyword was lost in splitting
+
+        if not context:
+            # Fallback if sentence splitting is weird
+            c_start = max(0, start - 100)
+            c_end = min(len(text), end + 150)
+            context = text[c_start:c_end].replace('\n', ' ').strip()
+            if c_start > 0: context = "..." + context
+            if c_end < len(text): context = context + "..."
+
+        suggestions.append({
+            "topic_id": topic_id,
+            "matched_keyword": matched_kw,
+            "context": context[:500]
+        })
+        seen_topics.add(topic_id)
+
+    return suggestions

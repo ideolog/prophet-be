@@ -1,26 +1,53 @@
 from rest_framework import serializers
-from ..models import RawText, Source
+from ..models import RawText, Source, Topic, PendingTopic
 from narratives.utils.text import generate_fingerprint
+
+class PendingTopicSerializer(serializers.ModelSerializer):
+    topic_name = serializers.CharField(source='topic.name', read_only=True)
+
+    class Meta:
+        model = PendingTopic
+        fields = ["id", "topic", "topic_name", "matched_keyword", "context", "status", "created_at"]
+        read_only_fields = ["id", "created_at"]
 
 class TopicSerializer(serializers.ModelSerializer):
     parents_count = serializers.IntegerField(source='parents.count', read_only=True)
     sub_topics_count = serializers.IntegerField(source='sub_topics.count', read_only=True)
     keywords_count = serializers.SerializerMethodField()
     level = serializers.SerializerMethodField()
+    parents = serializers.SerializerMethodField()
+    sub_topics = serializers.SerializerMethodField()
 
     class Meta:
         model = Topic
         fields = [
             "id", "name", "slug", "description", "keywords", 
-            "parents_count", "sub_topics_count", "keywords_count", "level"
+            "parents_count", "sub_topics_count", "keywords_count", "level",
+            "parents", "sub_topics"
         ]
 
     def get_keywords_count(self, obj):
         return len(obj.keywords) if isinstance(obj.keywords, list) else 0
 
     def get_level(self, obj):
-        # Level 0 if no parents, else 1 (simplified for now)
-        return 0 if obj.parents.count() == 0 else 1
+        # Recursive level calculation
+        def get_node_level(node, current_level=0):
+            parents = node.parents.all()
+            if not parents:
+                return current_level
+            # Return max level of any parent path + 1
+            return max(get_node_level(p, current_level + 1) for p in parents)
+        
+        try:
+            return get_node_level(obj)
+        except RecursionError:
+            return 999 # Safety for circular refs
+
+    def get_parents(self, obj):
+        return [{"id": p.id, "name": p.name} for p in obj.parents.all()]
+
+    def get_sub_topics(self, obj):
+        return [{"id": s.id, "name": s.name} for s in obj.sub_topics.all()]
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,13 +68,15 @@ class RawTextSerializer(serializers.ModelSerializer):
     source = serializers.SerializerMethodField()
     genre = serializers.SerializerMethodField()
     published_at = serializers.DateTimeField(required=False, allow_null=True)
+    pending_topics = PendingTopicSerializer(many=True, read_only=True)
 
     class Meta:
         model = RawText
         fields = [
             "id", "title", "subtitle", "author", "published_at",
             "content", "slug", "content_fingerprint", "source", "genre",
-            "is_processed", "is_new", "is_updated", "created_at", "source_url"
+            "is_processed", "is_new", "is_updated", "created_at", "source_url",
+            "pending_topics"
         ]
         read_only_fields = ["id", "slug", "content_fingerprint", "is_processed", "is_new", "is_updated", "created_at"]
 
