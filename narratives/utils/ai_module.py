@@ -171,9 +171,8 @@ def suggest_topics_for_text(text: str, topics_data: list):
     if not keywords_found:
         return []
 
-    # Process findings to get unique topics and their context
+    # Process findings to get ALL topics and their context
     suggestions = []
-    seen_topics = set()
     
     # Split text into sentences for better context extraction
     sentences = []
@@ -186,8 +185,6 @@ def suggest_topics_for_text(text: str, topics_data: list):
 
     for (topic_id_str, matched_kw), start, end in keywords_found:
         topic_id = int(topic_id_str)
-        if topic_id in seen_topics:
-            continue
             
         # Find the sentence containing this span
         context = ""
@@ -213,6 +210,5 @@ def suggest_topics_for_text(text: str, topics_data: list):
             "matched_keyword": matched_kw,
             "context": context[:500]
         })
-        seen_topics.add(topic_id)
 
     return suggestions

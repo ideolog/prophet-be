@@ -33,6 +33,7 @@ from .views import (
 
     # Topics
     TopicListView,
+    TopicCreateView,
     TopicDetailView,
 )
 
@@ -58,6 +59,7 @@ urlpatterns = [
 
     # TOPICS
     path('topics/', TopicListView.as_view(), name='topic-list'),
+    path('topics/create/', TopicCreateView.as_view(), name='topic-create'),
     path('topics/<int:id>/', TopicDetailView.as_view(), name='topic-detail'),
 
 

@@ -179,16 +179,16 @@ class RawTextFindTopicsView(APIView):
             if topic_id and context:
                 try:
                     topic = Topic.objects.get(id=topic_id)
-                    _, created = PendingTopic.objects.get_or_create(
-                        rawtext=rawtext,
-                        topic=topic,
-                        defaults={
-                            "context": context, 
-                            "status": "pending",
-                            "matched_keyword": matched_keyword
-                        }
-                    )
-                    if created:
+                    # We no longer use get_or_create with unique constraint
+                    # But we still want to avoid exact duplicates (same topic, same context)
+                    if not PendingTopic.objects.filter(rawtext=rawtext, topic=topic, context=context).exists():
+                        PendingTopic.objects.create(
+                            rawtext=rawtext,
+                            topic=topic,
+                            context=context,
+                            status="pending",
+                            matched_keyword=matched_keyword
+                        )
                         created_count += 1
                 except Topic.DoesNotExist:
                     continue
@@ -278,6 +278,23 @@ class RawTextRedownloadView(APIView):
 class TopicListView(generics.ListAPIView):
     queryset = Topic.objects.all().order_by('name')
     serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset
+
+class TopicCreateView(generics.CreateAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+
+    def perform_create(self, serializer):
+        parents_ids = self.request.data.get('parents_ids', [])
+        instance = serializer.save()
+        if parents_ids:
+            instance.parents.set(parents_ids)
 
 class TopicDetailView(generics.RetrieveAPIView):
     queryset = Topic.objects.all()

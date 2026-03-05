@@ -101,9 +101,6 @@ class PendingTopic(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('rawtext', 'topic')
-
     def __str__(self):
         return f"{self.rawtext.id} -> {self.topic.name} ({self.status})"
 

@@ -14,5 +14,6 @@ from .sources import (
     RawTextFindTopicsView,
     PendingTopicActionView,
     TopicListView,
+    TopicCreateView,
     TopicDetailView
 )
