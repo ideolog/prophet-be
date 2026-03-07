@@ -7,7 +7,7 @@ from decimal import Decimal
 from datetime import timedelta
 from drf_yasg.utils import swagger_auto_schema
 
-from ..models import Market, Claim, UserAccount, MarketPosition, VerificationStatus
+from ..models import Market, UserAccount, MarketPosition
 from ..serializers import MarketSerializer
 from ..serializers.request_bodies import MarketCreateRequestSerializer, MarketBuyRequestSerializer
 
@@ -15,37 +15,7 @@ class MarketCreateView(APIView):
 
     @swagger_auto_schema(request_body=MarketCreateRequestSerializer, responses={201: "Market created"})
     def post(self, request, claim_id):
-        claim = get_object_or_404(Claim, id=claim_id)
-
-        if claim.verification_status.name not in ["ai_reviewed", "ai_variants_generated"]:
-            return Response({"error": "Claim must be AI-verified before market creation."}, status=status.HTTP_400_BAD_REQUEST)
-
-        wallet_address = request.data.get("wallet_address")
-        if not wallet_address:
-            return Response({"error": "Wallet address is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        existing_market = Market.objects.filter(claim=claim).first()
-        if existing_market:
-            return Response({"error": "Market already exists for this claim."}, status=status.HTTP_400_BAD_REQUEST)
-
-        time_since_creation = now() - claim.created_at
-        exclusive_to_author = time_since_creation <= timedelta(minutes=30)
-
-        if exclusive_to_author and claim.author != wallet_address:
-            return Response({"error": "Only the claim's author can create a market within 30 minutes of submission."}, status=status.HTTP_403_FORBIDDEN)
-
-        market_created_status = get_object_or_404(VerificationStatus, name="market_created")
-
-        market = Market.objects.create(
-            claim=claim,
-            creator=wallet_address
-        )
-
-        claim.verification_status = market_created_status
-        claim.status_description = "Market has been created for this claim."
-        claim.save()
-
-        return Response({"message": "Market created successfully.", "market_id": market.id, "claim_slug": claim.slug}, status=status.HTTP_201_CREATED)
+        return Response({"error": "Markets are temporarily disabled."}, status=status.HTTP_400_BAD_REQUEST)
 
 class MarketListView(APIView):
     def get(self, request):

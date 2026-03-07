@@ -9,13 +9,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
-from ..models import RawText, Source, Topic, PendingTopic
+from ..models import RawText, Source, Topic, PendingTopic, RawTextProcessing
 from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, PendingTopicSerializer
 from ..utils.text import generate_fingerprint
 from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
-from narratives.models import Claim, VerificationStatus
-from narratives.models.sources import RawText, RawTextProcessing, Source, PendingTopic
-from narratives.utils.ai_module import extract_narrative_claims, suggest_topics_for_text
+from narratives.models import Source, RawText, RawTextProcessing, PendingTopic
+from narratives.utils.ai_module import suggest_topics_for_text
 
 class SourceListView(generics.ListCreateAPIView):
     queryset = Source.objects.all().order_by('-created_at')
@@ -160,14 +159,25 @@ class RawTextFindTopicsView(APIView):
     def post(self, request, id):
         rawtext = get_object_or_404(RawText, id=id)
         
-        # Get all topics with their keywords
-        topics = Topic.objects.all()
+        from ..models.categories import AppConfiguration
+        from django.utils import timezone
+        
+        current_version = AppConfiguration.get_version("categorization_version")
+        
+        # Get all topics with their keywords, excluding placeholders
+        topics = Topic.objects.filter(is_placeholder=False)
         topics_data = [
-            {"id": t.id, "name": t.name, "keywords": t.keywords}
+            {
+                "id": t.id, 
+                "name": t.name, 
+                "alternative_name": t.alternative_name,
+                "keywords": t.keywords,
+                "weak_keywords": t.weak_keywords
+            }
             for t in topics
         ]
         
-        # Call LLM to suggest topics
+        # Call search module to suggest topics
         suggestions = suggest_topics_for_text(rawtext.content, topics_data)
         
         created_count = 0
@@ -175,23 +185,30 @@ class RawTextFindTopicsView(APIView):
             topic_id = sug.get("topic_id")
             context = sug.get("context")
             matched_keyword = sug.get("matched_keyword")
+            is_weak = sug.get("is_weak", False)
             
             if topic_id and context:
                 try:
                     topic = Topic.objects.get(id=topic_id)
-                    # We no longer use get_or_create with unique constraint
-                    # But we still want to avoid exact duplicates (same topic, same context)
+                    # We still want to avoid exact duplicates (same topic, same context)
                     if not PendingTopic.objects.filter(rawtext=rawtext, topic=topic, context=context).exists():
                         PendingTopic.objects.create(
                             rawtext=rawtext,
                             topic=topic,
                             context=context,
                             status="pending",
-                            matched_keyword=matched_keyword
+                            matched_keyword=matched_keyword,
+                            is_weak=is_weak,
+                            found_context_words=sug.get("found_context_words", [])
                         )
                         created_count += 1
                 except Topic.DoesNotExist:
                     continue
+        
+        # Update categorization metadata
+        rawtext.categorization_version = current_version
+        rawtext.last_categorized_at = timezone.now()
+        rawtext.save()
         
         return Response({
             "message": f"Found {len(suggestions)} suggestions, created {created_count} new pending topics.",
@@ -201,14 +218,20 @@ class RawTextFindTopicsView(APIView):
 class PendingTopicActionView(APIView):
     def post(self, request, id):
         pending = get_object_or_404(PendingTopic, id=id)
-        action = request.data.get("action") # 'approve' or 'decline'
+        action = request.data.get("action") # 'approve', 'decline', 'approve_all', 'remove_keyword'
         
         if action == 'approve':
             pending.status = 'approved'
             pending.save()
-            # Here you might want to actually link the topic to the RawText if you have a ManyToMany
-            # For now we just mark it as approved in the pending table
             return Response({"message": "Topic approved"}, status=status.HTTP_200_OK)
+        elif action == 'approve_all':
+            # Approve all pending occurrences of the same topic for the same rawtext
+            count = PendingTopic.objects.filter(
+                rawtext=pending.rawtext,
+                topic=pending.topic,
+                status='pending'
+            ).update(status='approved')
+            return Response({"message": f"Approved {count} occurrences of '{pending.topic.name}'"}, status=status.HTTP_200_OK)
         elif action == 'decline':
             pending.status = 'declined'
             pending.save()
@@ -280,7 +303,7 @@ class TopicListView(generics.ListAPIView):
     serializer_class = TopicSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = Topic.objects.all().order_by('name')
         search = self.request.query_params.get('search')
         if search:
             queryset = queryset.filter(name__icontains=search)
@@ -292,14 +315,39 @@ class TopicCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         parents_ids = self.request.data.get('parents_ids', [])
+        related_ids = self.request.data.get('related_ids', [])
         instance = serializer.save()
         if parents_ids:
             instance.parents.set(parents_ids)
+        if related_ids:
+            instance.related_topics.set(related_ids)
 
-class TopicDetailView(generics.RetrieveAPIView):
+class TopicDetailView(generics.RetrieveUpdateAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
     lookup_field = "id"
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        
+        # Handle parents_ids, related_ids, and school_ids if provided
+        parents_ids = request.data.get('parents_ids')
+        related_ids = request.data.get('related_ids')
+        school_ids = request.data.get('school_ids')
+        
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        
+        if parents_ids is not None:
+            instance.parents.set(parents_ids)
+        if related_ids is not None:
+            instance.related_topics.set(related_ids)
+        if school_ids is not None:
+            instance.schools_of_thought.set(school_ids)
+            
+        return Response(serializer.data)
 
 class RawTextHashDuplicateCheck(APIView):
 
@@ -320,41 +368,4 @@ class RawTextHashDuplicateCheck(APIView):
 
 class RawTextMassProcessingView(APIView):
     def post(self, request):
-        default_model = "gpt-4o"
-
-        unprocessed = RawText.objects.exclude(
-            processing_records__model_used=default_model
-        )
-
-        processed_claim_ids = []
-
-        for raw in unprocessed:
-            try:
-                extracted_claims = extract_claims_from_text(raw.content)
-
-                for text in extracted_claims:
-                    claim = Claim.objects.create(
-                        text=text,
-                        verification_status=VerificationStatus.objects.get(name="AI Verified"),
-                        author=default_model
-                    )
-                    processed_claim_ids.append(claim.id)
-
-                RawTextProcessing.objects.create(
-                    rawtext=raw,
-                    model_used=default_model,
-                    status="SUCCESS"
-                )
-
-            except Exception as e:
-                RawTextProcessing.objects.create(
-                    rawtext=raw,
-                    model_used=default_model,
-                    status="FAILED",
-                    notes=str(e)
-                )
-
-        return Response({
-            "processed_rawtexts": unprocessed.count(),
-            "created_claims": processed_claim_ids
-        }, status=status.HTTP_200_OK)
+        return Response({"error": "Mass processing is temporarily disabled."}, status=status.HTTP_400_BAD_REQUEST)

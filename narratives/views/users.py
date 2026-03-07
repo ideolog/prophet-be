@@ -13,8 +13,7 @@ class WalletLoginView(APIView):
             return Response({"error": "Wallet address is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         user, created = UserAccount.objects.get_or_create(
-            wallet_address=wallet_address,
-            defaults={"verification_status": UserAccount.get_default_verification_status()}
+            wallet_address=wallet_address
         )
 
         serializer = UserAccountSerializer(user)
@@ -33,22 +32,4 @@ class UserAccountDetailView(APIView):
 
 class MyPositionsView(APIView):
     def get(self, request, wallet_address):
-        user = get_object_or_404(UserAccount, wallet_address=wallet_address)
-        positions = MarketPosition.objects.filter(user=user).select_related("market", "market__claim")
-
-        data = []
-        for position in positions:
-            market = position.market
-            claim = market.claim
-            data.append({
-                "claim_id": claim.id,
-                "claim_text": claim.text,
-                "claim_slug": claim.slug,
-                "side": position.side,
-                "shares": str(position.shares),
-                "cost_basis": str(position.cost_basis),
-                "share_percentage": "TODO",
-                "yield": "0.00",
-            })
-
-        return Response(data, status=status.HTTP_200_OK)
+        return Response([], status=status.HTTP_200_OK)

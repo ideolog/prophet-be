@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from integrations.core.integration_registry import INTEGRATION_REGISTRY
-from narratives.models.sources import Source, RawText, Genre
-from narratives.models.categories import Person
+from narratives.models import Source, RawText, Genre, Topic
 from narratives.utils.text import generate_fingerprint
 
 
@@ -78,7 +77,10 @@ class IntegrationRunView(APIView):
             author_name = (raw.get("author") or "").strip()
             author = None
             if author_name:
-                author, _ = Person.objects.get_or_create(full_name=author_name)
+                author, _ = Topic.objects.get_or_create(name=author_name)
+                # Ensure it has Person parent
+                person_root, _ = Topic.objects.get_or_create(name="Person")
+                author.parents.add(person_root)
 
             rawtext = RawText.objects.create(
                 title=(raw.get("title") or "").strip() or None,

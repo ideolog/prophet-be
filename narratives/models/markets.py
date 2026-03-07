@@ -1,11 +1,9 @@
 from django.db import models
 from decimal import Decimal
-from narratives.models.claims import Claim
 from narratives.models.users import UserAccount
 
 
 class Market(models.Model):
-    claim = models.OneToOneField(Claim, on_delete=models.CASCADE, related_name="market")
     creator = models.CharField(max_length=255, help_text="Wallet address of the market creator.")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -38,7 +36,7 @@ class Market(models.Model):
         return cost.quantize(Decimal("0.00000001"))
 
     def __str__(self):
-        return f"Market for {self.claim.text[:50]} by {self.creator}"
+        return f"Market {self.id} by {self.creator}"
 
 
 class MarketPosition(models.Model):

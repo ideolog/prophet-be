@@ -1,12 +1,5 @@
 from rest_framework import serializers
 
-class ClaimCreateRequestSerializer(serializers.Serializer):
-    text = serializers.CharField()
-    submitter = serializers.CharField(required=False)
-
-class GenerateClaimsRequestSerializer(serializers.Serializer):
-    text = serializers.CharField()
-
 class MarketCreateRequestSerializer(serializers.Serializer):
     wallet_address = serializers.CharField()
 

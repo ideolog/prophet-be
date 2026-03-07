@@ -1,7 +1,4 @@
-# narratives/models/sources.py
-
 from django.db import models
-from narratives.models import Person, Topic
 from django.utils.text import slugify
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -37,10 +34,7 @@ class Source(models.Model):
     is_new = models.BooleanField(default=True, help_text="Whether this source was just added")
     created_at = models.DateTimeField(default=timezone.now)
 
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True, related_name="sources")
-
-    owner_person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True, related_name="owned_sources")
-    owner_organization = models.ForeignKey('narratives.Organization', on_delete=models.SET_NULL, blank=True, null=True, related_name="owned_sources")
+    topic = models.ForeignKey('narratives.Topic', on_delete=models.SET_NULL, blank=True, null=True, related_name="sources")
 
     url = models.URLField(blank=True, null=True)
     rss_url = models.URLField(blank=True, null=True, help_text="Optional RSS feed URL for this source")
@@ -59,13 +53,29 @@ class RawText(models.Model):
     subtitle = models.CharField(max_length=2000, blank=True, null=True)
     content = models.TextField()
     source_url = models.URLField(blank=True, null=True, help_text="Original source URL for reference")
-    author = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True, related_name='rawtexts')
+    author = models.ForeignKey('narratives.Topic', on_delete=models.SET_NULL, blank=True, null=True, related_name='authored_rawtexts')
     published_at = models.DateTimeField(blank=True, null=True)
     is_new = models.BooleanField(default=True, help_text="Whether this article was just imported")
     is_updated = models.BooleanField(default=False, help_text="Whether this article was updated with new info")
     created_at = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True, max_length=300)
     content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Normalized hash of the content for duplicate detection")
+
+    # Categorization Versioning
+    categorization_version = models.CharField(max_length=20, blank=True, null=True, help_text="The version of the categorization logic used")
+    last_categorized_at = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def categorization_status(self):
+        from .categories import AppConfiguration
+        current_version = AppConfiguration.get_version("categorization_version")
+        if not self.categorization_version:
+            return "NOT_STARTED"
+        if self.categorization_version != current_version:
+            return "OUTDATED"
+        if self.pending_topics.filter(status='pending').exists():
+            return "PENDING_REVIEW"
+        return "COMPLETED"
 
     def __str__(self):
         return f"{(self.title or self.content[:50])[:100]}"
@@ -95,14 +105,17 @@ class PendingTopic(models.Model):
     ]
 
     rawtext = models.ForeignKey(RawText, on_delete=models.CASCADE, related_name="pending_topics")
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="pending_rawtexts")
+    topic = models.ForeignKey('narratives.Topic', on_delete=models.CASCADE, related_name="pending_rawtexts")
     matched_keyword = models.CharField(max_length=255, blank=True, null=True, help_text="The exact keyword that triggered the match")
+    is_weak = models.BooleanField(default=False, help_text="Whether this match was from a weak keyword")
+    found_context_words = models.JSONField(default=list, blank=True, help_text="List of context words found near the weak keyword")
     context = models.TextField(help_text="The sentence or snippet where the topic was found")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.rawtext.id} -> {self.topic.name} ({self.status})"
+
 
 # Slug creation signal (safely updated)
 @receiver(pre_save, sender=Source)
