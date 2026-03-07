@@ -251,11 +251,21 @@ class PendingTopicActionView(APIView):
                 return Response({"error": "Cannot remove the topic name itself as a keyword"}, status=status.HTTP_400_BAD_REQUEST)
             
             if keyword in topic.keywords:
+                # 1. Remove keyword from topic's global rules
                 topic.keywords = [kw for kw in topic.keywords if kw != keyword]
                 topic.save()
-                pending.status = 'declined'
-                pending.save()
-                return Response({"message": f"Keyword '{keyword}' removed from topic '{topic.name}'"}, status=status.HTTP_200_OK)
+                
+                # 2. Mark ALL pending occurrences of this keyword for this topic as 'declined' 
+                # across ALL articles (because the rule is gone globally)
+                count = PendingTopic.objects.filter(
+                    topic=topic,
+                    matched_keyword=keyword,
+                    status='pending'
+                ).update(status='declined')
+                
+                return Response({
+                    "message": f"Keyword '{keyword}' removed from topic '{topic.name}'. {count} pending suggestions declined."
+                }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": f"Keyword '{keyword}' not found in topic keywords"}, status=status.HTTP_400_BAD_REQUEST)
         else:
