@@ -205,9 +205,9 @@
   "pk": 1,
   "fields": {
     "key": "categorization_version",
-    "value": "1.220",
+    "value": "1.223",
     "description": "Version for categorization version",
-    "updated_at": "2026-03-07T00:45:05.451Z"
+    "updated_at": "2026-03-07T00:53:12.511Z"
   }
 },
 {
@@ -1353,7 +1353,6 @@
     "description": null,
     "keywords": [
       "tokenomics",
-      "inflation",
       "burn",
       "vesting"
     ],
@@ -6287,7 +6286,23 @@
     "slug": "futures",
     "description": "",
     "keywords": [],
-    "weak_keywords": [],
+    "weak_keywords": [
+      {
+        "keyword": "futures",
+        "distance": 10,
+        "required_context": [
+          "Nasdaq",
+          "trade",
+          "CEX",
+          "DEX",
+          "derivative",
+          "options",
+          "trading",
+          "market position",
+          "leverage"
+        ]
+      }
+    ],
     "is_placeholder": false,
     "metadata": {},
     "parents": [
@@ -14991,6 +15006,25 @@
   }
 },
 {
+  "model": "narratives.topic",
+  "pk": 746,
+  "fields": {
+    "name": "Saad Naja",
+    "alternative_name": null,
+    "slug": "saad-naja",
+    "description": null,
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [
+      297
+    ],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
   "model": "narratives.person",
   "pk": 1,
   "fields": {
@@ -17346,7 +17380,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/12/30/balance_of_power.html",
     "author": 28,
     "published_at": "2025-12-30T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.346Z",
     "slug": "balance-of-power",
@@ -17367,7 +17401,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/12/17/societies.html",
     "author": 28,
     "published_at": "2025-12-17T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.383Z",
     "slug": "let-a-thousand-societies-bloom",
@@ -17388,7 +17422,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/11/25/plinko.html",
     "author": 28,
     "published_at": "2025-11-25T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.412Z",
     "slug": "plinko-pir-tutorial",
@@ -17409,7 +17443,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/11/07/galaxybrain.html",
     "author": 28,
     "published_at": "2025-11-07T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.431Z",
     "slug": "galaxy-brain-resistance",
@@ -17430,7 +17464,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/10/19/gkr.html",
     "author": 28,
     "published_at": "2025-10-19T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.452Z",
     "slug": "a-gkr-tutorial",
@@ -17451,7 +17485,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/10/05/memory13.html",
     "author": 28,
     "published_at": "2025-10-05T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.466Z",
     "slug": "memory-access-is-on13",
@@ -17472,7 +17506,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/09/24/openness_and_verifiability.html",
     "author": 28,
     "published_at": "2025-09-24T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.483Z",
     "slug": "the-importance-of-full-stack-openness-and-verifiability",
@@ -17493,7 +17527,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/09/21/low_risk_defi.html",
     "author": 28,
     "published_at": "2025-09-21T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.502Z",
     "slug": "low-risk-defi-can-be-for-ethereum-what-search-was-for-google",
@@ -17514,7 +17548,7 @@
     "source_url": "https://vitalik.eth.limo/general/2025/08/12/ideas.html",
     "author": 28,
     "published_at": "2025-08-12T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.514Z",
     "slug": "on-idea-driven-ideas",
@@ -17535,13 +17569,181 @@
     "source_url": "https://vitalik.eth.limo/general/2025/08/12/onlyopensource.html",
     "author": 28,
     "published_at": "2025-08-12T00:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-06T19:50:07.529Z",
     "slug": "i-support-it-only-if-its-open-source-should-be-a-more-common-viewpoint",
     "content_fingerprint": "746c649042926683fbaa4614f408f917",
     "categorization_version": "0.003",
     "last_categorized_at": "2026-03-06T20:41:46.823Z"
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 134,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "Why bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months",
+    "subtitle": "21bf2b76-b8f2-447c-bd3c-4d80d64e6b3e",
+    "content": "Bitcoin briefly pushed toward $74,000 this week, buoyed by a string of bullish developments that have tied the crypto industry ever closer to traditional finance.\n\nSome market observers began calling this a bullish rally, with one analyst even saying that the new run 'has legs.'\n\nYet the rally didn’t last. By the end of the week, the largest cryptocurrency had slipped back below $69,000, losing $110 billion in market cap.\n\nThe pullback came despite what might otherwise have been considered one of the most positive stretches of institutional news for the sector in months.\n\nMorgan Stanley named Bank of New York Mellon as a custodian for its spot bitcoin ETF exposure, adding another layer of Wall Street infrastructure around the asset class. Crypto exchange Kraken gained access to the Federal Reserve’s payment system, a milestone in integrating crypto firms with the U.S. banking network. Intercontinental Exchange (ICE), the owner of the New York Stock Exchange, invested in crypto exchange OKX, valuing it at $25 billion, while U.S. President Donald Trump publicly suggested traditional banks should strike a workable relationship with the crypto industry.\n\nIndividually, any one of these developments might have sparked a market rally in earlier crypto cycles, when institutional adoption was seen as the catalyst that would send crypto into a massive bull run. Instead, now that adoption is here, the market is ignoring it as macro forces have taken over.\n\nThe selloff was mainly triggered by U.S. dollar strengthening as the conflict in Iran intensified, after U.S. President Donald Trump seemingly quashed any chance of some sort of negotiated settlement with Iran, saying, \"There will be no deal with Iran.\"\n\nThis spurred a spike in oil prices, new inflation concerns and shifting expectations around interest rates (despite jobs data showing a weakening market), which put pressure on risk assets globally. Equities moved to the downside as the dollar index rose, and crypto — which has increasingly traded alongside technology stocks (read: risk assets) — followed.\n\nIf that's not enough, Cracks in the global private credit market expanded to Wall Street giant BlackRock, which reportedly began limiting withdrawals from its $26 billion private credit fund amid rising redemption requests. Following similar stress at Blue Owl, which sold $1.4 billion in loans last month to meet withdrawals, the events started to rattle investors.\n\nSo what does this week's episode mean? A growing reality in crypto markets: macro matters more than crypto-native news.\n\nOver the past several years, bitcoin has become more tightly correlated with the Nasdaq and other risk assets as institutional investors entered the market. Hedge funds, asset managers and ETF flows increasingly treat bitcoin as part of a broader portfolio of macro-sensitive assets, reacting to liquidity conditions, interest rates and dollar strength.\n\nIronically, the same institutional adoption that many in the industry have long sought may be contributing to this dynamic.\n\nAs bitcoin becomes embedded in traditional financial portfolios, its price is increasingly influenced by the same forces that move equities, commodities and currencies. When the dollar rallies or interest-rate expectations rise, liquidity tightens across markets — and crypto is rarely immune.\n\nThat doesn’t mean the steady drumbeat of institutional developments is irrelevant. The expansion of custody services, banking access, and exchange investment points to a deeper, more mature crypto market structure forming beneath the surface.\n\nOne question investors ask when such conflicting price action batters the markets is: Who is selling?\n\nThe macro risk seemed to have spooked mostly the short-term bitcoin holders, who cashed out as bitcoin hit $74,000.\n\nThese short-term holders transferred more than 27,000 BTC ($1.8 billion) to exchanges in profit over the past 24 hours — one of the largest spikes in recent months, according to CryptoQuant analyst Darkfost.\n\nShort-term holders are typically the most reactive group in the market, and their selling reflects lingering caution amid the ongoing war in Iran and other macro uncertainties. These holders act more like traders, going in and out of an asset to make quick profits, rather than investors who want to buy and hold for the long term. And with bitcoin's thin liquidity, these moves make a dent in the price action\n\nAnd the data shows that.\n\nThe only short-term investors currently in profit are those who accumulated bitcoin between one week and one month ago, at a realized price of roughly $68,000, suggesting some recent buyers above that price are choosing to lock in gains rather than extend their positions.\n\nIn the short term, with crypto in the midst of a bear market dating back to early October and macro uncertainty, price is the only thing that matters to investors.\n\nBut it's not all doom and gloom.\n\nA recent Binance Research report noted that U.S. spot bitcoin ETFs recorded roughly $787 million in net inflows last week — their first positive weekly flows since mid-January — suggesting that some institutional investors may be beginning to re-engage with the market after several weeks of persistent outflows.\n\nIn fact, in a recent conference, giant university endowment funds, which tend to focus on long-term return, said that they have begun looking into other alternative investment ideas, including digital assets-related ETFs, given the sky-high valuations of traditional equities.\n\nThe report also pointed to signs that speculative excess may already have been flushed out.\n\nBitcoin funding rates have fallen to their lowest levels since 2023, indicating that leveraged long positions have largely been unwound — conditions that historically create a cleaner foundation for more durable rallies driven by spot demand rather than short-term speculation.\n\nIn the end, it all comes down to conviction and market moves.\n\nSome traders called the sharp rally earlier this week a \"bull trap\" — a brief breakout that lures in late buyers before reversing lower. While institutional conviction is on the rise, with thin liquidity, a skittish market, macro headwinds and a lack of clear catalysts, bitcoin's price action, at least this week, seems to have proven them right so far.\n\nRead more: Bitcoin is stuck in a rut but JPMorgan says new legislation could be the ultimate spark\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nBlackRock private credit fund is latest to crack, hitting crypto prices and DeFi markets\n\nStress in the $3.5 trillion private credit market could ripple into digital assets through both macro contagion and tokenized credit markets, experts warn.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/markets/2026/03/06/why-bitcoin-suffered-a-usd110-billion-wipeout-despite-its-best-week-of-wall-street-news-in-months",
+    "author": 668,
+    "published_at": "2026-03-06T20:17:14Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.187Z",
+    "slug": "why-bitcoin-couldnt-hold-70000-despite-its-best-week-of-wall-street-news-in-months",
+    "content_fingerprint": "019f847566f362381809dea5c1784361",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 135,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "Managing financial AI agents is the only skill you’ll need to survive the AI layoffs",
+    "subtitle": "4226074f-3da4-4161-8a77-8dc595f8551f",
+    "content": "AI is infiltrating every layer of society, finance included. What began as asking ChatGPT about your deepest money worries has rapidly evolved into agents capable of reasoning, executing and coordinating across markets with minimal human intervention.\n\nThe pace of change at the intersection of AI and finance is daily, not weekly. Goldman Sachs has warned of AI-fueled layoffs, while Citrini Research's brief job-displacement scare sparked an AI trade, signaling the scale of disruption ahead. As Matt Shumer wrote in ‘Something Big is Happening,’ adaptability may be the only durable advantage, and now is the time to get your financial house in order.\n\nThere’s a simpler way to think about surviving and thriving in the AI era. Instead of trying to outlearn every new AI tool, focus on mastering the AI skills that will build a financial buffer or even a nest egg. Creating insulation against AI-driven disruption that’s coming.\n\nThose who learn to deploy finance AI agents to build capital on their behalf won’t need to obsess over whether their current role survives the next restructuring or scramble to master every new AI release. They'll be building the means to survive and thrive through the next wave of AI layoffs, using AI.\n\nThe greater financial risk may be doing nothing without considering the latest AI alternatives. The opportunity cost of ignoring agents isn’t just missed returns; it’s remaining reactive, paralyzed or paying fund manager fees while the window of gains narrows. Instead of panicked ChatGPT searches, this is a chance to take deliberate control of your financial house, learning just one new skill.\n\nThat new skill is agent selection. With the right team of agents doing the heavy lifting with your investments, operating within clear constraints and aligned to defined goals, anyone could be future-proofing their finances.\n\nAI is the great equalizer, unlocking the ability for everyone to build generational wealth beyond the elites. AI has the potential to be a major multiplier for anyone’s investments by trading markets better, faster, cheaper, and on repeat, with minimal human intervention. What remains to be seen is whether the rest of us will seize this window of opportunity while institutions hold the headstart.\n\nToday, AI agents for traders remain largely underutilized by the AI-curious. Either confined to institutions or misunderstood by individuals, where perceptions of risk are shaped more by OpenClaw headlines than by how agent risk is actually managed with human oversight, strict controls and proper security, designed by dedicated teams.\n\nMany self-described financial use cases still resemble people treating AI chat interfaces like magic eight balls for money decisions, rather than harnessing the full strategic power of this breakout technology. Nearly one in five (19%) globally now use AI tools to build or adjust their portfolio (eToro), and almost two in five (39%) Brits use AI tools for future financial planning (Lloyds Group). Seeking incremental advice on DIY finance won’t deliver the exponential gains– disciplined execution will.\n\nIt’s time to rethink where human judgment adds most value. It makes financial sense to play to our strengths, let humans do what AI can’t and leave AI to do the heavy lifting. Humans are best at defining their investment goals, allocating capital thoughtfully, setting risk constraints and deciding when to intervene. AI is best at executing trades with discipline and precision.\n\nAI is starting to deliver material returns for quant funds and high-frequency traders. AI quant hedge fund Ningbo’s High-Flyer disclosed an average 52.55% return in 2025, placing it top of the industry’s leaders.\n\nBy comparison, 84% of retail traders lost money in their first year of trading crypto. The uncomfortable truth is that most traders don’t lose money because they lack information; they lose because they lack discipline. AI doesn’t sleep, hesitate, panic, get bored, impulsively or revenge-trade like humans.\n\nAgents watch every market 24/7, spotting risks, debating strategies and executing the strategy they’re trained on without hesitation. AI executes trades with an edge humans can’t match, where profits are won and lost in milliseconds and margins are razor-thin.\n\nAgent selection will be one of the defining skills of the next decade. Not prompt engineering or chasing the latest model release. Followed by managing agents.\n\nThink of trading AI agents less like fantasy football and more like owning a real club. When real money is on the line, you don’t draft on hype. You build a squad designed to win across conditions. A striker for momentum, a disciplined defender for mean reversion or a quiet midfielder exploiting arbitrage. You train for tough matches and evaluate performance against expectations.\n\nThe same discipline applies to capital. You set the objective, impose constraints and install kill switches, position caps and verify stop-loss controls. You measure more than the last scoreline, tracking consistency, drawdowns and adaptability across regimes. Soon, agents won’t just claim results; they’ll be ranked against transparent and standardized benchmarks. Like any league table, the numbers will speak for themselves.\n\nMarkets will increasingly trade themselves, and crypto is already the proving ground. In a 24/7, onchain environment where speed and discipline compound, agentic systems are beginning to shape liquidity and volatility in real time. The real risk isn’t letting agents compete. It’s waiting until the window closes and the margins compress.\n\nIn football, fans watch the game. Coaches shape it. Those who thrive in the AI arena will build and manage squads of trading agents, refining strategy as conditions change and using the technology to keep pace with the industry. In the next league of markets, financial freedom won’t come from watching; it’ll come from building the team from the coach’s box. If job disruption from AI is inevitable, can you afford to stay in the stands?\n\nNote: The views expressed in this column are those of the author and do not necessarily reflect those of CoinDesk, Inc. or its owners and affiliates.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nDonald Trump's crypto legacy in two words: Paul Atkins\n\nAs the CLARITY Act faces a stalemate on Capitol Hill, the Trump administration is pivoting toward executive workarounds and family-backed stablecoins to reshape the financial system without waiting for a vote, argues Dale.",
+    "source_url": "https://www.coindesk.com/opinion/2026/03/06/managing-financial-ai-agents-is-the-only-skill-you-ll-need-to-survive-the-ai-layoffs",
+    "author": 746,
+    "published_at": "2026-03-06T19:00:00Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.203Z",
+    "slug": "managing-financial-ai-agents-is-the-only-skill-youll-need-to-survive-the-ai-layoffs",
+    "content_fingerprint": "21d45886c470f7af28badcef0ae23537",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 136,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "BlackRock private credit fund is latest to crack, hitting crypto prices and DeFi markets",
+    "subtitle": "804260ab-d019-4a00-a801-965f9d508b10",
+    "content": "Cracks in the global private credit market are rattling investors, raising concerns the stress could spill into crypto markets.\n\nBloomberg reported Friday that BlackRock’s $26 billion private credit fund has begun limiting withdrawals amid rising redemption requests. The move follows similar stress at Blue Owl, which sold $1.4 billion in loans last month to meet withdrawals and reportedly has exposure to a collapsed U.K. property lender.\n\nShares of major asset managers including BlackRock (BLK), Apollo Global Management (APO), Ares Management (ARES) and KKR slid 4%-6% Friday, extending their 2026 rout.\n\nRead more: Blue Owl liquidity crisis has investors bracing for 2008-style fallout\n\nIf redemption pressure forces private credit funds to unwind positions, it could trigger broader deleveraging across asset classes that could ripple through digital assets including bitcoin BTC$70,549.10, Andreja Cobeljic, head of derivatives trading at Swiss crypto bank AMINA Bank warned in an emailed note.\n\nU.S. banks extended nearly $300 billion in loans to private credit providers as of mid-2025 and another $285 billion to private equity funds, Cobeljic wrote, carrying risks that credit woes could extend to the banking sector\n\n\"In isolation this would be manageable,\" he said. \"But emerging in the middle of a broader global deleveraging event, alongside an energy shock and collapsing rate-cut expectations, it is a different conversation.\"\n\n\"For risk assets, including crypto, a disorderly unwind here would represent a significant second-order shock that current pricing does not reflect,\" he said.\n\nA second channel of credit risk could surface directly on blockchain rails.\n\nTokenized private credit products — loans and funds packaged and issued on public blockchains as tokens — have grown quickly as part of the broader real-world asset (RWA) trend. According to data from rwa.xyz, the on-chain private credit market now stands at just under $5 billion. That remains tiny compared with the roughly $3.5 trillion global private credit market in 2025, estimated by the Alternative Credit Council.\n\nBut the growing presence of these assets inside decentralized finance (DeFi) means stress in the underlying loans could ripple directly to crypto markets.\n\n\"Institutions are entering crypto, but often with products that even degens and DeFi natives don’t fully grasp,” said Teddy Pornprinya, co-founder of real-world asset protocol Plume.\n\nReal-world credit products can carry complex risks that are not always obvious to crypto investors, he said, including volatile net asset value swings and headline yields that don’t fully reflect fees or credit risk.\n\nA recent episode shows how off-chain credit stress can spill into DeFi.\n\nAccording to a report by risk advisory firm Chaos Labs, the 2025 bankruptcy of auto-parts supplier First Brands Group affected a private credit strategy run by Fasanara Capital. A tokenized version of the strategy, mF-ONE, had been issued on the Midas RWA platform and used as collateral for borrowing on the Morpho protocol.\n\nWhen the underlying fund marked down exposure tied to the bankruptcy, the token’s net asset value slipped about 2%, pushing highly leveraged borrowers close to liquidation and tightening liquidity on the platform. Lenders ultimately avoided losses, but the episode highlighted how tokenized private credit used as DeFi collateral can transmit traditional credit stress into on-chain markets.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nWhy bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months\n\nInstitutional interest continues to grow, but a stronger dollar and shifting interest rate expectations are keeping a lid on the latest rally.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/markets/2026/03/06/blackrock-private-credit-fund-is-latest-to-crack-hitting-crypto-prices-and-defi-markets",
+    "author": 649,
+    "published_at": "2026-03-06T17:30:48Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.211Z",
+    "slug": "blackrock-private-credit-fund-is-latest-to-crack-hitting-crypto-prices-and-defi-markets-5v3qe",
+    "content_fingerprint": "a3feb45cac11df60466b300f556a015f",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 137,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "Bitcoin buyers are cashing out fast after short-lived jump to $74,000",
+    "subtitle": "2c612911-a011-4b58-b8fe-0b23ee8b6a72",
+    "content": "Bitcoin’s move to a one-month high of $74,000 this week triggered a wave of profit-taking from short-term traders, according to data from CryptoQuant.\n\nThe largest cryptocurrency is trading around $69,000 after losing momentum from Wednesday's break above $70,000.\n\nCryptoQuant analyst Darkfost explains that short-term holders transferred more than 27,000 BTC ($1.8 billion) to exchanges in profit over the past 24 hours — one of the largest spikes in recent months.\n\nThe only short-term investors currently in profit are those who accumulated bitcoin between one week and one month ago, with a realized price of roughly $68,000, suggesting some recent buyers are choosing to lock in gains rather than extend their positions.\n\nShort-term holders are typically the most reactive group in the market, and their selling reflects lingering caution in light of the ongoing war in Iran.\n\nCoinDesk analysis on Wednesday identified a potential bull trap as price action mirrored that in January when price broke out to $98,000 before taking a leg lower.\n\nAnd that leg lower occurred on Friday, accelerated by comments from U.S. president Donald Trump who demanded that Iran unconditionally surrenders - a move that also sent the price of oil soaring.\n\nDespite the profit-taking, broader factors are helping support bitcoin’s rally according to Adrian Fritz, chief investment strategist at 21Shares.\n\nFritz said traders are increasingly betting that the Clarity Act, a U.S. digital asset market structure bill, could pass by year-end. Prediction markets currently price the probability at around 70%, though Fritz noted these markets are relatively illiquid.\n\nHe also pointed to rising geopolitical tensions and strong institutional demand as key drivers.\n\nSome investors are increasingly viewing bitcoin as a “gold beta” trade, rotating into the asset after gold’s recent rally. Meanwhile, spot bitcoin ETFs have shown resilience, with holdings down only about 5% during the recent pullback and over $700 million in net inflows this week.\n\nWhile political developments may have helped spark the move, Fritz said the rally is being sustained by geopolitical hedging and growing institutional conviction in the asset.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nWhy bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months\n\nInstitutional interest continues to grow, but a stronger dollar and shifting interest rate expectations are keeping a lid on the latest rally.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/markets/2026/03/06/bitcoin-falls-below-usd70-000-as-short-term-holders-take-profits",
+    "author": 668,
+    "published_at": "2026-03-06T15:24:21Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.219Z",
+    "slug": "bitcoin-buyers-are-cashing-out-fast-after-short-lived-jump-to-74000-rUNGW",
+    "content_fingerprint": "382ae02e77e12e324b5382cebe78a45f",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 138,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "'No deal with Iran': Trump demands unconditional surrender, sending oil surging, bitcoin and stocks lower",
+    "subtitle": "5045c32e-a57e-4c93-9cd3-f2707dd232fd",
+    "content": "Risk markets are taking new legs lower on Friday morning after U.S. President Donald Trump seemingly quashed any chance of some sort of negotiated settlement with Iran.\n\n\"There will be no deal with Iran except UNCONDITIONAL SURRENDER,\" said the president in a Truth Social post.\n\nThe news sent WTI crude oil to a multi-year high near $90 per barrel, and in turn sent Nasdaq futures lower by 1.8%. That hit crypto prices as well, pushing bitcoin  to new session lows, down 5% at $68,800.\n\nU.S. payrolls unexpectedly declined by 92,000 jobs in February, highlighting a cooling U.S. labor market just as rising oil prices and geopolitical tensions complicate the Federal Reserve's outlook. The unemployment rate also ticked higher to 4.4% from 4.3% the previous month.\n\nThe weak report reinforces a broader slowdown in hiring that has been building over the past year.\n\n“Let me put this another way: The U.S. economy has lost jobs since April 2025,” economist Heather Long wrote on X. “Total job gains from May 2025 to February 2026 are now -19,000. Companies are not hiring in the face of all of these headwinds and uncertainty.”\n\nNormally, data like this would have the Federal Reserve busily cutting rates, but the central bank continues to face inflation that remains above its 2% target, and the sharp rise in oil threatens to worsen the price outlook.\n\nFor the moment, interest rate traders continue to bet on little chance for an imminent rate cut. The odds of a March cut are just 4% and an April cut only 17%.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nWhy bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months\n\nInstitutional interest continues to grow, but a stronger dollar and shifting interest rate expectations are keeping a lid on the latest rally.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/markets/2026/03/06/no-deal-with-iran-trump-demands-unconditional-surrender-sending-oil-surging-bitcoin-and-stocks-lower",
+    "author": 672,
+    "published_at": "2026-03-06T14:34:58Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.235Z",
+    "slug": "no-deal-with-iran-trump-demands-unconditional-surrender-sending-oil-surging-bitcoin-and-stocks-lower-6Zrqz",
+    "content_fingerprint": "3c213c457afcd650b0c94f2e66d939bb",
+    "categorization_version": "1.223",
+    "last_categorized_at": "2026-03-07T01:03:36.720Z"
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 139,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "U.S. unexpectedly lost 92,000 jobs in February, unemployment rate rose to 4.4%",
+    "subtitle": "f30f7891-28b4-4d9a-bb05-9f4b30b1bed2",
+    "content": "The U.S. job market weakened appreciably in February, possibly putting back in play the chance of Federal Reserve rate cuts in the first half of 2026.\n\nThe country lost 92,000 jobs last month, according to Friday's report from the Bureau of Labor Statistics. Economists had forecast an addition of 59,000 new jobs, compared with January's gain of 126,000.\n\nThe unemployment rate rose to 4.4% versus economist expectations of 4.3%, and January's reading of 4.3%.\n\nUnder pressure overnight ahead of the report and trading down to $70,000 as oil soared higher and equity markets dipped, bitcoin BTC$70,549.10 remained right around that mark in the minutes following the data.\n\nU.S. stock index futures continue lower, with the Nasdaq down 1% and S&P 500 off 0.8%. The 10-year Treasury yield has fallen four basis points to 4.11%. Precious metals reversed an early decline, with gold now higher by 1% and silver by 2%. WTI crude oil is up 6.2% to $86 per barrel.\n\nAhead of this morning's report, markets were pricing in a 95% probability that the Federal Reserve would hold rates steady at the March 18 meeting and an 85% chance of no rate cut in April.\n\nMeanwhile, rising oil prices linked to tensions in the Middle East could add upward pressure to inflation expectations. If sustained, higher energy prices may feed into broader inflation, particularly through energy and food costs. Combined with signs that the U.S. economy may be re-accelerating, this could prompt markets to reassess the path of monetary policy.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nWhy bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months\n\nInstitutional interest continues to grow, but a stronger dollar and shifting interest rate expectations are keeping a lid on the latest rally.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/markets/2026/03/06/u-s-lost-92-000-jobs-in-february-unemployment-rate-rose-to-4-2",
+    "author": 672,
+    "published_at": "2026-03-06T13:33:54Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.246Z",
+    "slug": "us-unexpectedly-lost-92000-jobs-in-february-unemployment-rate-rose-to-44-YpfDG",
+    "content_fingerprint": "a4f87cbfd3eebb091582e4a871412ca5",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 140,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "Kazakhstan central bank to invest $350 million worth of gold, forex reserves into digital assets",
+    "subtitle": "5be554f5-82ac-4303-b954-af43156218da",
+    "content": "Kazakhstan’s central bank revealed plans to allocate up to $350 million from its gold and foreign exchange reserves to investments linked to cryptocurrencies and digital assets.\n\nThe bank's governor, Timur Suleimanov, said the institution is developing a list of acceptable investments, which will extend beyond direct cryptocurrency holdings, according to a Reuters report on Friday.\n\nThe country became a major bitcoin BTC$70,549.10 mining hub after China’s 2021 mining ban pushed operators abroad. In 2025, Astana-based Fonte Capital introduced central Asia’s first spot bitcoin ETF (BETF), offering regulated, physically backed exposure to bitcoin.\n\nThe investment strategy is expected to include shares of high-tech companies connected to digital assets, cryptocurrency infrastructure firms and index funds whose performance tracks crypto markets.\n\nDeputy central bank chair Aliya Moldabekova said the investments would be made in April and May, emphasizing that authorities are taking a measured approach.\n\n“We are not talking about any large investment in cryptocurrencies,” Moldabekova said, according to Reuters. “We are currently selecting companies that deal with digital assets, for example those involved in cryptocurrency infrastructure.”\n\nThe allocation represents only a small share of the country’s overall reserves. As of Feb. 1, the central bank held $69.4 billion in gold and foreign exchange reserves, while the country’s national fund, which accumulates oil revenues, held $65.23 billion in assets, according to the central bank data.\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nStrike secures New York BitLicense, opening bitcoin financial services to state residents\n\nNYDFS approval allows the Bitcoin payments company to offer trading, bill pay and custody products across New York.\n\nWhat to know:",
+    "source_url": "https://www.coindesk.com/business/2026/03/06/kazakhstan-central-bank-to-invest-usd350-million-worth-of-gold-forex-reserves-into-digital-assets",
+    "author": 653,
+    "published_at": "2026-03-06T13:08:55Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.256Z",
+    "slug": "kazakhstan-central-bank-to-invest-350-million-worth-of-gold-forex-reserves-into-digital-assets-LZQnn",
+    "content_fingerprint": "2e90cf99858d88513134019c38445f82",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 141,
+  "fields": {
+    "source": 4,
+    "genre": 7,
+    "title": "Bitcoin hit by short-termism as rally fades ahead of U.S. jobs data",
+    "subtitle": "8d604a3c-f74b-44a8-8630-701bcd0c5097",
+    "content": "If you're not already subscribed to the newsletter email, click here.\n\nBy Francisco Rodrigues (All times ET unless indicated otherwise)\n\nCryptocurrency prices are falling as some holders look to cash in on the mid-week bounce to $74,000 and others prefer less risky assets as the war in the Middle East escalates.\n\nBitcoin BTC$70,549.10 has lost 3.7% in the past 24 hours, holding just above $70,000, while the wider CoinDesk 20 (CD20) index dropped 3.5% as momentum from the rally earlier in the week cools. Bitcoin cleared $74,000 on Wednesday and is still up more than 6% over five days.\n\nIllia Otychenko, lead analyst at CEX.IO, said the decline reflects selling pressure from short-term traders who bought the recovery. \"Despite the recent recovery, there is still limited conviction that the rally will continue,\" Otychenko told CoinDesk.\n\nMeanwhile, derivatives markets show growing pessimism. Funding rates remain deeply negative, meaning traders are paying to hold onto short positions.\n\nBut underlying demand hasn’t gone anywhere. Otychenko noted that stablecoin movements into exchanges recently reached their highest levels in 2026 while spot bitcoin ETF flows turned positive.\n\n“This creates a clear conflict in the market. Institutional spot buyers are accumulating Bitcoin, while derivatives traders are increasing short positions,” he added. “Historically, when spot accumulation coincides with negative funding, it often ends in a short squeeze, where short sellers are forced to close positions and the price moves higher. However, that outcome is not guaranteed.”\n\nGeopolitics remains a factor. Brent crude is up more than 22% in the past week after U.S. and Israeli strikes on Iran and retaliatory attacks disrupted oil shipments through the Strait of Hormuz, a chokepoint carrying roughly 20% of global supply.\n\n“Hormuz tanker traffic is still down 92%, Goldman is warning oil could hit $100, and the curve is flattening again as the short end reprices inflation risk with the 2Y backing up to 3.51%,” said Bryan Tan, a trader at Wintermute in a note.\n\nThe surge in energy prices is feeding inflation concerns, prompting traders to reconsider interest-rate cut expectations. Bond markets are already reflecting that shift, with U.S. Treasury yields rising as investors price in the risk that inflation will remain elevated.\n\nAnd don't forget, there's also the U.S. jobs report later today, which will also feed into the Fed's interest-rate decisions. Stay alert!\n\nRead more: For analysis of today's activity in altcoins and derivatives, see Crypto Markets Today\n\nFor a more comprehensive list of events this week, see CoinDesk's \"Crypto Week Ahead\".\n\nFor a more comprehensive list of events this week, see CoinDesk's \"Crypto Week Ahead\".\n\nFor a more comprehensive list of events this week, see CoinDesk's \"Crypto Week Ahead\".\n\nCrypto Treasury Companies\n\nSpot BTC ETFs\n\nSpot ETH ETFs\n\nSource: Farside Investors\n\nMore For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model. With 2M+ units sold, they scale via global partnerships and events.\n\nWhat to know:\n\nMore For You\n\nBitcoin takes aim at $74,000. Surprisingly, the dollar's rallying too.\n\nYour day-ahead look for March 5, 2026\n\nWhat to know:\n\nIf you're not already subscribed to the newsletter email, click here.",
+    "source_url": "https://www.coindesk.com/daybook-us/2026/03/06/bitcoin-hit-by-short-termism-as-rally-fades-ahead-of-u-s-jobs-data",
+    "author": 673,
+    "published_at": "2026-03-06T12:20:32Z",
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T00:49:51.264Z",
+    "slug": "bitcoin-hit-by-short-termism-as-rally-fades-ahead-of-us-jobs-data-fwMRp",
+    "content_fingerprint": "3384ff50e72cb9fa6edb73de78f81e1a",
+    "categorization_version": null,
+    "last_categorized_at": null
   }
 },
 {
@@ -24832,6 +25034,92 @@
     "context": "Ideas like this can enable open-source communities,\ncollections of countries, and other groups that are not actors to have\nhigher levels of diffusion between each other, allowing them to share\nmore economies of scale and remain competitive with more internally\norganized centralized behemoths.",
     "status": "approved",
     "created_at": "2026-03-06T23:58:17Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 601,
+  "fields": {
+    "rawtext": 138,
+    "topic": 648,
+    "matched_keyword": "Donald Trump",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "President Donald Trump seemingly quashed any chance of some sort of negotiated settlement with Iran.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.707Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 602,
+  "fields": {
+    "rawtext": 138,
+    "topic": 287,
+    "matched_keyword": "futures",
+    "is_weak": true,
+    "found_context_words": [
+      "Nasdaq"
+    ],
+    "context": "The news sent WTI crude oil to a multi-year high near $90 per barrel, and in turn sent Nasdaq futures lower by 1.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.709Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 603,
+  "fields": {
+    "rawtext": 138,
+    "topic": 27,
+    "matched_keyword": "futures",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "The news sent WTI crude oil to a multi-year high near $90 per barrel, and in turn sent Nasdaq futures lower by 1.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.712Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 604,
+  "fields": {
+    "rawtext": 138,
+    "topic": 197,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "That hit crypto prices as well, pushing bitcoin  to new session lows, down 5% at $68,800.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.714Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 605,
+  "fields": {
+    "rawtext": 138,
+    "topic": 283,
+    "matched_keyword": "Phygital",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "More For You\n\nCoinDesk Research looks into how Pudgy Penguins disrupts traditional toys market via a phygital model.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.717Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 606,
+  "fields": {
+    "rawtext": 138,
+    "topic": 197,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "What to know:\n\nMore For You\n\nWhy bitcoin couldn't hold $70,000 despite its best week of Wall Street news in months\n\nInstitutional interest continues to grow, but a stronger dollar and shifting interest rate expectations are keeping a lid on the latest rally.",
+    "status": "pending",
+    "created_at": "2026-03-07T01:03:36.720Z"
   }
 },
 {

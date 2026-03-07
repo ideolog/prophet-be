@@ -55,10 +55,38 @@ class IntegrationRunView(APIView):
         imported = []
         for raw in rawtexts:
             content = (raw.get("content") or "").strip()
+            source_url = raw.get("source_url")
             if not content:
                 continue
 
             fingerprint = generate_fingerprint(content)
+            
+            # NEW LOGIC: Check by URL first to avoid duplicates with different content (edits)
+            existing_by_url = None
+            if source_url:
+                existing_by_url = RawText.objects.filter(source_url=source_url).first()
+            
+            if existing_by_url:
+                # If URL exists, check if content changed
+                if existing_by_url.content_fingerprint != fingerprint:
+                    # Content changed - update it
+                    existing_by_url.content = content
+                    existing_by_url.content_fingerprint = fingerprint
+                    # Also update title/subtitle if they changed
+                    new_title = (raw.get("title") or "").strip()
+                    if new_title:
+                        existing_by_url.title = new_title
+                    new_subtitle = (raw.get("subtitle") or "").strip()
+                    if new_subtitle:
+                        existing_by_url.subtitle = new_subtitle
+                    
+                    existing_by_url.is_updated = True
+                    existing_by_url.is_new = False
+                    existing_by_url.save()
+                    imported.append(existing_by_url.id)
+                continue
+
+            # If no URL match, check by fingerprint (just in case same content on different URL)
             existing_rawtext = RawText.objects.filter(content_fingerprint=fingerprint).first()
             
             if existing_rawtext:
@@ -68,7 +96,7 @@ class IntegrationRunView(APIView):
                     existing_rawtext.title = new_title
                     existing_rawtext.is_updated = True
                     existing_rawtext.save()
-                    imported.append(existing_rawtext.id) # Add to imported to trigger redirect/badge
+                    imported.append(existing_rawtext.id)
                 continue
 
             genre_name = (raw.get("genre") or "speech").strip().lower()
