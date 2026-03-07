@@ -12,6 +12,7 @@ class TopicSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
     related_topics = serializers.SerializerMethodField()
     schools_of_thought = serializers.SerializerMethodField()
+    topics_in_school = serializers.SerializerMethodField()
 
     class Meta:
         model = Topic
@@ -19,7 +20,7 @@ class TopicSerializer(serializers.ModelSerializer):
             "id", "name", "alternative_name", "slug", "description", "keywords", "weak_keywords", "metadata",
             "is_placeholder",
             "parents_count", "children_count", "related_count", "keywords_count", "level",
-            "parents", "children", "related_topics", "schools_of_thought"
+            "parents", "children", "related_topics", "schools_of_thought", "topics_in_school"
         ]
 
     def get_keywords_count(self, obj):
@@ -62,6 +63,10 @@ class TopicSerializer(serializers.ModelSerializer):
 
     def get_schools_of_thought(self, obj):
         return [{"id": s.id, "name": s.name} for s in obj.schools_of_thought.all()]
+
+    def get_topics_in_school(self, obj):
+        # Return topics that have this topic as their school of thought
+        return [{"id": t.id, "name": t.name} for t in obj.topics_in_school.all()]
 
 class PendingTopicSerializer(serializers.ModelSerializer):
     topic_name = serializers.CharField(source='topic.name', read_only=True)
