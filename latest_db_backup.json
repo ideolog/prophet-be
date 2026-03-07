@@ -205,9 +205,9 @@
   "pk": 1,
   "fields": {
     "key": "categorization_version",
-    "value": "0.479",
+    "value": "1.220",
     "description": "Version for categorization version",
-    "updated_at": "2026-03-07T00:21:15.155Z"
+    "updated_at": "2026-03-07T00:45:05.451Z"
   }
 },
 {
@@ -14915,6 +14915,82 @@
   }
 },
 {
+  "model": "narratives.topic",
+  "pk": 742,
+  "fields": {
+    "name": "Diseconomies of scale",
+    "alternative_name": "",
+    "slug": "diseconomies-of-scale",
+    "description": "",
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [
+      743
+    ],
+    "related_topics": [],
+    "schools_of_thought": [
+      737
+    ]
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 743,
+  "fields": {
+    "name": "Cost disadvantage",
+    "alternative_name": "",
+    "slug": "cost-disadvantage",
+    "description": "",
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [
+      744
+    ],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 744,
+  "fields": {
+    "name": "Cost",
+    "alternative_name": "",
+    "slug": "cost",
+    "description": "",
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [],
+    "related_topics": [],
+    "schools_of_thought": [
+      745
+    ]
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 745,
+  "fields": {
+    "name": "Accounting",
+    "alternative_name": "",
+    "slug": "accounting",
+    "description": null,
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
   "model": "narratives.person",
   "pk": 1,
   "fields": {
@@ -24755,7 +24831,7 @@
     "found_context_words": [],
     "context": "Ideas like this can enable open-source communities,\ncollections of countries, and other groups that are not actors to have\nhigher levels of diffusion between each other, allowing them to share\nmore economies of scale and remain competitive with more internally\norganized centralized behemoths.",
     "status": "approved",
-    "created_at": "2026-03-06T23:58:17.000Z"
+    "created_at": "2026-03-06T23:58:17Z"
   }
 },
 {
@@ -30054,7 +30130,7 @@
   "model": "admin.logentry",
   "pk": 295,
   "fields": {
-    "action_time": "2024-09-12T12:54:15.000Z",
+    "action_time": "2024-09-12T12:54:15Z",
     "user": [
       "paulus"
     ],
@@ -42304,6 +42380,60 @@
     ],
     "object_id": "740",
     "object_repr": "Market behavior",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 976,
+  "fields": {
+    "action_time": "2026-03-07T00:30:55.623Z",
+    "user": [
+      "paulus"
+    ],
+    "content_type": [
+      "narratives",
+      "topic"
+    ],
+    "object_id": "742",
+    "object_repr": "Diseconomies of scale",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 977,
+  "fields": {
+    "action_time": "2026-03-07T00:32:38.253Z",
+    "user": [
+      "paulus"
+    ],
+    "content_type": [
+      "narratives",
+      "topic"
+    ],
+    "object_id": "743",
+    "object_repr": "Cost disadvantage",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 978,
+  "fields": {
+    "action_time": "2026-03-07T00:35:16.788Z",
+    "user": [
+      "paulus"
+    ],
+    "content_type": [
+      "narratives",
+      "topic"
+    ],
+    "object_id": "744",
+    "object_repr": "Cost",
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
   }

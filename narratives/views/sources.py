@@ -158,6 +158,11 @@ class RawTextDetailView(generics.RetrieveAPIView):
 class RawTextFindTopicsView(APIView):
     def post(self, request, id):
         rawtext = get_object_or_404(RawText, id=id)
+        reset = request.data.get("reset", False)
+        
+        if reset:
+            # Delete all existing pending topics for this rawtext
+            PendingTopic.objects.filter(rawtext=rawtext).delete()
         
         from ..models.categories import AppConfiguration
         from django.utils import timezone
