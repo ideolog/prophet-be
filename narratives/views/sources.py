@@ -314,14 +314,17 @@ class RawTextRedownloadView(APIView):
             return Response({"error": f"Failed to redownload: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class TopicListView(generics.ListAPIView):
-    queryset = Topic.objects.all().order_by('name')
+    queryset = Topic.objects.all().order_by('-updated_at')
     serializer_class = TopicSerializer
 
     def get_queryset(self):
-        queryset = Topic.objects.all().order_by('name')
+        queryset = Topic.objects.all().order_by('-updated_at')
         search = self.request.query_params.get('search')
         if search:
             queryset = queryset.filter(name__icontains=search)
+        else:
+            # Only limit to 50 if no search is performed
+            queryset = queryset[:50]
         return queryset
 
 class TopicCreateView(generics.CreateAPIView):
@@ -346,10 +349,11 @@ class TopicDetailView(generics.RetrieveUpdateAPIView):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
-        # Handle parents_ids, related_ids, and school_ids if provided
+        # Handle parents_ids, related_ids, school_ids, and functions_ids if provided
         parents_ids = request.data.get('parents_ids')
         related_ids = request.data.get('related_ids')
         school_ids = request.data.get('school_ids')
+        functions_ids = request.data.get('functions_ids')
         
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -361,6 +365,8 @@ class TopicDetailView(generics.RetrieveUpdateAPIView):
             instance.related_topics.set(related_ids)
         if school_ids is not None:
             instance.schools_of_thought.set(school_ids)
+        if functions_ids is not None:
+            instance.functions.set(functions_ids)
             
         return Response(serializer.data)
 

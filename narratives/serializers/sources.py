@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import serializers
 from ..models import RawText, Source, Topic, PendingTopic
 from narratives.utils.text import generate_fingerprint
@@ -11,17 +12,32 @@ class TopicSerializer(serializers.ModelSerializer):
     parents = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     related_topics = serializers.SerializerMethodField()
+    functions = serializers.SerializerMethodField()
     schools_of_thought = serializers.SerializerMethodField()
     topics_in_school = serializers.SerializerMethodField()
+    function_of = serializers.SerializerMethodField()
+    topic_type = serializers.SerializerMethodField()
+    topic_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=Topic.objects.filter(is_placeholder=True),
+        source='topic_type',
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = Topic
         fields = [
             "id", "name", "alternative_name", "slug", "description", "keywords", "weak_keywords", "metadata",
-            "is_placeholder",
+            "is_placeholder", "updated_at",
             "parents_count", "children_count", "related_count", "keywords_count", "level",
-            "parents", "children", "related_topics", "schools_of_thought", "topics_in_school"
+            "parents", "children", "related_topics", "functions", "function_of", "schools_of_thought", "topics_in_school",
+            "topic_type", "topic_type_id"
         ]
+
+    def get_topic_type(self, obj):
+        if obj.topic_type:
+            return {"id": obj.topic_type.id, "name": obj.topic_type.name}
+        return None
 
     def get_keywords_count(self, obj):
         try:
@@ -61,6 +77,12 @@ class TopicSerializer(serializers.ModelSerializer):
     def get_related_topics(self, obj):
         return [{"id": r.id, "name": r.name} for r in obj.related_topics.all()]
 
+    def get_functions(self, obj):
+        return [{"id": f.id, "name": f.name} for f in obj.functions.all()]
+
+    def get_function_of(self, obj):
+        return [{"id": t.id, "name": t.name} for t in obj.function_of.all()]
+
     def get_schools_of_thought(self, obj):
         return [{"id": s.id, "name": s.name} for s in obj.schools_of_thought.all()]
 
@@ -77,15 +99,29 @@ class PendingTopicSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
 class SourceSerializer(serializers.ModelSerializer):
+    topic_distribution = serializers.SerializerMethodField()
+
     class Meta:
         model = Source
         fields = [
-            "id", "name", "platform", "handle", "external_id", 
+            "id", "name", "platform", "handle", "external_id",
             "description", "subscriber_count", "avatar_url", "avatar_file",
-            "topic", "url", 
-            "rss_url", "timezone", "slug", "is_new", "created_at"
+            "topic", "url",
+            "rss_url", "timezone", "slug", "is_new", "created_at",
+            "topic_distribution",
         ]
         read_only_fields = ["id", "slug", "created_at"]
+
+    def get_topic_distribution(self, obj):
+        rows = PendingTopic.objects.filter(
+            rawtext__source=obj,
+            status="approved",
+        ).values("topic__name").annotate(count=Count("id")).order_by("-count")
+        return [
+            {"name": r["topic__name"], "count": r["count"]}
+            for r in rows
+            if r["topic__name"]
+        ]
 
 class RawTextSerializer(serializers.ModelSerializer):
     categorization_status = serializers.ReadOnlyField()

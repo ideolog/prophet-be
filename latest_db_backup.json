@@ -205,9 +205,9 @@
   "pk": 1,
   "fields": {
     "key": "categorization_version",
-    "value": "1.264",
+    "value": "1.273",
     "description": "Version for categorization version",
-    "updated_at": "2026-03-07T21:02:39.577Z"
+    "updated_at": "2026-03-07T21:42:28.299Z"
   }
 },
 {
@@ -2043,16 +2043,25 @@
   "pk": 82,
   "fields": {
     "name": "AI Agents",
-    "alternative_name": null,
+    "alternative_name": "",
     "slug": "ai-agents",
-    "description": null,
+    "description": "",
     "keywords": [
       "ai agents",
       "autonomous agents",
-      "virtuals",
       "autonolas"
     ],
-    "weak_keywords": [],
+    "weak_keywords": [
+      {
+        "keyword": "virtuals",
+        "distance": 10,
+        "required_context": [
+          "AI",
+          "artificial intelligence",
+          "autonomous agents"
+        ]
+      }
+    ],
     "is_placeholder": false,
     "metadata": {},
     "parents": [
@@ -3390,7 +3399,6 @@
     "description": null,
     "keywords": [
       "qualified custodian",
-      "copper",
       "anchorage",
       "bitgo"
     ],
@@ -4516,9 +4524,7 @@
     "alternative_name": null,
     "slug": "bitcoin-ecosystem",
     "description": null,
-    "keywords": [
-      "Bitcoin"
-    ],
+    "keywords": [],
     "weak_keywords": [],
     "is_placeholder": false,
     "metadata": {},
@@ -14092,7 +14098,23 @@
     "slug": "love",
     "description": "A profound and unconditional care and connection toward others.",
     "keywords": [],
-    "weak_keywords": [],
+    "weak_keywords": [
+      {
+        "keyword": "love",
+        "distance": 1,
+        "required_context": [
+          "my",
+          "your",
+          "his",
+          "her",
+          "their",
+          "a",
+          "the",
+          "at",
+          "in"
+        ]
+      }
+    ],
     "is_placeholder": false,
     "metadata": {},
     "parents": [
@@ -15627,6 +15649,57 @@
     "parents": [
       297
     ],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 779,
+  "fields": {
+    "name": "Cryptocurrency exchange",
+    "alternative_name": "Digital currency exchange",
+    "slug": "cryptocurrency-exchange",
+    "description": null,
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 780,
+  "fields": {
+    "name": "Morgan Stanley",
+    "alternative_name": "",
+    "slug": "morgan-stanley",
+    "description": null,
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [],
+    "related_topics": [],
+    "schools_of_thought": []
+  }
+},
+{
+  "model": "narratives.topic",
+  "pk": 781,
+  "fields": {
+    "name": "Kraken",
+    "alternative_name": "",
+    "slug": "kraken",
+    "description": null,
+    "keywords": [],
+    "weak_keywords": [],
+    "is_placeholder": false,
+    "metadata": {},
+    "parents": [],
     "related_topics": [],
     "schools_of_thought": []
   }
@@ -18743,7 +18816,7 @@
     "source_url": "https://www.coindesk.com/policy/2026/03/07/coinbase-says-new-u-s-tax-reporting-rules-for-crypto-are-wasteful-onerous",
     "author": 655,
     "published_at": "2026-03-07T21:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.558Z",
     "slug": "coinbase-says-new-us-tax-reporting-rules-for-crypto-are-cluttered-confusing",
@@ -18764,7 +18837,7 @@
     "source_url": "https://www.coindesk.com/policy/2026/03/07/trump-s-cyber-strategy-vows-to-support-the-security-of-cryptocurrencies-and-blockchain",
     "author": 669,
     "published_at": "2026-03-07T19:46:41Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.568Z",
     "slug": "trumps-cyber-strategy-vows-to-support-the-security-of-cryptocurrencies-and-blockchain",
@@ -18785,7 +18858,7 @@
     "source_url": "https://www.coindesk.com/opinion/2026/03/07/the-multibillion-dollar-shift-turning-prediction-markets-into-a-professional-hedging-tool",
     "author": 778,
     "published_at": "2026-03-07T19:01:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.580Z",
     "slug": "the-multibillion-dollar-shift-turning-prediction-markets-into-a-professional-hedging-tool",
@@ -18806,7 +18879,7 @@
     "source_url": "https://www.coindesk.com/markets/2026/03/07/latin-america-s-crypto-user-growth-outpaced-u-s-by-3x-in-2025-report-shows",
     "author": 673,
     "published_at": "2026-03-07T18:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.589Z",
     "slug": "latin-americas-crypto-user-growth-outpaced-us-by-3x-in-2025-report-shows",
@@ -18827,7 +18900,7 @@
     "source_url": "https://www.coindesk.com/business/2026/03/07/bitcoin-purist-jack-dorsey-s-firm-is-reluctantly-giving-in-to-stablecoin-craze",
     "author": 673,
     "published_at": "2026-03-07T17:24:25Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.597Z",
     "slug": "bitcoin-purist-jack-dorsey-says-that-his-firm-is-reluctantly-giving-in-to-stablecoin-craze",
@@ -18848,7 +18921,7 @@
     "source_url": "https://www.coindesk.com/markets/2026/03/07/top-wall-street-minds-see-ai-rotation-ahead-as-bitcoin-seeks-role-in-new-cycle",
     "author": 669,
     "published_at": "2026-03-07T17:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.606Z",
     "slug": "top-wall-street-minds-see-ai-rotation-ahead-as-bitcoin-seeks-role-in-new-cycle",
@@ -18869,7 +18942,7 @@
     "source_url": "https://www.coindesk.com/business/2026/03/07/kalshi-polymarket-seeking-usd20-billion-valuations-in-fundraising-talks-wsj",
     "author": 673,
     "published_at": "2026-03-07T16:30:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.614Z",
     "slug": "kalshi-polymarket-seeking-20-billion-valuations-in-fundraising-talks-wsj",
@@ -18890,7 +18963,7 @@
     "source_url": "https://www.coindesk.com/business/2026/03/07/circle-starts-using-usdc-stablecoin-for-internal-treasury-moves-settling-usd68-million",
     "author": 649,
     "published_at": "2026-03-07T15:03:26Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.620Z",
     "slug": "circle-moves-68-million-in-just-30-minutes-by-using-its-own-stablecoin-for-internal-payments",
@@ -18911,7 +18984,7 @@
     "source_url": "https://www.coindesk.com/news-analysis/2026/03/06/those-who-cheered-u-s-bitcoin-reserve-have-spent-year-watching-trump-order-languish",
     "author": 650,
     "published_at": "2026-03-07T15:00:00Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.628Z",
     "slug": "those-who-cheered-us-bitcoin-reserve-have-spent-year-watching-trumps-order-languish",
@@ -18932,13 +19005,55 @@
     "source_url": "https://www.coindesk.com/markets/2026/03/07/bitcoin-slips-below-usd68-000-heading-into-the-weekend-as-dollar-posts-steepest-weekly-gain-in-a-year",
     "author": 656,
     "published_at": "2026-03-07T06:15:48Z",
-    "is_new": true,
+    "is_new": false,
     "is_updated": false,
     "created_at": "2026-03-07T21:02:39.636Z",
     "slug": "bitcoin-slips-below-68000-as-dollar-posts-steepest-weekly-gain-in-a-year",
     "content_fingerprint": "8c4d787e4db32bd01f54e62db4af5a07",
     "categorization_version": null,
     "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 170,
+  "fields": {
+    "source": 11,
+    "genre": 3,
+    "title": "Why I’m Staying in Dubai",
+    "subtitle": null,
+    "content": "Let me ask you something. If someone\ntold you that you'd be sitting in your\nliving room hearing missile interceptors\nin the sky above you exploding and your\nhonest reaction would be, \"Yeah, I love\nthis place. I'm not leaving.\" Would you\nbelieve them? Because that's exactly\nwhere I am right now. And I want to tell\nyou why. So, as most of you know, about\na year and a half ago, my family and I\npacked up our entire lives in New\nZealand and moved to Dubai. And I'll be\nstraight with you. It has been one of\nthe absolute best decisions in my life\nthat ever made. top five easily right up\nthere with marrying my amazing\nincredible wife, having our beautiful\nkids, getting into crypto and start a\nYouTube channel. Moving to Dubai has\nbeen an unparalleled return on\ninvestment. Full stop. Now, I know what\nyou're thinking. Okay, and yes, I'm\ngoing to address it head-on right now\nbecause I can already see the comments\ndown there forming up. Lark, aren't they\nliterally dropping bombs on the UAE\nright now? Yeah, I Yeah, you're right.\nYou're right. The region is very tense\nright now. Iran is lashing out at pretty\nmuch everyone around it after getting\nhit by the USA and Israel last week. And\nyes, living here, you can hear the\ninterceptor missiles taking out the\nincoming drones and missiles being fired\nby Iran. And I won't pretend that that's\nnothing. It's happening, right? It's not\ncool. But here's the thing. This is what\nI really want the whole video to be\nabout. That experience has actually\nreinforced exactly why we moved here in\nthe first place. Stay with me because I\nthink this might genuinely change how\nyou think about where you choose to\nbuild your life. Let's start with the\nthing that surprised me most when we\nfirst got here. Okay. The reasons why we\nchose Dubai and the reasons why we're\nstaying in Dubai and love Dubai. It's\nthe vibe. I call it D vibe sometimes.\nOkay. Yeah, I know. But anyway, the\npeople honestly I wasn't fully prepared\nfor how good the social scene in Dubai\nwould be. You hear about it, but holy\n[ __ ] living it's crazy. Think about it\nfor a second. Everyone who lives in\nDubai made the conscious choice to be\nhere. They didn't just end up here by\ndefault. They weren't just randomly born\nhere. I mean the Amiratis were but not\neverybody else, right? They left the UK,\nAustralia, Russia, Spain, wherever. And\nthey said, you know what? I'm going to\nDubai to build my life. That means\nyou're surrounded by people who are\nintentional, ambitious, switched on.\nPeople who decided to take control of\ntheir lives and do something different.\nAnd that changes everything. Back home\nin New Zealand, the social scene, well,\nit is what it is, okay? Most people grew\nup there, they stayed there, and they'll\nprobably stay there. Nothing wrong with\nthat. I love New Zealand. It's my home,\nokay? It's my home country, right? But\nit's not my home anymore. When you're\nbuilding a business, when you're growing\nyour wealth, when you're trying to level\nup in life, you want to be around people\nwho are doing the same thing. In Dubai,\nit's almost impossible not to be. You go\nto a dinner, half the table are\nentrepreneurs. You go to a networking\nevent, you're shaking hands with\ninfluencers, investors, founders. Go to\nthe gym. And speaking of gym, and gym\nculture here is insane, by the way.\npeople are genuinely taking care of\nthemselves and people are talking about\ntheir businesses and their goals and\ntheir next moves and all that kind of\nstuff. There's this old saying, it's\nvery true in Dubai, I feel where\nanywhere really. You become like the\nfive people you spend the most time\nwith. Okay, if you're still hanging out\nwith those high school buddies who are\ntalking about high school and doing butt\nchugs of beer, man, got to level the\n[ __ ] up. In Dubai, your five people are\nprobably longevity hacking, talking\nabout deals, living their best lives,\nthey're in crypto, they're running\nbusinesses. You think that doesn't rub\noff on you? Of course it does. It\nabsolutely does. Now, here's one thing\nthat I think shocks people the most\nbecause when most people hear about\nDubai, they think clubs, luxury cars,\nInstagram influencer chicks, all that\nkind of stuff. And look, yes, that stuff\nexists, obviously. But that's not the\nreal Dubai. That's not the heart of\nDubai. The real Dubai is one of the most\nfamily-friendly places I've ever seen in\nmy life, genuinely. You know, back home\nin New Zealand, there's this whole sort\nof cultural narrative like go travel in\nyour 20s, then come back in your 30s,\nsettle down and raise your family here\nbecause it's the best place in the world\nfor that. I know New Zealand's got\nbeautiful nature. Beautiful nature.\nOkay? And if you got your whole family\nthere, I get it. Makes sense. Grandma,\ngrandpa, all that stuff. Sure. Fine. And\nI used to believe this, right? But I\ndon't anymore because the schools here\nare world class. The health care system\nactually functions. Okay? And when we\ntake our kids to the park, it's bursting\nwith other kids and families and energy\nand life and languages and it's cool,\nman. The sense of vibrancy of community,\nit's real. And it was something I didn't\nalways feel back home. In fact, I really\nfelt there was a this hole in my life\nbecause of that. People are having fewer\nkids in Western countries. New Zealand's\nnot immune to that. Communities are\ngetting quieter and that energy is\nfading in a lot of places. The\nplaygrounds are half the time empty.\nThat's just not the case here. This city\nfeels alive in a way that genuinely\nmatters when you're raising a family.\nAnd I say this as a dad of three kids.\nThis was non-negotiable for me. And\nDubai delivered in ways I didn't even\nimagine at first. So, here's the part\nwhere I tell you about the 9-minute\nbread delivery. No, seriously, it's\ncrazy. I ordered bread the other day and\nit showed up in nine minutes. I couldn't\nbelieve it. How's that even possible? I\ndon't know, but it happened anyway.\nStill thinking about it. Look, the\nlifestyle here is hard to explain until\nyou've lived it. The services, the the\nquality of standards and all, it's just\ninsane. Everything's just accessible.\nServices are next level. You want to do\nsome hyperbaric oxygen treatments, some\nred light therapy, some longevity\nclinics, it's all right here for you.\nYou want nine bread, it's here for you.\nOkay? You want the best restaurants, the\nbest gyms, the best events, all the\ncrypto stuff happens here. It's all\nright here. And it's not just that these\nthings exists, it's the density of it.\nIt's the DNA of the city. This is what\nit's about. Everything is close.\nEverything works. And the people around\nyou, they're matching that energy.\nThere's an abundance mindset that just\nruns right through the vein of the city.\nAnd it's really hard to find that\nanywhere else in the world in such\nquantity. You might find little\ncommunities of it, but man, it's like\nthat is Dubai back home. And you might\nexperience this in your hometown if\nyou're in the West. There's that poverty\nmindset just creeps in all the time.\nThere's that tall poppy syndrome, don't\ndo too well and all that kind of stuff.\nA sense that doing well means you owe\neveryone an apology for it. That doesn't\nexist here. People here in Dubai\ncelebrate success. They want to build.\nThey want to grow. And when you're\nswimming in that abundance environment,\nyou level up faster than ever thought\npossible. It's awesome. Now, for those\nof you who followed my channel for a\nwhile, thank you, by the way. You're\n[ __ ] awesome. I appreciate you guys.\nYou know that crypto is a big part of my\nworld, okay? And Dubai, it's the crypto\ncapital of the planet right now, man.\nFull stop. It is. The biggest\nconferences all come through here. The\nbiggest influencers are here. The\nbiggest companies are here. The biggest\nplayers come through here all the time.\nThe networking opportunities are\nabsolutely off the freaking charts. Back\nin New Zealand, and this is specific to\nme in New Zealand, maybe you're living\nin New York City or something. You say,\n\"Well, I've got plenty of opportunities\nlike that here, too.\" But back in New\nZealand, if I wanted to go to a major\nconference, I was looking at an 18 hour\nplane ride to Dubai, right? 12 hours to\nSingapore or whatever each way and being\naway from my family for a week. Didn't\nreally want to do that three or four\ntimes a year, plus traveling to visit\nfamily for 30 hours or whatever. Now I\ndon't have to. It's all here at my\ndoorstep. The events are here, the\npeople are here, and the regulatory\nclarity is here, too, which is nice. It\nfeels good. Honestly, the UAE has real\nclear crypto regulations. New Zealand's\njust kind of gray area, whatever is kind\nof okay-ish. It's not good enough,\nright? I know what the rules are in in\nDubai and I can build my business with\nconfidence on the back of that. Back in\nNew Zealand, just murky at best. Is this\nlegal? What's going on? What are the\nregulations around DeFi protocols and\nall this kind of stuff? It's annoying,\nman. It's exhausting. Spending a week\nevery year doing your [ __ ] taxes and\ntrying to figure out, well, did I get a\nproxy token from this Dry protocol or\nnot? Is there a taxable event here? Man,\ncome on. That is not an environment that\nencourages innovation or wealth\nbuilding. Dubai is the opposite. It is\nthe environment that encourages\ninnovation and wealth building. Now,\nlet's talk about safety. And yeah, I\nknow I know how that sounds right.\nBelieve me, I know how that sounds right\nnow. But hear me out. In normal times,\nDubai is one of the safest cities on the\nearth. You can wear a watch on your\nwrist, which sounds like a low bar until\nyou realize you literally cannot do that\nin London anymore without like getting,\nyou know, assaulted by people with\nmachetes. Like, it happens all the time.\nI know multiple people who have had\nwatches stolen off their wrists in\nLondon. You can leave your bag on a\nchair at a cafe. You can walk around at\nnight without a second thought. Home\ninvasions, violent crime, the kind of\nstuff that is unfortunately, and this\nreally sad for New Zealand, man, because\nthe [ __ ] never used to happen, but this\nstuff is now becoming more and more\ncommon place in New Zealand. Of course,\nelsewhere it's been happening much more\nprevalently for a while. These things\nessentially do not happen here. Now,\nyes, the current regional situation with\nIran is a very real thing. And as a\nfather, I'm not going to sit here and\npretend that there are not moments while\nthis is going on where it's deeply\nunsettling. Okay? But here's what I keep\ncoming back to. If they're going to be\nanywhere for this kind of stuff, man,\nthe UAE, they invested huge amounts of\nmoney in their missile defense program.\nYou can hear the Air Force patrolling\nconstantly in their jets. They have\nfriends. The French are coming to help\nout patrol the skies as well. Okay. The\nglobal response has been very great to\nsee, comforting to see. Okay. the fact\nthat, okay, yeah, France did send in\njets and Italy is considering sending in\njets. And then over across the water,\nIran, Iran has literally no allies\ncoming to help them. Nobody, not even\nChina's stepping up for them. China's\nlike, \"Good luck, guys. We're going to\nwave a flag before you light a candle or\nsomething.\" The UAE has friends. The UAE\nhas infrastructure. The UAE has a\nforwardthinking government that is\nbuilding some of the coolest [ __ ] in the\nworld, the biggest and the best of\neverything all the time. Okay? And the\nUAE has taken the biggest and best\nseriously when it comes to their missile\ndefense program. And that actually gives\nme real confidence. Not false\nreassurances, but genuine confidences.\nThe situation's temporary. Okay. Dubai\nwas built to weather any situation now.\nAll right. Fine, fine, fine. I I can\nhear you already in the comment section.\nLet's talk about the money situation. I\nknow some of you waiting for this.\nYou're already down there trash me in\nthe comment sections. Oh, L just moved\nto this desert middle of nowhere and\ngave up living in nice green New Zealand\nto save on money. I get it. Back in New\nZealand, I was paying 39% income tax.\nEvery time I sold crypto, basically a\n39% bill. I'm not bitter about\ncontributing to my home country. I did\nit for years. I've paid lifetimes worth\nof taxes. Okay? Genuinely, me and New\nZealand were good, man. But here's what\nfrustrated me. I was giving 39% of my\nincome to a system where you look\naround, man. Homeless people are still\nfilling up the streets. The roads in the\ncapital barely get repainted. You know,\npaint's all falling off. Infrastructure\nis not being invested in and it's\ncrumbling. Like the fairies between the\nislands like man we needed new fairies\nand the pre the new government came in\nand canceled them. What is that [ __ ]\nYoung people between the ages of 20 and\n40 are leaving the country in droves\nbecause the government has failed to\ncreate opportunities. New Zealand has\none of the lowest percentage GDP\ninvestments in R&D in the OECD. When\nyou're paying that much money and you're\ngetting that little back, we're not\ngoing to talk about the struggles of the\nhealth care system, all that kind of\nstuff, too, but at some point you have\nto make a decision for your family. Is\nit really worth giving up 39% of my\nmoney every single year for subpar\nservices in the UAE? By contrast,\nthere's zero income tax, zero capital\ngains tax. None. And the insane thing,\nthe level of services and infrastructure\nis so dramatically better than back in\nNew Zealand. I know we don't have green\nforests here in the UAE. I get that. I\nunderstand. Okay. But the roads here\nwork, even if they're a bit chaotic and\nthe traffic gets a bit crazy sometimes,\nbut the system functions. Things get\nbuilt, things get maintained. There's a\nreal vision to make this the best of the\nbest. Not just be as mediocre as\npossible. So, not only am I compounding\nmy wealth faster, but I'm keeping more\nof what I earn. And the quality of life\nI'm getting in return is genuinely\nhigher. And that's crazy, ma'am, because\nit's not just a tradeoff. It's\nobjectively better. Look, I want to be\nstraight with you. I made this video\nbecause the current situation made me\nsit down and really think hard about\nwhether or not we made the right call. A\nyear and a half ago, I made the video\ntelling you guys it's leaving New\nZealand and moving to the UAE. This is\nkind of an update video on that. It's\nbeen meaning to do this update video for\na while, but the current situation made\nme sit down and really think it's time\nfor that update video, guys. And look,\nevery time I go through the list of\nreasons we moved here, the reasons to\nstay here, the people, the family life,\nthe lifestyle, the crypto ecosystem, the\nsafety, aside from the Iranian bombs,\neven then it feels safe because the\nmissile defense systems, the tax\nenvironment. I keep going back to the\nsame answer. Yes, we absolutely made the\nright call and we are not going\nanywhere. I love this place. It's\nawesome. This feels like home. And it\nfelt like home so quickly. It's like an\nold glove that you found. You put on\nlike, \"Oh, that feels good.\" This is\nwhere my wife and I and our kids finally\nfeel like we fit in. We're kind of\nmisfits. We're from all over the place.\nWe speak multiple languages. And that\nkind of is the Dubai vibe. And that's\nnot something to walk away from because\nof a temporary geopolitical situation.\nThe UAE has friends. It has systems. It\nhas a government that's handling this\nwith more professionalism than I've seen\nalmost anywhere else. So yes, we are\nstaying. And honestly, if you are\nsomeone who has been sitting on the\nfence about making a move like this,\nman, life's short, dude. Whether it's\nDubai or it's somewhere else,\nwhat the [ __ ] are you doing? Get up, do\nsomething, take action. Okay? Worst case\nscenario, you can always go back home\nand all those friends who are from high\nschool who you butt chugged beers with,\nthey're there waiting for you, man.\nJokes aside, I hope this video gave you\nsomething real to think about. Life's\nshort, okay? Go somewhere that lifts you\nup, that matches your ambition, that\nmatches your vibes. That's where your\ntribe is waiting for you. Okay? Go\nsomewhere with 9m minute bread delivery.\n9 minute bread, man. Come on. It's the\nbest. Because once you've had that,\nthere's no how you going to go back to\nhaving to drive down to the shop, spend\nan hour of your time to get bread. You\ncan't. There's no going back, man.\nAnyway, as always, thank you for\nwatching. If you got questions, drop\nthem in the comments. I read everything\nand curious to see what you guys have to\nthink about it. I'll see you in the next\none. Bye.",
+    "source_url": "https://www.youtube.com/watch?v=cwN37IiyCec",
+    "author": 666,
+    "published_at": null,
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T21:19:09.402Z",
+    "slug": "why-im-staying-in-dubai",
+    "content_fingerprint": "9c92aee096a616dcd0128b9b5199c061",
+    "categorization_version": null,
+    "last_categorized_at": null
+  }
+},
+{
+  "model": "narratives.rawtext",
+  "pk": 171,
+  "fields": {
+    "source": 11,
+    "genre": 3,
+    "title": "No One’s More Nervous Than Bitcoin Holders Now",
+    "subtitle": null,
+    "content": "No one is more nervous than Bitcoin\nholders right now. Well, or that or\nanyone getting promoted to new jobs in\nIran. They're probably pretty nervous,\ntoo. But anyway, is this the bottom? Is\nthe bottom end? Are we going to pump? Is\nthis the magical war pump where we see\nBitcoin go to the moon? We're back,\nbaby. We got a lot to talk about in\ntoday's video. So, we get straight into\nit, guys, because things have been tense\nglobally. What's going to happen to the\noil markets? You're seeing the massive\ndoomer posts already starting to come\nin. The world's ending. and straight to\nHormuz are going to close. There's going\nto be no fertilizer, no food, no energy.\nIt's all going to zero. How often are\nthe doomers correct? Not very often.\nOkay, let's put it that way. Jesse\nWaters makes a very interesting point\nabout straits moves in China. No one is\nmore nervous than China right now. The\nUS controls all global shipping choke\npoints. A full naval blockade of China\nis now possible. Of course, that's part\nof the big game, what's going on in\nIran. Obviously, the government of Iran\nis a, you know, bunch of bunch of dicks.\nBut, uh, so the world's probably a\nbetter place without these people\n[ __ ] their own people all the time.\nAnd I've got a lot of Iranian friends\nhere. And, um, they all basically say\nthe same thing. The government\nabsolutely sucks and everybody's pretty\nhappy. The Ayatollah is gone and all\nthese people are getting their sort of\njust desserts because they've been\ntreating people terribly for a very long\ntime. So, you can disagree with Trump\nabout the methodology and all that kind\nof stuff, but uh at the end result, it's\nprobably going to be a better situation\nfor the people of Iran in the end.\nAnyway, that's just a quick note, but uh\na lot of this is also about China, okay?\nBecause this is one of China's soft oil\nsuppliers and there is very much a push\nright now to ensure that China knows\nthat this is America's world and China\njust lives in it. Anyway, straight to\nHormuz. Not many ships getting through\ntoday. I think only um sort of allied\nships like a Chinese ship or something\nmight have got through. I'm not exactly\nsure, but a few ships have gone through,\nbut almost none. The USA has promised to\nensure all ships going through the\nstraight and is offering the potential\nfor naval escorts through the straight,\nbut that has not yet. So, we'll see if\nthat plan comes to fruition over the\nnext few days or not. But that remains\nthe key thing that markets are paying\nattention to right now. Basically, the\nentire world is focused on one tiny\nlittle stretch of water at the end of\nthe Arabian Peninsula right now. That's\nwhat markets are focused on. That's the\nbig thing. We've gone on from, you know,\nall tech and AI. I haven't even heard\nabout, maybe it's just me. I feel like I\nhaven't heard about AI crashing the\nmarkets in a few days now. It's all\nabout the straits of Hormuz, baby.\nBrent, Brent,\nBrent crude oil prices $84 keeps pushing\nup here to the sort of mid80 range\naround like 8586, but keeps kind of not\nbreaking out there. So oil's on an\nuptrend currently. It's been an uptrend\nhere since the start of January when\npeople started worrying about some of\nthese things starting to take place.\nNow we're up to $84 a barrel again. So\nobviously Trump wants to see this come\ndown. Trump doesn't want high oil\nprices. That means high prices for\neverything. That being said, so far the\nworld is not pricing in the end of the\nworld when it comes to oil. But any big\nspike up higher\nindicates that there's a belief by the\nbig money crowd that things are going to\nget worse before they get better. Okay.\nYo, I just want to share this. This is\nthe the Korean stock market. Look at\nthis thing, man. went down 20% in two\ndays and then pumped 13% today. Now,\nthose two days where it went down 20 uh\n20%, it hit the circuit breakers, like\nwhen markets fall too fast, they just\npause trading for like 15 minutes to let\neverybody like take a breath and go, \"Oh\nmy god.\" And then they open it back up\nand it goes down again. But anyway,\nthat's that's that's crypto volatility\nright there, man. That's the entire\nindex. Geez Louise.\nHeisenberg posted this, the VIX. That's\nthe volatility index. Something about\n2829 that always leads to a near-term\nbounce. So you can see here every time\nwe get these big spikes up in the\nvolatility index. For the last few\nyears, it seems to just basically spike\nup to around like 28 29 and then have a\nmassive correction down. So we want to\nsee the VIX continue to come back down\nto normal levels. If so, markets could\nspike off of that. Currently S&P 500\nfutures opening only slightly in the\nred. Again, this is not pricing in the\nend of the world by any means. We had a\nnice pump in the S&P 500 yesterday. with\nthe index going from 68 up to uh almost\n6,900,\nbut it's been stuck in the range still.\nThis is actually basically the exact\naverage price that the index has been at\nsince\nthe end of October. Okay, a multi-month\nrange here on the S&P 500. Keep\nstruggling to try to get up. The\nall-time high was back here on the 29th\nof January.\nThe smart take would be, yeah, this\nshould at least have a correction at\nsome point. Shouldn't it be needed at\nthis point? It's failing to keep to get\nhighs, but you know, if the Iran\nresolution happens soon, I could easily\nsee this thing pumping into alltime\nhighs. I wouldn't be shocked at all.\nBuru sex posted this weakest period for\ntech stocks in over 50 years, which is\ninsane when you think about all the hype\nrecently. But there you go. Obviously,\nthe big hype came in in sort of October,\nSeptember for tech stocks, and they've\nall been through a corrective period\nsince then.\nI just had to share this is hilarious,\nman. Somebody posted this to Jamath\nearlier saying, \"Hey, Jamath, how about\nall the scams through your spaxs? You\nnever came clean about it. Millions of\ncustomers lost money.\" Jamas says,\n\"Bullshit.\" This guy says, \"Not\n[ __ ] I invested in all of them.\"\nYou p your pitches were compelling. Then\nI lost tons. You made tons. Why? Jamas\nsays, \"Then you generated capital\nlosses. Did you use those yet?\" [ __ ]\nChamoth, man. Ah,\nit's hilarious. I bought uh Virgin\nGalactic. I was like, \"Oh, I got\nChamoth. He's the CEO, man. This is\ngreat. Richard Branson Space.\" I think I\nlost like 90% on that. Didn't put in\nmassive money, but it was enough to go,\n\"That's annoying.\" And then, of course,\nyou read later, well, ah, why was it\ngoing down so much? Chimath cashed out\nlike $300 million of his stocks and then\nresigned as CEO.\nDon't hate the player, hate the game,\nguys. Although you can be very annoyed\nat the players sometimes too.\nChimoth to the rest of the world. Have\nyou not said thank you once for your\ncapital loss tax credits.\nAyay. Uh Bitcoin long is still open by\nthe way. So the entry price in that one\nwas 71 uh 289. I've moved the stop loss\nup to 71300. So worst case scenario for\nthis Bitcoin long right now as I get\nstopped out of break even which I'm fine\nwith. That's fine. Okay. Obviously, we'd\nlove to see it go up to $78,000.\nTake the money on it. That would be\nfantastic. But either way, I'm cool on\nthis trade. Either break even or I'm\nmaking what is it? Three and a half,\nfour grand or whatever on the trade. Uh\nif we get up to $78,000 in this uh move\nfor Bitcoin. Now, if you want to join me\ntrading over on Bit Unix, there's a link\ndown below. You can get signed up. In\nfact, anyone anywhere can use Bit Unix.\nIt's a global exchange. They got the\ncoins you want to trade. They got the\nliquidity that you want. Okay. Long the\nrips, short the dips, they got you\ncovered. When you use the link down\nbelow, you'll be up for some exclusive\nbonuses. So, you deposit 500 bucks, you\nget 100 bucks back. You put in a,000\nbucks, you're going to get $200 back.\nYou put in $2,000, you'll get $400\ncredited back into your account. These\nare crazy deals, okay? I have no idea\nhow they're still running these awesome\ndeals, but there's a link down below\nwhere you can get signed up today and\nstart trading on Bit Unix. Thank you\nvery much. So\nBaraxis posted this. I hope many of you\nrealize that this Iran conflict will be\nover but before the end of Q1. I mean\nIran is running out of missiles and\nstuff real fast. Man, I saw a statistic\nyesterday is like um I think it was Pete\nHegath maybe the secretary of war who\nwas talking about this in the US and he\nwas saying Iran's ballistic missile\nlaunches are down 86% since the first\nday of the conflict and their drone\nlaunches are down 75%. So, there's still\nattacks going on across the Middle East,\nbut\nIran's getting their butts kicked, man.\nUh, anyway, Clarity Act will be signed\ninto law by the end of Q2 2026. The next\n6 to 18 months is going to be the best\nBitcoin run we've experienced since\n2017. Buckle up. Of course, we have the\nISM PMI for manufacturing also taking\noff. That usually indicate the business\ncycle heating up. And Bitcoin has always\nhad its big big top\nat the top of the business cycle. So\nperhaps what we've seen recently is like\na mid-market reset as painful as it's\nbeen for a lot of investors. Nick posted\nthis and reflect on this this morning.\nBitcoin news for a couple hours. Um\nKraken got a Federal Reserve master\naccount license. Morgan Stanley is\nfiling for a Bitcoin ETF with Bank of\nNew York Melon as a custodian. Feels\nlike just another institutional adoption\nnews day, but in reality is probably one\nof those days that changes the game\nagain forever in Bitcoin's favor. The\namount of news and again you need to\nhave perspective, guys. any of these do\nstories like five years ago or how long\nhave I been in crypto now? Jeez Louise,\na long time. Nine years. Nine years ago,\nthese stories would have like people\nwould have lost their effing minds. I\nwas like, \"Oh, yeah. Kraken got a\nFederal Reserve master count.\nNobody cares anymore.\" But these are big\nnews stories, guys. And the impact of\nthese things is not overnight, but long\nterm, it's absolutely massive. James\nBull, let's go. The road to $100,000\nBitcoin. This is very interesting. It\nsays Bitcoin versus gold. He says BTC\ngold always bottomed 14 months exactly\nafter the peak. It did it in 2014, 2018,\nand 2022. And it's always marked the\nbottom and was always followed by two to\nthree years of up only.\nLet's [ __ ] go. That chart fits the\nheck out of my bias. Let's do it. Let's\ndo it. Also, if you look at the copper\ngold ratio signaling as well that\nthere's a potential for a major upturn\nin the business cycle, which is already\nstarting to happen. So, this is all to\nsay that between now and like the end of\n2028, which also happens to line up with\nthe end of the solar cycle, things get\nreal spicy. Okay, not say there's not\ngoing to be volatility, but gosh darn\nit. Psychedelic post this people are\nheavily shorting this rally. The 1day\nfunding level is close to the 60K bottom\nlevels. If it wasn't for that, this\nwould be the biggest negative funding\nday since March 2023 in three years.\nEverybody wants to short every tiny\nlittle move in the markets. Massive\nshort squeezes building up right across\nthe market. Whether it's Bitcoin, which\nis massively shorted right now, Micro\nStrategy, which is the most shorted\n[ __ ] stock on the stock market right\nnow, like the short squeeze potential,\nand that is just freaking massive, man.\nYeah, BTC is here. We got initially uh I\ndon't want to say rejected, but the\nyesterday's rally cooled, let's say, at\nthe 50-day EMA right here at around 74K.\nThis is the highest daily candle since\nwell, a long time since February, man.\nWe had the big old fat crash. Okay, so\ninteresting. We want to see, of course,\nBitcoin continue to show strength here\nand continue to push itself up. There'll\nbe lots of corrections along the way.\nexpect if this is the start of a new\nuptrend, even if it's just for a big\nrelief rally in the markets, not to say\nnew all-time high necessarily. If it is\njust a relief rally, there will still be\nprobably a few retests of the 20-day EMA\non the way up. Again, my take profit set\nat $78,000\nhere for BTC, which is right around this\nuh cluster of price action here. Okay,\nbut I can see it even pushing up to like\n81 82 around the 100 day. Let's see. But\nif it is, of course, a big breakout,\nit'll go higher. But you know what? Not\ntrying to get the grand slam on this uh\nBitcoin trade right here. I'm trying to\ndo a 3:1 riskreward trade. Risk $1 to\nmake three. If we hit $78,000, that's a\nsuccessfully completed trade. Heisenberg\nagain, uh came across this quote by Sun\nLiao. Okay. After realizing the market\nhas endless opportunities, I never had\nFOMO again. This is the thing. There's\nalways a trade, man. Every single day,\nthere's always a trade. It's nonstop in\nthe markets. All you have to do is have\nthe right eyes to the opportunities in\nfront of you. Okay, real quick. Look a\nfew charts here. This is virtual. I've\nactually been adding a little bit to\nthis position this week. Not massive\namounts. I've increased my position like\n10% or something like that. But you can\nsee huge downtrend. Broke out here on\nthe 25th of February.\nNow slowly grinding up. It's been\ntrading above the 20-day EMA pretty\nsteadily. and we're looking at a\npotential bullish MACD crossover for the\nor bullish EMA crossover where the\n20-day gets back over the 50-day.\nI like it. There's a lot of cool [ __ ]\nhappening with virtuals right now. I\nthink it's a great ecosystem and with AI\nagents taking off. I'm surprised it\nhasn't actually done better. We've had\nothers like uh VVV, Venice Token, like\nabsolutely mooning a few others as well,\nbut uh I think Virtual is a very very\nrock solid uh AI play in the crypto\nspace, which is why it's one of the few\naltcoin bags that I'm currently holding.\nPump is not pumping, but it did have\nthree equal bottoms here.\nCome on, pump bags. Go to the moon. Go\nto the moon. All right, come on. D needs\na new pair of shoes here.\nOh boy. Anyway, uh breaking out of the\ndowntrend here. Let's see if it can\nstart building up strength back above\nthe 20-day EMA for the first time in a\nwhile. So, let's see if that's move is\ngoing to have some legs or not. Uh MACD\nalso flipping uh for bullish momentum\nhere as well, showing uptrend uh\nnarrative building here. Okay, micro\nstrategy. This is again on the weekly\nchart. Last time we went from oversold\nto overbought conditions. The first\noverbought conditions took around 88\nweeks and the final peak took 125 weeks.\nWhat's interesting that brings us right\nto the end of 2028 near the end of the\nsolar cycle by the time that the AI\nunemployment crisis is probably going to\nreally start catching narrative as\neverybody really starts losing their\njobs to AI and humanoid robots.\nInteresting. I feel like I need to buy\nsome more of that. I've got about\nprobably half as much of the position as\nI'd want for Micro Strategy. You know,\nusually I like to buy dividend stocks or\nstuff like that. My tech stocks are a\ndecent part of my portfolio, don't get\nme wrong, but and I also like to avoid\ncrypto exposure in my stock portfolio. I\nlike to invest in non-crypto stuff\nbecause, you know, [ __ ] I've got [ __ ]\ntons of crypto. Like, do I really need\nmore exposure to crypto? But man, I just\nI cannot unsee this micro strategy chart\nor strategy. It's not it's not micro\nstrategy now. It's just just strategy.\nJust strategy. Hey, take away the micro\npart. Just strategy. It's cleaner,\nright? Anyway, this chart looks\nabsolutely primed before upside,\nespecially at BTC runs. It is the beaten\ndown most shorted stock on the stock\nmarket right now. Over the last few\nweeks, everybody's literally been saying\nthat it's effing dead. I'm a buyer. I'll\nkeep buying. If we go under a hundred\nbucks, I guess I'll lose my shirt. It's\nfine. and won't be the first time. Iron,\nthis of course is a AI data center play\ncontinuing very popular stock right now\ncontinuing to coil up within this wider\ntriangle pattern. So we want to see a\nbreakout to the upside on this. If it\ngets to $100, I will sell my whole stack\nand be happy. If we lose it under here,\ngot some bag holding for a while and\nprobably buy some more. Tesla still in\nthis downtrend. It's the third peak\nabove the downtrend line. I guess we got\nto move the downtrend line now, don't\nwe? Maybe make a little more little more\nlike that. So, we're once again here at\nthe downtrend line after bouncing for\nthe third time at the 200day EMA.\nTesa bulls want to see a breakout now\nbeyond about $410.\nIf you want to uh watch for a great\nbuying opportunity, I think it's this\ntrend line right down here, which is\nwhere I would personally be adding uh\nmore to my Tesla position. Okay, by the\nway, if you're not in the circle yet,\nyou got to get in it. It's awesome, man.\nNo, seriously. This group's like\nabsolute fire. I'm so proud of what we\nbuilt over at the inner circle. The\nvalue we provide is absolutely off the\ncharts insane. Look, when you sign up,\nyou're going to get our trading course.\nThat's $299 value. You're going to get\nregular long and short positions on\ncryptos, metals, and stocks from\nin-house trading team. You're going to\nget our trading signal bot. You're going\nto get our token sniffer bot. We talk\nprediction markets. We talk DeFi. You\nget a weekly stock report on a hot stock\nlike Micron Tech before it had it 100%\nrally. You get weekly altcoin reports on\nthings like canon before it had it 100%\nrally. Okay, you get community. I'm in\nthere. My team of OG researchers is in\nthere. It's absolutely awesome. I have\nno idea how we're giving this away for\n50 bucks a month, but we currently are.\nAnd you'll get a 7-day free trial. Link\ndown below. I appreciate you guys and\nI'll see you back in the next one.\nPeace.",
+    "source_url": "https://www.youtube.com/watch?v=vhXbNSmgSfY",
+    "author": 666,
+    "published_at": null,
+    "is_new": true,
+    "is_updated": false,
+    "created_at": "2026-03-07T21:19:09.437Z",
+    "slug": "no-ones-more-nervous-than-bitcoin-holders-now",
+    "content_fingerprint": "b6101e36624c549110f4c23bba1fad11",
+    "categorization_version": "1.273",
+    "last_categorized_at": "2026-03-07T21:42:50.662Z"
   }
 },
 {
@@ -28231,6 +28346,510 @@
     "context": "4%, and 43% of bitcoin's supply now sitting at a loss according to Glassnode data.",
     "status": "approved",
     "created_at": "2026-03-07T10:03:39.242Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 915,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "No one is more nervous than Bitcoin\nholders right now.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.589Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 916,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Is\nthis the magical war pump where we see\nBitcoin go to the moon?",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.593Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 917,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We've gone on from, you know,\nall tech and AI.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.596Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 918,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "I feel like I\nhaven't heard about AI crashing the\nmarkets in a few days now.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.599Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 919,
+  "fields": {
+    "rawtext": 171,
+    "topic": 755,
+    "matched_keyword": "S&p 500",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Currently S&P 500\nfutures opening only slightly in the\nred.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.601Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 920,
+  "fields": {
+    "rawtext": 171,
+    "topic": 755,
+    "matched_keyword": "S&p 500",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We had a\nnice pump in the S&P 500 yesterday.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.602Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 921,
+  "fields": {
+    "rawtext": 171,
+    "topic": 755,
+    "matched_keyword": "S&p 500",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Okay, a multi-month\nrange here on the S&P 500.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.604Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 922,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Uh Bitcoin long is still open by\nthe way.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.607Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 923,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "So worst case scenario for\nthis Bitcoin long right now as I get\nstopped out of break even which I'm fine\nwith.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.610Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 924,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Uh\nif we get up to $78,000 in this uh move\nfor Bitcoin.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.612Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 925,
+  "fields": {
+    "rawtext": 171,
+    "topic": 708,
+    "matched_keyword": "Hope",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "I hope many of you\nrealize that this Iran conflict will be\nover but before the end of Q1.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.615Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 926,
+  "fields": {
+    "rawtext": 171,
+    "topic": 756,
+    "matched_keyword": "Middle East",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "So, there's still\nattacks going on across the Middle East,\nbut\nIran's getting their butts kicked, man.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.617Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 927,
+  "fields": {
+    "rawtext": 171,
+    "topic": 719,
+    "matched_keyword": "Law",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Uh, anyway, Clarity Act will be signed\ninto law by the end of Q2 2026.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.619Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 928,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "The next\n6 to 18 months is going to be the best\nBitcoin run we've experienced since\n2017.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.621Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 929,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "And Bitcoin has always\nhad its big big top\nat the top of the business cycle.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.623Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 930,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Bitcoin news for a couple hours.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.627Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 931,
+  "fields": {
+    "rawtext": 171,
+    "topic": 781,
+    "matched_keyword": "Kraken",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Um\nKraken got a Federal Reserve master\naccount license.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.629Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 932,
+  "fields": {
+    "rawtext": 171,
+    "topic": 777,
+    "matched_keyword": "Federal Reserve",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Um\nKraken got a Federal Reserve master\naccount license.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.630Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 933,
+  "fields": {
+    "rawtext": 171,
+    "topic": 780,
+    "matched_keyword": "Morgan Stanley",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Morgan Stanley is\nfiling for a Bitcoin ETF with Bank of\nNew York Melon as a custodian.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.631Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 934,
+  "fields": {
+    "rawtext": 171,
+    "topic": 93,
+    "matched_keyword": "bitcoin etf",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Morgan Stanley is\nfiling for a Bitcoin ETF with Bank of\nNew York Melon as a custodian.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.632Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 935,
+  "fields": {
+    "rawtext": 171,
+    "topic": 53,
+    "matched_keyword": "Institutional Adoption",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Feels\nlike just another institutional adoption\nnews day, but in reality is probably one\nof those days that changes the game\nagain forever in Bitcoin's favor.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.634Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 936,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Feels\nlike just another institutional adoption\nnews day, but in reality is probably one\nof those days that changes the game\nagain forever in Bitcoin's favor.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.636Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 937,
+  "fields": {
+    "rawtext": 171,
+    "topic": 781,
+    "matched_keyword": "Kraken",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Kraken got a\nFederal Reserve master count.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.637Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 938,
+  "fields": {
+    "rawtext": 171,
+    "topic": 777,
+    "matched_keyword": "Federal Reserve",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Kraken got a\nFederal Reserve master count.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.638Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 939,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "The road to $100,000\nBitcoin.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.640Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 940,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "It\nsays Bitcoin versus gold.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.641Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 941,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Whether it's Bitcoin, which\nis massively shorted right now, Micro\nStrategy, which is the most shorted\n[ __ ] stock on the stock market right\nnow, like the short squeeze potential,\nand that is just freaking massive, man.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.643Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 942,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We want to see, of course,\nBitcoin continue to show strength here\nand continue to push itself up.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.645Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 943,
+  "fields": {
+    "rawtext": 171,
+    "topic": 771,
+    "matched_keyword": "Bitcoin",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Not\ntrying to get the grand slam on this uh\nBitcoin trade right here.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.646Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 944,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "I\nthink it's a great ecosystem and with AI\nagents taking off.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.649Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 945,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We've had\nothers like uh VVV, Venice Token, like\nabsolutely mooning a few others as well,\nbut uh I think Virtual is a very very\nrock solid uh AI play in the crypto\nspace, which is why it's one of the few\naltcoin bags that I'm currently holding.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.650Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 946,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "What's interesting that brings us right\nto the end of 2028 near the end of the\nsolar cycle by the time that the AI\nunemployment crisis is probably going to\nreally start catching narrative as\neverybody really starts losing their\njobs to AI and humanoid robots.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.652Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 947,
+  "fields": {
+    "rawtext": 171,
+    "topic": 46,
+    "matched_keyword": "AI",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Iron,\nthis of course is a AI data center play\ncontinuing very popular stock right now\ncontinuing to coil up within this wider\ntriangle pattern.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.655Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 948,
+  "fields": {
+    "rawtext": 171,
+    "topic": 91,
+    "matched_keyword": "Prediction Markets",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We talk\nprediction markets.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.657Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 949,
+  "fields": {
+    "rawtext": 171,
+    "topic": 216,
+    "matched_keyword": "DeFi",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "We talk DeFi.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.659Z"
+  }
+},
+{
+  "model": "narratives.pendingtopic",
+  "pk": 950,
+  "fields": {
+    "rawtext": 171,
+    "topic": 695,
+    "matched_keyword": "Peace",
+    "is_weak": false,
+    "found_context_words": [],
+    "context": "Peace.",
+    "status": "approved",
+    "created_at": "2026-03-07T21:42:50.661Z"
   }
 },
 {

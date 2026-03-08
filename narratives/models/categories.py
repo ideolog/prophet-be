@@ -47,6 +47,7 @@ class Topic(models.Model):
     slug = models.SlugField(unique=True, blank=True, max_length=500)
     parents = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="children")
     related_topics = models.ManyToManyField('self', symmetrical=True, blank=True, related_name="related_to")
+    functions = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="function_of", help_text="The primary functions/roles of this topic (e.g., Money -> Medium of Exchange)")
     schools_of_thought = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="topics_in_school", help_text="Schools of thought that this topic belongs to or is defined by")
     description = models.TextField(blank=True, null=True)
     keywords = models.JSONField(default=list, blank=True, help_text="Strong keywords (no AI check needed)")
@@ -56,6 +57,8 @@ class Topic(models.Model):
         help_text="List of dicts: [{'keyword': 'gas', 'required_context': ['blockchain'], 'distance': 10}]"
     )
     is_placeholder = models.BooleanField(default=False, help_text="If true, this topic will not be searched in texts (used only for hierarchy)")
+    topic_type = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name="typed_topics", limit_choices_to={'is_placeholder': True}, help_text="The classification type of this topic (e.g., Person, Crypto, Organization)")
+    updated_at = models.DateTimeField(auto_now=True)
     metadata = models.JSONField(default=dict, blank=True, help_text="Additional data for specific types (e.g., bio for persons)")
 
     def __str__(self):
