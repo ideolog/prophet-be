@@ -10,11 +10,21 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
 from ..models import RawText, Source, Topic, PendingTopic, RawTextProcessing
-from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, PendingTopicSerializer
+from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, PendingTopicSerializer, DeclinedTopicSerializer
 from ..utils.text import generate_fingerprint
 from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
 from narratives.models import Source, RawText, RawTextProcessing, PendingTopic
+from narratives.models.categories import DeclinedTopic, Topic
 from narratives.utils.ai_module import suggest_topics_for_text
+from narratives.utils.knowledge_sources.aggregator import collect_topic_knowledge, format_knowledge_dossier
+from narratives.utils.local_ai import analyze_topic_with_ai
+import wikipediaapi
+from rest_framework.pagination import PageNumberPagination
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 class SourceListView(generics.ListCreateAPIView):
     queryset = Source.objects.all().order_by('-created_at')
@@ -316,15 +326,25 @@ class RawTextRedownloadView(APIView):
 class TopicListView(generics.ListAPIView):
     queryset = Topic.objects.all().order_by('-updated_at')
     serializer_class = TopicSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         queryset = Topic.objects.all().order_by('-updated_at')
         search = self.request.query_params.get('search')
         if search:
             queryset = queryset.filter(name__icontains=search)
-        else:
-            # Only limit to 50 if no search is performed
-            queryset = queryset[:50]
+        return queryset
+
+class DeclinedTopicListView(generics.ListAPIView):
+    queryset = DeclinedTopic.objects.all().order_by('-created_at')
+    serializer_class = DeclinedTopicSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        queryset = DeclinedTopic.objects.all().order_by('-created_at')
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
         return queryset
 
 class TopicCreateView(generics.CreateAPIView):
@@ -370,6 +390,17 @@ class TopicDetailView(generics.RetrieveUpdateAPIView):
             
         return Response(serializer.data)
 
+class TopicBulkDeleteView(APIView):
+    def post(self, request):
+        ids = request.data.get("ids", [])
+        if not ids:
+            return Response({"error": "No IDs provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        count = Topic.objects.filter(id__in=ids).count()
+        Topic.objects.filter(id__in=ids).delete()
+        
+        return Response({"message": f"Successfully deleted {count} topics."}, status=status.HTTP_200_OK)
+
 class RawTextHashDuplicateCheck(APIView):
 
     @swagger_auto_schema(
@@ -390,3 +421,205 @@ class RawTextHashDuplicateCheck(APIView):
 class RawTextMassProcessingView(APIView):
     def post(self, request):
         return Response({"error": "Mass processing is temporarily disabled."}, status=status.HTTP_400_BAD_REQUEST)
+
+class RawTextAISuggestTopicsView(APIView):
+    def post(self, request, id):
+        rawtext = get_object_or_404(RawText, id=id)
+        
+        # 1. Get existing topics already linked to this text
+        existing_linked_topic_ids = PendingTopic.objects.filter(rawtext=rawtext).values_list('topic_id', flat=True)
+        existing_topic_names = list(Topic.objects.filter(id__in=existing_linked_topic_ids).values_list('name', flat=True))
+        
+        # 2. Call local AI to suggest new topics
+        from narratives.utils.local_ai import suggest_new_topics_with_ai
+        ai_results = suggest_new_topics_with_ai(rawtext.content[:4000], existing_topic_names)
+        
+        if not ai_results or "suggested_topics" not in ai_results:
+            return Response({"error": "AI failed to suggest topics."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        suggestions = ai_results["suggested_topics"]
+        
+        # 3. Filter suggestions (must be atomic nouns, must exist in Wikipedia)
+        valid_suggestions = []
+        rejected_suggestions = []
+        
+        from narratives.utils.ai_module import _get_nlp
+        nlp = _get_nlp()
+        user_agent = "ProphetOntologyBot/1.0 (https://github.com/paulus/prophet; contact@example.com)"
+        wiki = wikipediaapi.Wikipedia(user_agent=user_agent, language='en')
+
+        for name in suggestions:
+            name = name.strip()
+            if not name or len(name) < 2: continue
+            
+            # POS Check
+            doc = nlp(name)
+            if len(doc) > 0 and doc[0].pos_ in ["VERB", "AUX"]:
+                rejected_suggestions.append({"name": name, "reason": "Starts with verb"})
+                continue
+                
+            # Wikipedia Check
+            page = wiki.page(name)
+            if not page.exists():
+                rejected_suggestions.append({"name": name, "reason": "Wikipedia page missing"})
+                continue
+                
+            # Check if already exists in DB
+            topic_obj = Topic.objects.filter(name__iexact=name).first()
+            
+            valid_suggestions.append({
+                "name": page.title,
+                "exists_in_db": topic_obj is not None,
+                "topic_id": topic_obj.id if topic_obj else None,
+                "summary": page.summary[:200] + "..."
+            })
+            
+        return Response({
+            "suggestions": valid_suggestions,
+            "rejected": rejected_suggestions
+        }, status=status.HTTP_200_OK)
+
+class TopicEnhanceWikipediaView(APIView):
+    def post(self, request, id):
+        topic = get_object_or_404(Topic, id=id)
+        
+        # 1. Collect knowledge from multiple sources
+        knowledge_list = collect_topic_knowledge(topic.name)
+        if not knowledge_list:
+            return Response({"error": f"No information found for '{topic.name}' in any source."}, status=status.HTTP_404_NOT_FOUND)
+        
+        # 2. Update Topic Description if empty or different (prefer Binance Academy for crypto)
+        best_content = knowledge_list[0]['content']
+        if not topic.description or len(topic.description) < 50:
+            topic.description = best_content
+            topic.save()
+            
+        # 3. Analyze with Local AI using the combined dossier
+        dossier = format_knowledge_dossier(knowledge_list)
+        ai_results = analyze_topic_with_ai(topic.name, dossier)
+        
+        if not ai_results:
+            return Response({
+                "message": "Knowledge collected, but AI analysis failed (check Ollama).",
+                "dossier": dossier
+            }, status=status.HTTP_200_OK)
+            
+        # 4. Apply findings (Create missing topics and link them)
+        created_topics = []
+        linked_parents = []
+        linked_schools = []
+        linked_functions = []
+        linked_related = []
+        rejected_count = 0
+        
+        # Helper to get or create topic with validation
+        def get_or_create_topic(name, target_field):
+            nonlocal rejected_count
+            name = name.strip()
+            if not name: return None
+            
+            # 0. Case-insensitive existence check to avoid duplicates
+            existing = Topic.objects.filter(name__iexact=name).first()
+            if existing:
+                return existing
+
+            # 1. Basic length check
+            if len(name) < 2:
+                DeclinedTopic.objects.create(
+                    name=name,
+                    source_topic=topic,
+                    target_field=target_field,
+                    reason='too_short'
+                )
+                rejected_count += 1
+                return None
+
+            # 2. POS Validation with spaCy (Anti-verb check)
+            try:
+                from narratives.utils.ai_module import _get_nlp
+                nlp = _get_nlp()
+                doc = nlp(name)
+                if len(doc) > 0:
+                    first_token = doc[0]
+                    # Check if first token is a verb OR if it's a participle (like 'Written')
+                    # spaCy tags: VERB (main verb), AUX (auxiliary), PART (particle)
+                    if first_token.pos_ in ["VERB", "AUX"]:
+                        DeclinedTopic.objects.create(
+                            name=name,
+                            source_topic=topic,
+                            target_field=target_field,
+                            reason='starts_with_verb',
+                            reason_detail=f"Detected POS: {first_token.pos_} ({first_token.tag_})"
+                        )
+                        rejected_count += 1
+                        return None
+            except Exception as e:
+                print(f"POS validation failed: {e}")
+
+            # 3. Wikipedia Existence Check (Final sanity check for new topics)
+            try:
+                user_agent = "ProphetOntologyBot/1.0 (https://github.com/paulus/prophet; contact@example.com)"
+                wiki = wikipediaapi.Wikipedia(user_agent=user_agent, language='en')
+                page = wiki.page(name)
+                if not page.exists():
+                    # Also check if it exists in our DB already
+                    if not Topic.objects.filter(name__iexact=name).exists():
+                        DeclinedTopic.objects.create(
+                            name=name,
+                            source_topic=topic,
+                            target_field=target_field,
+                            reason='wikipedia_missing',
+                            reason_detail="No exact match found on English Wikipedia"
+                        )
+                        rejected_count += 1
+                        return None
+            except Exception as e:
+                print(f"Wikipedia check failed: {e}")
+
+            # 4. Create or get
+            name = name[0].upper() + name[1:] if len(name) > 0 else name
+            t, created = Topic.objects.get_or_create(name=name)
+            if created:
+                created_topics.append(name)
+            return t
+
+        # Process Parents
+        for p_name in ai_results.get("parents", []):
+            p_topic = get_or_create_topic(p_name, "parents")
+            if p_topic and p_topic != topic:
+                topic.parents.add(p_topic)
+                linked_parents.append(p_name)
+                
+        # Process Schools of Thought
+        for s_name in ai_results.get("schools", []):
+            s_topic = get_or_create_topic(s_name, "schools")
+            if s_topic and s_topic != topic:
+                topic.schools_of_thought.add(s_topic)
+                linked_schools.append(s_name)
+
+        # Process Functions
+        for f_name in ai_results.get("functions", []):
+            f_topic = get_or_create_topic(f_name, "functions")
+            if f_topic and f_topic != topic:
+                topic.functions.add(f_topic)
+                linked_functions.append(f_name)
+
+        # Process Related Topics
+        for r_name in ai_results.get("related", []):
+            r_topic = get_or_create_topic(r_name, "related")
+            if r_topic and r_topic != topic:
+                topic.related_topics.add(r_topic)
+                linked_related.append(r_name)
+                
+        return Response({
+            "message": "Topic enhanced successfully.",
+            "sources_used": [s['source'] for s in knowledge_list],
+            "ai_extracted": ai_results,
+            "created_new_topics": created_topics,
+            "linked_parents": linked_parents,
+            "linked_schools": linked_schools,
+            "linked_functions": linked_functions,
+            "linked_related": linked_related,
+            "rejected_suggestions_count": rejected_count,
+            "summary": best_content
+        }, status=status.HTTP_200_OK)

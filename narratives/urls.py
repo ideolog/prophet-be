@@ -15,6 +15,7 @@ from .views import (
     RawTextDetailView,
     RawTextRedownloadView,
     RawTextFindTopicsView,
+    RawTextAISuggestTopicsView,
     PendingTopicActionView,
 
     # Markets
@@ -31,6 +32,9 @@ from .views import (
     TopicListView,
     TopicCreateView,
     TopicDetailView,
+    TopicEnhanceWikipediaView,
+    DeclinedTopicListView,
+    TopicBulkDeleteView
 )
 
 urlpatterns = [
@@ -46,13 +50,17 @@ urlpatterns = [
     path('rawtexts/<int:id>/', RawTextDetailView.as_view(), name='rawtext-detail'),
     path('rawtexts/<int:id>/redownload/', RawTextRedownloadView.as_view(), name='rawtext-redownload'),
     path('rawtexts/<int:id>/find-topics/', RawTextFindTopicsView.as_view(), name='rawtext-find-topics'),
+    path('rawtexts/<int:id>/ai-suggest/', RawTextAISuggestTopicsView.as_view(), name='rawtext-ai-suggest'),
     path('rawtexts/', RawTextListView.as_view(), name='rawtext-list'),
     path('pending-topics/<int:id>/action/', PendingTopicActionView.as_view(), name='pending-topic-action'),
 
     # TOPICS
     path('topics/', TopicListView.as_view(), name='topic-list'),
+    path('topics/bulk-delete/', TopicBulkDeleteView.as_view(), name='topic-bulk-delete'),
     path('topics/create/', TopicCreateView.as_view(), name='topic-create'),
     path('topics/<int:id>/', TopicDetailView.as_view(), name='topic-detail'),
+    path('topics/<int:id>/enhance-wikipedia/', TopicEnhanceWikipediaView.as_view(), name='topic-enhance-wikipedia'),
+    path('declined-topics/', DeclinedTopicListView.as_view(), name='declined-topic-list'),
 
 
     # MARKETS

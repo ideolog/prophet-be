@@ -1,6 +1,7 @@
 from django.db.models import Count
 from rest_framework import serializers
 from ..models import RawText, Source, Topic, PendingTopic
+from narratives.models.categories import DeclinedTopic
 from narratives.utils.text import generate_fingerprint
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -169,3 +170,14 @@ class RawTextSerializer(serializers.ModelSerializer):
         if content and not validated_data.get("content_fingerprint"):
             validated_data["content_fingerprint"] = generate_fingerprint(content)
         return super().create(validated_data)
+
+class DeclinedTopicSerializer(serializers.ModelSerializer):
+    source_topic_name = serializers.CharField(source='source_topic.name', read_only=True)
+
+    class Meta:
+        model = DeclinedTopic
+        fields = [
+            "id", "name", "source_topic", "source_topic_name", 
+            "target_field", "reason", "reason_detail", "created_at"
+        ]
+        read_only_fields = ["id", "created_at"]

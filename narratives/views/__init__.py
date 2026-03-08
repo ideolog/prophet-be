@@ -9,10 +9,14 @@ from .sources import (
     SourceListView, 
     SourceDetailView, 
     YouTubeSourceAddView, 
-    RawTextRedownloadView,
+    RawTextRedownloadView, 
     RawTextFindTopicsView,
+    RawTextAISuggestTopicsView,
     PendingTopicActionView,
     TopicListView,
-    TopicCreateView,
-    TopicDetailView
+    TopicCreateView, 
+    TopicDetailView,
+    TopicEnhanceWikipediaView,
+    DeclinedTopicListView,
+    TopicBulkDeleteView
 )

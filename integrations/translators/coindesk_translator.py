@@ -32,6 +32,25 @@ class CoinDeskTranslator:
                     if content_div:
                         p_tags = content_div.find_all('p')
                         paragraphs = [p.get_text().strip() for p in p_tags if p.get_text().strip()]
+                        
+                        # Clean up CoinDesk specific "Read More" and "More For You" sections
+                        cleaned_paragraphs = []
+                        skip_rest = False
+                        for p in paragraphs:
+                            if skip_rest:
+                                break
+                            
+                            # Check for common CoinDesk footer markers
+                            lower_p = p.lower()
+                            if lower_p.startswith("read more:") or \
+                               lower_p == "more for you" or \
+                               lower_p == "what to know:":
+                                skip_rest = True
+                                continue
+                            
+                            cleaned_paragraphs.append(p)
+                        
+                        paragraphs = cleaned_paragraphs
                         if paragraphs:
                             full_content = "\n\n".join(paragraphs)
             except Exception as e:

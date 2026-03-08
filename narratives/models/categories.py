@@ -81,6 +81,26 @@ class Organization(models.Model):
         return self.name
 
 
+class DeclinedTopic(models.Model):
+    REASON_CHOICES = [
+        ('starts_with_verb', 'Starts with a verb'),
+        ('too_short', 'Too short'),
+        ('complex_phrase', 'Too complex/Not atomic'),
+        ('wikipedia_missing', 'Wikipedia page missing'),
+        ('other', 'Other'),
+    ]
+
+    name = models.CharField(max_length=500, help_text="The rejected topic name")
+    source_topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="rejected_suggestions")
+    target_field = models.CharField(max_length=50, help_text="Field it was intended for (parents, functions, etc.)")
+    reason = models.CharField(max_length=50, choices=REASON_CHOICES, default='other')
+    reason_detail = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} (Rejected for {self.source_topic.name})"
+
+
 # Signal receivers for slugs
 @receiver(pre_save, sender=Topic)
 def create_slug(sender, instance, *args, **kwargs):
