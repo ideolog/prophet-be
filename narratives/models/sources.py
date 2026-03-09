@@ -60,6 +60,9 @@ class RawText(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True, max_length=300)
     content_fingerprint = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Normalized hash of the content for duplicate detection")
+    
+    # AI Suggestions cache
+    ai_suggestions = models.JSONField(default=list, blank=True, help_text="Cached AI topic suggestions for this text")
 
     # Categorization Versioning
     categorization_version = models.CharField(max_length=20, blank=True, null=True, help_text="The version of the categorization logic used")

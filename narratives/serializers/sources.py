@@ -1,25 +1,25 @@
 from django.db.models import Count
 from rest_framework import serializers
-from ..models import RawText, Source, Topic, PendingTopic
+from ..models import RawText, Source, Topic, PendingTopic, TopicType
 from narratives.models.categories import DeclinedTopic
 from narratives.utils.text import generate_fingerprint
 
+class TopicTypeSerializer(serializers.ModelSerializer):
+    topics_count = serializers.IntegerField(source='topics.count', read_only=True)
+
+    class Meta:
+        model = TopicType
+        fields = ["id", "name", "slug", "description", "updated_at", "topics_count"]
+
 class TopicSerializer(serializers.ModelSerializer):
-    parents_count = serializers.IntegerField(source='parents.count', read_only=True)
-    children_count = serializers.IntegerField(source='children.count', read_only=True)
     related_count = serializers.IntegerField(source='related_topics.count', read_only=True)
     keywords_count = serializers.SerializerMethodField()
-    level = serializers.SerializerMethodField()
-    parents = serializers.SerializerMethodField()
-    children = serializers.SerializerMethodField()
     related_topics = serializers.SerializerMethodField()
-    functions = serializers.SerializerMethodField()
     schools_of_thought = serializers.SerializerMethodField()
     topics_in_school = serializers.SerializerMethodField()
-    function_of = serializers.SerializerMethodField()
     topic_type = serializers.SerializerMethodField()
     topic_type_id = serializers.PrimaryKeyRelatedField(
-        queryset=Topic.objects.filter(is_placeholder=True),
+        queryset=TopicType.objects.all(),
         source='topic_type',
         required=False,
         allow_null=True
@@ -29,9 +29,9 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = [
             "id", "name", "alternative_name", "slug", "description", "keywords", "weak_keywords", "metadata",
-            "is_placeholder", "updated_at",
-            "parents_count", "children_count", "related_count", "keywords_count", "level",
-            "parents", "children", "related_topics", "functions", "function_of", "schools_of_thought", "topics_in_school",
+            "wikipedia_url", "is_placeholder", "updated_at",
+            "related_count", "keywords_count",
+            "related_topics", "schools_of_thought", "topics_in_school",
             "topic_type", "topic_type_id"
         ]
 
@@ -48,48 +48,24 @@ class TopicSerializer(serializers.ModelSerializer):
         except:
             return 0
 
-    def get_level(self, obj):
-        # Recursive level calculation
-        def get_node_level(node, current_level=0, visited=None):
-            if visited is None:
-                visited = set()
-            
-            if node.id in visited:
-                return current_level
-            visited.add(node.id)
-            
-            parents = node.parents.all()
-            if not parents:
-                return current_level
-            # Return max level of any parent path + 1
-            return max(get_node_level(p, current_level + 1, visited) for p in parents)
-        
-        try:
-            return get_node_level(obj)
-        except:
-            return 999 # Safety for circular refs
-
-    def get_parents(self, obj):
-        return [{"id": p.id, "name": p.name} for p in obj.parents.all()]
-
-    def get_children(self, obj):
-        return [{"id": s.id, "name": s.name} for s in obj.children.all()]
-
     def get_related_topics(self, obj):
-        return [{"id": r.id, "name": r.name} for r in obj.related_topics.all()]
-
-    def get_functions(self, obj):
-        return [{"id": f.id, "name": f.name} for f in obj.functions.all()]
-
-    def get_function_of(self, obj):
-        return [{"id": t.id, "name": t.name} for t in obj.function_of.all()]
+        try:
+            return [{"id": r.id, "name": r.name} for r in obj.related_topics.all()]
+        except:
+            return []
 
     def get_schools_of_thought(self, obj):
-        return [{"id": s.id, "name": s.name} for s in obj.schools_of_thought.all()]
+        try:
+            return [{"id": s.id, "name": s.name} for s in obj.schools_of_thought.all()]
+        except:
+            return []
 
     def get_topics_in_school(self, obj):
         # Return topics that have this topic as their school of thought
-        return [{"id": t.id, "name": t.name} for t in obj.topics_in_school.all()]
+        try:
+            return [{"id": t.id, "name": t.name} for t in obj.topics_in_school.all()]
+        except:
+            return []
 
 class PendingTopicSerializer(serializers.ModelSerializer):
     topic_name = serializers.CharField(source='topic.name', read_only=True)
@@ -114,15 +90,61 @@ class SourceSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "slug", "created_at"]
 
     def get_topic_distribution(self, obj):
-        rows = PendingTopic.objects.filter(
+        from django.db.models import Case, When, Value, IntegerField, Sum
+        from narratives.models import PendingTopic, Topic
+
+        # 1. Get all approved pending topics for this source
+        pending_topics = PendingTopic.objects.filter(
             rawtext__source=obj,
             status="approved",
-        ).values("topic__name").annotate(count=Count("id")).order_by("-count")
-        return [
-            {"name": r["topic__name"], "count": r["count"]}
-            for r in rows
-            if r["topic__name"]
-        ]
+        ).select_related('rawtext', 'topic')
+
+        if not pending_topics.exists():
+            return []
+
+        # 2. Calculate weights for each topic mention
+        topic_weights = {}
+        # Track if we've already given the title weight for a topic in a specific article
+        title_weight_given = set() # (rawtext_id, topic_id)
+
+        for pt in pending_topics:
+            topic_id = pt.topic_id
+            topic_name = pt.topic.name
+            rawtext_id = pt.rawtext_id
+            
+            # Default weight is 1 (content)
+            weight = 1
+            
+            # Check if this topic should get title weight for this article
+            if (rawtext_id, topic_id) not in title_weight_given:
+                title = (pt.rawtext.title or "").lower()
+                matched = (pt.matched_keyword or topic_name).lower()
+                if matched and matched in title:
+                    weight = 10
+                    title_weight_given.add((rawtext_id, topic_id))
+            
+            if topic_id not in topic_weights:
+                topic_weights[topic_id] = {
+                    "name": topic_name, 
+                    "weight": 0,
+                    "type": pt.topic.topic_type.name if pt.topic.topic_type else None
+                }
+            
+            topic_weights[topic_id]["weight"] += weight
+
+        # 3. Format for response
+        result = []
+        for topic_id, info in topic_weights.items():
+            result.append({
+                "id": topic_id,
+                "name": info["name"],
+                "total_weight": info["weight"],
+                "type": info["type"]
+            })
+
+        # Sort by total weight
+        result.sort(key=lambda x: x["total_weight"], reverse=True)
+        return result
 
 class RawTextSerializer(serializers.ModelSerializer):
     categorization_status = serializers.ReadOnlyField()
@@ -142,7 +164,7 @@ class RawTextSerializer(serializers.ModelSerializer):
             "content", "slug", "content_fingerprint", "source", "genre",
             "categorization_status", "categorization_version", "current_system_version", "last_categorized_at",
             "is_new", "is_updated", "created_at", "source_url",
-            "pending_topics"
+            "pending_topics", "ai_suggestions"
         ]
         read_only_fields = ["id", "slug", "content_fingerprint", "categorization_status", "categorization_version", "current_system_version", "last_categorized_at", "is_new", "is_updated", "created_at"]
 

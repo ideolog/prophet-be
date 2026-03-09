@@ -41,13 +41,21 @@ class AppConfiguration(models.Model):
         return config.value
 
 
+class TopicType(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+    description = models.TextField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Topic(models.Model):
     name = models.CharField(max_length=500, unique=True)
     alternative_name = models.CharField(max_length=500, blank=True, null=True, help_text="Alternative name for this topic (e.g., Freedom of Expression for Freedom of Speech)")
     slug = models.SlugField(unique=True, blank=True, max_length=500)
-    parents = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="children")
     related_topics = models.ManyToManyField('self', symmetrical=True, blank=True, related_name="related_to")
-    functions = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="function_of", help_text="The primary functions/roles of this topic (e.g., Money -> Medium of Exchange)")
     schools_of_thought = models.ManyToManyField('self', symmetrical=False, blank=True, related_name="topics_in_school", help_text="Schools of thought that this topic belongs to or is defined by")
     description = models.TextField(blank=True, null=True)
     keywords = models.JSONField(default=list, blank=True, help_text="Strong keywords (no AI check needed)")
@@ -57,9 +65,10 @@ class Topic(models.Model):
         help_text="List of dicts: [{'keyword': 'gas', 'required_context': ['blockchain'], 'distance': 10}]"
     )
     is_placeholder = models.BooleanField(default=False, help_text="If true, this topic will not be searched in texts (used only for hierarchy)")
-    topic_type = models.ForeignKey('self', on_delete=models.SET_NULL, blank=True, null=True, related_name="typed_topics", limit_choices_to={'is_placeholder': True}, help_text="The classification type of this topic (e.g., Person, Crypto, Organization)")
+    topic_type = models.ForeignKey(TopicType, on_delete=models.SET_NULL, blank=True, null=True, related_name="topics", help_text="The classification type of this topic (e.g., Person, Crypto, Organization)")
     updated_at = models.DateTimeField(auto_now=True)
     metadata = models.JSONField(default=dict, blank=True, help_text="Additional data for specific types (e.g., bio for persons)")
+    wikipedia_url = models.URLField(blank=True, null=True, help_text="Direct link to the Wikipedia article (to avoid disambiguation pages)")
 
     def __str__(self):
         return self.name
@@ -102,6 +111,11 @@ class DeclinedTopic(models.Model):
 
 
 # Signal receivers for slugs
+@receiver(pre_save, sender=TopicType)
+def create_topictype_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = slugify(instance.name)
+
 @receiver(pre_save, sender=Topic)
 def create_slug(sender, instance, *args, **kwargs):
     if not instance.slug:

@@ -14,9 +14,13 @@ from .sources import (
     RawTextAISuggestTopicsView,
     PendingTopicActionView,
     TopicListView,
+    TopicTypeListView,
+    TopicTypeDetailView,
     TopicCreateView, 
     TopicDetailView,
     TopicEnhanceWikipediaView,
     DeclinedTopicListView,
-    TopicBulkDeleteView
+    TopicBulkDeleteView,
+    TopicDistributionView,
+    TopicMergeView
 )

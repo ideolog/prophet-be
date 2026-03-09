@@ -9,12 +9,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
-from ..models import RawText, Source, Topic, PendingTopic, RawTextProcessing
-from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, PendingTopicSerializer, DeclinedTopicSerializer
+from ..models import RawText, Source, Topic, PendingTopic, TopicType
+from ..serializers import RawTextSerializer, SourceSerializer, TopicSerializer, TopicTypeSerializer, PendingTopicSerializer, DeclinedTopicSerializer
 from ..utils.text import generate_fingerprint
 from ..serializers.request_bodies import RawTextDuplicateCheckRequestSerializer
-from narratives.models import Source, RawText, RawTextProcessing, PendingTopic
-from narratives.models.categories import DeclinedTopic, Topic
+from narratives.models import Source, RawText, PendingTopic, TopicType
+from narratives.models.categories import DeclinedTopic, Topic, TopicType
 from narratives.utils.ai_module import suggest_topics_for_text
 from narratives.utils.knowledge_sources.aggregator import collect_topic_knowledge, format_knowledge_dossier
 from narratives.utils.local_ai import analyze_topic_with_ai
@@ -257,12 +257,25 @@ class PendingTopicActionView(APIView):
                 return Response({"error": "No keyword associated with this suggestion"}, status=status.HTTP_400_BAD_REQUEST)
             
             topic = pending.topic
-            if keyword == topic.name:
+            if keyword.lower() == topic.name.lower():
                 return Response({"error": "Cannot remove the topic name itself as a keyword"}, status=status.HTTP_400_BAD_REQUEST)
             
+            # 1. Remove keyword from topic's global rules (check both strong and weak)
+            keyword_removed = False
+            
+            # Check strong keywords
             if keyword in topic.keywords:
-                # 1. Remove keyword from topic's global rules
                 topic.keywords = [kw for kw in topic.keywords if kw != keyword]
+                keyword_removed = True
+            
+            # Check weak keywords
+            if not keyword_removed:
+                new_weak = [w for w in topic.weak_keywords if w.get('keyword') != keyword]
+                if len(new_weak) < len(topic.weak_keywords):
+                    topic.weak_keywords = new_weak
+                    keyword_removed = True
+            
+            if keyword_removed:
                 topic.save()
                 
                 # 2. Mark ALL pending occurrences of this keyword for this topic as 'declined' 
@@ -335,6 +348,24 @@ class TopicListView(generics.ListAPIView):
             queryset = queryset.filter(name__icontains=search)
         return queryset
 
+class TopicTypeListView(generics.ListCreateAPIView):
+    queryset = TopicType.objects.all().order_by('name')
+    serializer_class = TopicTypeSerializer
+
+class TopicTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TopicType.objects.all()
+    serializer_class = TopicTypeSerializer
+    lookup_field = "id"
+
+class TopicTypeListView(generics.ListCreateAPIView):
+    queryset = TopicType.objects.all().order_by('name')
+    serializer_class = TopicTypeSerializer
+
+class TopicTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TopicType.objects.all()
+    serializer_class = TopicTypeSerializer
+    lookup_field = "id"
+
 class DeclinedTopicListView(generics.ListAPIView):
     queryset = DeclinedTopic.objects.all().order_by('-created_at')
     serializer_class = DeclinedTopicSerializer
@@ -352,11 +383,8 @@ class TopicCreateView(generics.CreateAPIView):
     serializer_class = TopicSerializer
 
     def perform_create(self, serializer):
-        parents_ids = self.request.data.get('parents_ids', [])
         related_ids = self.request.data.get('related_ids', [])
         instance = serializer.save()
-        if parents_ids:
-            instance.parents.set(parents_ids)
         if related_ids:
             instance.related_topics.set(related_ids)
 
@@ -369,24 +397,18 @@ class TopicDetailView(generics.RetrieveUpdateAPIView):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
-        # Handle parents_ids, related_ids, school_ids, and functions_ids if provided
-        parents_ids = request.data.get('parents_ids')
+        # Handle related_ids and school_ids if provided
         related_ids = request.data.get('related_ids')
         school_ids = request.data.get('school_ids')
-        functions_ids = request.data.get('functions_ids')
         
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         
-        if parents_ids is not None:
-            instance.parents.set(parents_ids)
         if related_ids is not None:
             instance.related_topics.set(related_ids)
         if school_ids is not None:
             instance.schools_of_thought.set(school_ids)
-        if functions_ids is not None:
-            instance.functions.set(functions_ids)
             
         return Response(serializer.data)
 
@@ -428,18 +450,49 @@ class RawTextAISuggestTopicsView(APIView):
         
         # 1. Get existing topics already linked to this text
         existing_linked_topic_ids = PendingTopic.objects.filter(rawtext=rawtext).values_list('topic_id', flat=True)
-        existing_topic_names = list(Topic.objects.filter(id__in=existing_linked_topic_ids).values_list('name', flat=True))
+        existing_topics_map = {t.name.lower(): t for t in Topic.objects.filter(id__in=existing_linked_topic_ids)}
+        existing_topic_names = [t.name for t in existing_topics_map.values()]
         
-        # 2. Call local AI to suggest new topics
+        # 2. Hybrid Extraction: spaCy NER + Local AI
+        
+        # 2a. spaCy NER (PERSON, ORG)
+        from narratives.utils.ai_module import extract_entities_with_spacy
+        spacy_entities = extract_entities_with_spacy(rawtext.content)
+        
+        # 2b. Local AI (Abstract concepts)
         from narratives.utils.local_ai import suggest_new_topics_with_ai
         ai_results = suggest_new_topics_with_ai(rawtext.content[:4000], existing_topic_names)
         
         if not ai_results or "suggested_topics" not in ai_results:
             return Response({"error": "AI failed to suggest topics."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
-        suggestions = ai_results["suggested_topics"]
+        ai_suggestions = ai_results["suggested_topics"]
         
-        # 3. Filter suggestions (must be atomic nouns, must exist in Wikipedia)
+        # 3. Merge and Filter suggestions
+        # We'll use a dict keyed by lowercase name to deduplicate
+        merged_suggestions = {} # name_lower -> {name, type_id, type_name, is_ner}
+        
+        # Add NER entities first (higher confidence for specific names)
+        for ent in spacy_entities:
+            name_lower = ent["name"].lower()
+            merged_suggestions[name_lower] = {
+                "name": ent["name"],
+                "suggested_type_id": ent["suggested_type_id"],
+                "suggested_type_name": ent["suggested_type_name"],
+                "is_ner": True
+            }
+        
+        # Add AI suggestions
+        for name in ai_suggestions:
+            name_lower = name.lower().strip()
+            if name_lower and name_lower not in merged_suggestions:
+                merged_suggestions[name_lower] = {
+                    "name": name.strip(),
+                    "suggested_type_id": None,
+                    "suggested_type_name": None,
+                    "is_ner": False
+                }
+        
         valid_suggestions = []
         rejected_suggestions = []
         
@@ -448,43 +501,109 @@ class RawTextAISuggestTopicsView(APIView):
         user_agent = "ProphetOntologyBot/1.0 (https://github.com/paulus/prophet; contact@example.com)"
         wiki = wikipediaapi.Wikipedia(user_agent=user_agent, language='en')
 
-        for name in suggestions:
-            name = name.strip()
-            if not name or len(name) < 2: continue
+        for name_lower, info in merged_suggestions.items():
+            name = info["name"]
+            if len(name) < 2: continue
             
-            # POS Check
-            doc = nlp(name)
-            if len(doc) > 0 and doc[0].pos_ in ["VERB", "AUX"]:
-                rejected_suggestions.append({"name": name, "reason": "Starts with verb"})
-                continue
-                
-            # Wikipedia Check
-            page = wiki.page(name)
-            if not page.exists():
-                rejected_suggestions.append({"name": name, "reason": "Wikipedia page missing"})
-                continue
-                
-            # Check if already exists in DB
+            # Check if already linked to THIS article
+            is_already_linked = name_lower in existing_topics_map
+            
+            # Check if already exists in DB (case-insensitive)
             topic_obj = Topic.objects.filter(name__iexact=name).first()
             
+            # POS Check (Only for AI suggestions, NER is already high confidence proper nouns)
+            if not info["is_ner"] and not topic_obj:
+                doc = nlp(name)
+                if len(doc) > 0 and doc[0].pos_ in ["VERB", "AUX"]:
+                    rejected_suggestions.append({"name": name, "reason": "Starts with verb"})
+                    continue
+                
+            # Wikipedia Check (Only if not in DB)
+            summary = ""
+            if not topic_obj:
+                page = wiki.page(name)
+                if not page.exists():
+                    rejected_suggestions.append({"name": name, "reason": "Wikipedia page missing"})
+                    continue
+                name = page.title # Use canonical Wikipedia title
+                summary = page.summary[:200] + "..."
+            else:
+                summary = (topic_obj.description or "")[:200] + "..."
+
             valid_suggestions.append({
-                "name": page.title,
+                "name": name,
                 "exists_in_db": topic_obj is not None,
                 "topic_id": topic_obj.id if topic_obj else None,
-                "summary": page.summary[:200] + "..."
+                "is_already_linked": is_already_linked,
+                "suggested_type_id": info["suggested_type_id"],
+                "suggested_type_name": info["suggested_type_name"],
+                "summary": summary
             })
+            
+        # 4. Save to cache
+        rawtext.ai_suggestions = valid_suggestions
+        rawtext.save()
             
         return Response({
             "suggestions": valid_suggestions,
             "rejected": rejected_suggestions
         }, status=status.HTTP_200_OK)
 
+class TopicDistributionView(APIView):
+    def get(self, request, id):
+        topic = get_object_or_404(Topic, id=id)
+        
+        # 1. Get all approved mentions of this topic
+        pending_topics = PendingTopic.objects.filter(
+            topic=topic,
+            status="approved",
+        ).select_related('rawtext', 'topic')
+
+        if not pending_topics.exists():
+            return Response({
+                "id": topic.id,
+                "name": topic.name,
+                "total_weight": 0,
+                "breakdown": []
+            })
+
+        # 2. Calculate weights
+        total_weight = 0
+        # Track if we've already given the title weight for a topic in a specific article
+        title_weight_given = set() # (rawtext_id, topic_id)
+
+        for pt in pending_topics:
+            rawtext_id = pt.rawtext_id
+            
+            weight = 1
+            if (rawtext_id, topic.id) not in title_weight_given:
+                title = (pt.rawtext.title or "").lower()
+                matched = (pt.matched_keyword or topic.name).lower()
+                if matched and title.find(matched) != -1:
+                    weight = 10
+                    title_weight_given.add((rawtext_id, topic.id))
+            
+            total_weight += weight
+
+        return Response({
+            "id": topic.id,
+            "name": topic.name,
+            "total_weight": total_weight,
+            "breakdown": [
+                {
+                    "id": None,
+                    "name": "Direct Mentions",
+                    "weight": total_weight
+                }
+            ]
+        })
+
 class TopicEnhanceWikipediaView(APIView):
     def post(self, request, id):
         topic = get_object_or_404(Topic, id=id)
         
         # 1. Collect knowledge from multiple sources
-        knowledge_list = collect_topic_knowledge(topic.name)
+        knowledge_list = collect_topic_knowledge(topic.name, wikipedia_url=topic.wikipedia_url)
         if not knowledge_list:
             return Response({"error": f"No information found for '{topic.name}' in any source."}, status=status.HTTP_404_NOT_FOUND)
         
@@ -506,9 +625,7 @@ class TopicEnhanceWikipediaView(APIView):
             
         # 4. Apply findings (Create missing topics and link them)
         created_topics = []
-        linked_parents = []
         linked_schools = []
-        linked_functions = []
         linked_related = []
         rejected_count = 0
         
@@ -583,13 +700,6 @@ class TopicEnhanceWikipediaView(APIView):
                 created_topics.append(name)
             return t
 
-        # Process Parents
-        for p_name in ai_results.get("parents", []):
-            p_topic = get_or_create_topic(p_name, "parents")
-            if p_topic and p_topic != topic:
-                topic.parents.add(p_topic)
-                linked_parents.append(p_name)
-                
         # Process Schools of Thought
         for s_name in ai_results.get("schools", []):
             s_topic = get_or_create_topic(s_name, "schools")
@@ -597,29 +707,123 @@ class TopicEnhanceWikipediaView(APIView):
                 topic.schools_of_thought.add(s_topic)
                 linked_schools.append(s_name)
 
-        # Process Functions
-        for f_name in ai_results.get("functions", []):
-            f_topic = get_or_create_topic(f_name, "functions")
-            if f_topic and f_topic != topic:
-                topic.functions.add(f_topic)
-                linked_functions.append(f_name)
-
-        # Process Related Topics
+        # Process Related Topics from AI results
         for r_name in ai_results.get("related", []):
             r_topic = get_or_create_topic(r_name, "related")
             if r_topic and r_topic != topic:
                 topic.related_topics.add(r_topic)
                 linked_related.append(r_name)
+        
+        # Process discovery links from Wikipedia (Summary/Overview)
+        discovery_links = []
+        for knowledge in knowledge_list:
+            if knowledge.get('source') == 'Wikipedia' and 'related_links' in knowledge:
+                discovery_links = knowledge['related_links']
+                break
+        
+        discovered_topics_count = 0
+        for link in discovery_links:
+            link_title = link['title']
+            link_url = link['url']
+            
+            # Check if exists or create
+            # We use a simplified version of get_or_create_topic logic here
+            # but we prioritize Wikipedia URL and canonical title.
+            
+            # 1. Check by Wikipedia URL first
+            r_topic = Topic.objects.filter(wikipedia_url=link_url).first()
+            
+            # 2. Check by canonical name
+            if not r_topic:
+                r_topic = Topic.objects.filter(name__iexact=link_title).first()
+            
+            if not r_topic:
+                # Create new topic if it doesn't exist
+                # We still want to run basic validation (no verbs, etc.)
+                r_topic = get_or_create_topic(link_title, "wikipedia_discovery")
+                if r_topic:
+                    r_topic.wikipedia_url = link_url
+                    r_topic.save()
+                    discovered_topics_count += 1
+            
+            # Link as related if not already linked and not the same topic
+            if r_topic and r_topic != topic:
+                topic.related_topics.add(r_topic)
+                if link_title not in linked_related:
+                    linked_related.append(link_title)
                 
         return Response({
             "message": "Topic enhanced successfully.",
             "sources_used": [s['source'] for s in knowledge_list],
             "ai_extracted": ai_results,
             "created_new_topics": created_topics,
-            "linked_parents": linked_parents,
             "linked_schools": linked_schools,
-            "linked_functions": linked_functions,
             "linked_related": linked_related,
+            "discovered_from_wikipedia": discovered_topics_count,
             "rejected_suggestions_count": rejected_count,
             "summary": best_content
+        }, status=status.HTTP_200_OK)
+
+class TopicMergeView(APIView):
+    def post(self, request):
+        source_id = request.data.get("source_id")
+        target_id = request.data.get("target_id")
+        new_name = request.data.get("name")
+        new_alt_name = request.data.get("alternative_name")
+        new_type_id = request.data.get("topic_type_id")
+        new_school_ids = request.data.get("school_ids", [])
+
+        if not source_id or not target_id:
+            return Response({"error": "Source and target IDs are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        source = get_object_or_404(Topic, id=source_id)
+        target = get_object_or_404(Topic, id=target_id)
+
+        # 1. Update target with new basic info
+        if new_name:
+            target.name = new_name
+        if new_alt_name is not None:
+            target.alternative_name = new_alt_name
+        
+        if new_type_id:
+            target.topic_type_id = new_type_id
+        
+        if new_school_ids:
+            target.schools_of_thought.set(new_school_ids)
+
+        # 2. Merge Keywords
+        strong_kws = set(target.keywords)
+        strong_kws.update(source.keywords)
+        target.keywords = list(strong_kws)
+
+        # Merge weak keywords (avoid duplicates by keyword string)
+        weak_kws_map = {w['keyword']: w for w in target.weak_keywords}
+        for w in source.weak_keywords:
+            if w['keyword'] not in weak_kws_map:
+                weak_kws_map[w['keyword']] = w
+        target.weak_keywords = list(weak_kws_map.values())
+
+        # 3. Merge Relations
+        # Related topics
+        target.related_topics.add(*source.related_topics.all())
+        # Remove self from related if it was there
+        target.related_topics.remove(target)
+        
+        # 4. Re-link PendingTopics
+        # Move all mentions from source to target
+        PendingTopic.objects.filter(topic=source).update(topic=target)
+
+        # 5. Handle metadata merge (simple dict update)
+        if source.metadata:
+            merged_metadata = target.metadata or {}
+            merged_metadata.update(source.metadata)
+            target.metadata = merged_metadata
+
+        # 6. Final save and delete source
+        target.save()
+        source.delete()
+
+        return Response({
+            "message": f"Successfully merged topic {source_id} into {target_id}",
+            "target_id": target.id
         }, status=status.HTTP_200_OK)

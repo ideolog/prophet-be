@@ -1,7 +1,7 @@
 from .wikipedia import fetch_wikipedia
 from .binance_academy import fetch_binance_academy
 
-def collect_topic_knowledge(topic_name: str):
+def collect_topic_knowledge(topic_name: str, wikipedia_url: str = None):
     """
     Collects knowledge about a topic from multiple sources.
     """
@@ -13,7 +13,7 @@ def collect_topic_knowledge(topic_name: str):
         results.append(binance_data)
         
     # 2. Try Wikipedia (Broad Context)
-    wiki_data = fetch_wikipedia(topic_name)
+    wiki_data = fetch_wikipedia(topic_name, wikipedia_url=wikipedia_url)
     if wiki_data:
         results.append(wiki_data)
         

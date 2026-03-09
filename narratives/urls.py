@@ -34,7 +34,11 @@ from .views import (
     TopicDetailView,
     TopicEnhanceWikipediaView,
     DeclinedTopicListView,
-    TopicBulkDeleteView
+    TopicBulkDeleteView,
+    TopicDistributionView,
+    TopicMergeView,
+    TopicTypeListView,
+    TopicTypeDetailView
 )
 
 urlpatterns = [
@@ -56,10 +60,14 @@ urlpatterns = [
 
     # TOPICS
     path('topics/', TopicListView.as_view(), name='topic-list'),
+    path('topics/types/', TopicTypeListView.as_view(), name='topic-type-list'),
+    path('topics/types/<int:id>/', TopicTypeDetailView.as_view(), name='topic-type-detail'),
     path('topics/bulk-delete/', TopicBulkDeleteView.as_view(), name='topic-bulk-delete'),
+    path('topics/merge/', TopicMergeView.as_view(), name='topic-merge'),
     path('topics/create/', TopicCreateView.as_view(), name='topic-create'),
     path('topics/<int:id>/', TopicDetailView.as_view(), name='topic-detail'),
     path('topics/<int:id>/enhance-wikipedia/', TopicEnhanceWikipediaView.as_view(), name='topic-enhance-wikipedia'),
+    path('topics/<int:id>/distribution/', TopicDistributionView.as_view(), name='topic-distribution'),
     path('declined-topics/', DeclinedTopicListView.as_view(), name='declined-topic-list'),
 
 

@@ -42,6 +42,68 @@ def _check_pos_filter(context: str, match_start_in_context: int, pos_filter: lis
         return False
 
 # -------------------------
+# ENTITY EXTRACTION (spaCy) - Level 1, called for hybrid suggestions
+# -------------------------
+
+def extract_entities_with_spacy(text: str, labels=["PERSON", "ORG"]):
+    """
+    Extracts named entities from text using spaCy.
+    Maps labels to placeholder topic IDs.
+    """
+    if not text:
+        return []
+    
+    try:
+        nlp = _get_nlp()
+        doc = nlp(text)
+        
+        # Mapping spaCy labels to placeholder topic IDs
+        # PERSON -> 297, ORG -> 298
+        label_map = {
+            "PERSON": {"id": 297, "name": "Person"},
+            "ORG": {"id": 298, "name": "Organization"}
+        }
+        
+        entities = []
+        seen = set()
+        
+        for ent in doc.ents:
+            if ent.label_ in labels:
+                clean_text = ent.text.strip()
+                
+                # Filter out obvious false positives for PERSON and ORG
+                # 1. All caps short words (likely tickers like BTC, ETH) - these are NOT people or orgs
+                if clean_text.isupper() and len(clean_text) <= 4:
+                    continue
+                
+                # 2. Common crypto terms that spaCy misidentifies as PERSON/ORG
+                # We don't blacklist them from the system, just prevent spaCy from 
+                # incorrectly tagging them as a "Person" or "Organization".
+                # These will be handled by the LLM as general concepts or Collective Actors.
+                spacy_ner_noise = {
+                    "whale", "whales", "bull", "bear", "bulls", "bears",
+                    "moon", "pump", "dump", "gas", "fiat", "stablecoin",
+                    "holders", "hodlers", "traders", "investors"
+                }
+                if clean_text.lower() in spacy_ner_noise:
+                    continue
+
+                # Basic cleanup and deduplication
+                if clean_text and len(clean_text) > 2 and clean_text.lower() not in seen:
+                    entities.append({
+                        "name": clean_text,
+                        "label": ent.label_,
+                        "suggested_type_id": label_map[ent.label_]["id"],
+                        "suggested_type_name": label_map[ent.label_]["name"]
+                    })
+                    seen.add(clean_text.lower())
+        
+        return entities
+    except Exception as e:
+        print(f"Entity extraction failed: {e}")
+        return []
+
+# -------------------------
 # PUBLIC API (USED BY VIEWS)
 # -------------------------
 
