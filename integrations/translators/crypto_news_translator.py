@@ -22,7 +22,27 @@ class CryptoNewsTranslator:
         "cointelegraph": {
             "selectors": ["._html-renderer_mz5on_1", ".post-content", ".article-body", "article", "main"],
             "cleanup": ["Read more:", "Cointelegraph"]
-        }
+        },
+        "bitcoinmagazine": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "Subscribe", "Bitcoin Magazine"]
+        },
+        "beincrypto": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "BeInCrypto"]
+        },
+        "cryptoslate": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "CryptoSlate"]
+        },
+        "thedefiant": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "The Defiant"]
+        },
+        "blockworks": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "Blockworks"]
+        },
     }
 
     def parse_articles(self, articles: List[Any], site_key: str) -> List[Dict[str, Any]]:
@@ -93,7 +113,7 @@ class CryptoNewsTranslator:
 
             rawtexts.append({
                 "title": a.title,
-                "subtitle": a.external_id,
+                "subtitle": None,
                 "author": a.author or site_key.capitalize(),
                 "content": full_content,
                 "content_paragraphs": paragraphs,

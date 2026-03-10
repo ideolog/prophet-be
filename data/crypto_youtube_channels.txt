@@ -1,0 +1,34 @@
+# Crypto YouTube channels to add (one URL per line; lines starting with # are ignored)
+# Batch 1
+https://www.youtube.com/@CoinBureau
+https://www.youtube.com/@DanHeldBitcoin
+https://www.youtube.com/@SheldonEvansx
+https://www.youtube.com/@ThinkingCrypto
+https://www.youtube.com/@BenjaminCowen
+https://www.youtube.com/@InvestAnswers
+https://www.youtube.com/@LarkDavis
+https://www.youtube.com/@GuyCoin
+https://www.youtube.com/@CryptoZombie
+https://www.youtube.com/@TheChartGuys
+# Batch 2 — ещё ~20 крипто-блогеров
+https://www.youtube.com/@AltcoinDaily
+https://www.youtube.com/@CryptoBanterTV
+https://www.youtube.com/@DataDash
+https://www.youtube.com/@EllioTrades
+https://www.youtube.com/@BitBoyCrypto
+https://www.youtube.com/@DigitalAssetNews
+https://www.youtube.com/@Boxmining
+https://www.youtube.com/@99Bitcoins
+https://www.youtube.com/@WhiteboardCrypto
+https://www.youtube.com/@AndreiJikh
+https://www.youtube.com/@JRNYCrypto
+https://www.youtube.com/@CryptoCasey
+https://www.youtube.com/@Bankless
+https://www.youtube.com/@TheMoonCarl
+https://www.youtube.com/@CryptoCapitalVenture
+https://www.youtube.com/@CoinMarketCap
+https://www.youtube.com/@Hashoshi
+https://www.youtube.com/@IvanonTech
+https://www.youtube.com/@aantonop
+https://www.youtube.com/@MilesDeutscher
+https://www.youtube.com/@CryptosRUs

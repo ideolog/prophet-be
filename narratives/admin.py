@@ -26,10 +26,10 @@ class UserAccountAdmin(admin.ModelAdmin):
 
 @admin.register(Epoch)
 class EpochAdmin(admin.ModelAdmin):
-    list_display = ('title', 'start_date', 'end_date')
-    list_display_links = ('title',)
-    search_fields = ('title',)
-    list_filter = ('start_date', 'end_date')
+    list_display = ('name', 'typical_start_date', 'core_start_date', 'core_end_date', 'typical_end_date')
+    list_display_links = ('name',)
+    search_fields = ('name',)
+    list_filter = ('typical_start_date', 'typical_end_date')
     save_on_top = True
 
 @admin.register(Source)

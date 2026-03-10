@@ -45,10 +45,42 @@ class TopicType(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='children',
+        help_text="Parent type for hierarchy, e.g. 'Political threat' → parent 'Threat'"
+    )
+    is_swot = models.BooleanField(default=False, help_text="If true, topics of this type (or any descendant) will trigger SWOT/PESTEL analysis when found in text")
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
+
+    def inherits_swot(self):
+        """True if this type or any ancestor has is_swot=True (for pipeline: run SWOT analysis)."""
+        current = self
+        while current:
+            if current.is_swot:
+                return True
+            current = current.parent
+        return False
+
+
+class ContextSet(models.Model):
+    """Named list of context words for weak keywords. Use [SLUG] in Topic weak_keywords.required_context to reference."""
+    slug = models.SlugField(max_length=80, unique=True, help_text="Reference in required_context as [slug], e.g. CRYPTO_WEAK_CONTEXT")
+    name = models.CharField(max_length=255, blank=True, help_text="Display name")
+    words = models.JSONField(
+        default=list,
+        help_text="List of context words, e.g. ['crypto', 'token', 'marketcap']",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.slug or self.name or str(self.id)
 
 
 class Topic(models.Model):

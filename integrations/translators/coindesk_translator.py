@@ -58,7 +58,7 @@ class CoinDeskTranslator:
 
             rawtexts.append({
                 "title": a.title,
-                "subtitle": a.external_id,
+                "subtitle": None,
                 "author": a.author or "CoinDesk",
                 "content": full_content,
                 "content_paragraphs": paragraphs,

@@ -114,6 +114,25 @@ class PendingTopic(models.Model):
     found_context_words = models.JSONField(default=list, blank=True, help_text="List of context words found near the weak keyword")
     context = models.TextField(help_text="The sentence or snippet where the topic was found")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    # Where the match was found (for display and weighting)
+    found_in = models.CharField(
+        max_length=32,
+        blank=True,
+        null=True,
+        help_text="Zone: title, subtitle, first_paragraph (lead), content",
+    )
+    weight = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Importance weight; e.g. 5 for first paragraph (lead) on direct sources",
+    )
+
+    # SWOT Analysis Survey Data
+    swot_analysis = models.JSONField(
+        default=dict, 
+        blank=True, 
+        help_text="Survey-like analysis: {pestel_category, impact_strength (1-4), stance (-2 to +2), summary}"
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

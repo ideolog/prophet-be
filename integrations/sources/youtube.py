@@ -1,3 +1,4 @@
+import html
 from django.conf import settings
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -45,7 +46,7 @@ class YouTubeIntegration:
             videos = []
             for item in search_response.get("items", [])[:limit]:
                 v_id = item["id"]["videoId"]
-                v_title = item["snippet"]["title"]
+                v_title = html.unescape(item["snippet"]["title"])
                 videos.append({"video_id": v_id, "title": v_title})
             return videos
         
@@ -61,7 +62,6 @@ class YouTubeIntegration:
             
         results = []
         api = YouTubeTranscriptApi()
-        formatter = TextFormatter()
         language = source_config.get("language", "en") if source_config else "en"
 
         for video in raw_data:
@@ -70,13 +70,26 @@ class YouTubeIntegration:
                 video_title = video.get("title", f"YouTube video {video_id}")
                 
                 fetched = api.fetch(video_id, languages=[language])
-                text = formatter.format_transcript(fetched)
+                
+                # Custom formatting to include timestamps
+                # Format: [MM:SS] Text
+                formatted_lines = []
+                for entry in fetched:
+                    # entry is a FetchedTranscriptSnippet object with .text, .start, .duration
+                    start_time = int(entry.start)
+                    minutes = start_time // 60
+                    seconds = start_time % 60
+                    timestamp = f"[{minutes:02d}:{seconds:02d}]"
+                    text = entry.text.replace('\n', ' ').strip()
+                    formatted_lines.append(f"{timestamp} {text}")
+                
+                full_text = "\n".join(formatted_lines)
 
                 results.append({
                     "title": video_title,
                     "subtitle": None,
                     "author": source.name if source else None,
-                    "content": text,
+                    "content": full_text,
                     "published_at": None,
                     "source_url": f"https://www.youtube.com/watch?v={video_id}",
                 })

@@ -1,15 +1,41 @@
 from django.db.models import Count
 from rest_framework import serializers
-from ..models import RawText, Source, Topic, PendingTopic, TopicType
+from ..models import RawText, Source, Topic, PendingTopic, TopicType, Epoch, AnalyticalFramework, AnalyticalCategory
 from narratives.models.categories import DeclinedTopic
-from narratives.utils.text import generate_fingerprint
+from narratives.utils.text import generate_fingerprint, title_contains_keyword_as_word, topic_title_matches_keyword, parse_keyword_spec
+
+class AnalyticalFrameworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnalyticalFramework
+        fields = ["id", "name", "slug"]
+
+
+class AnalyticalCategorySerializer(serializers.ModelSerializer):
+    framework_id = serializers.IntegerField(source="framework.id", read_only=True)
+
+    class Meta:
+        model = AnalyticalCategory
+        fields = ["id", "name", "slug", "framework_id"]
+
 
 class TopicTypeSerializer(serializers.ModelSerializer):
     topics_count = serializers.IntegerField(source='topics.count', read_only=True)
+    parent = serializers.SerializerMethodField()
+    parent_id = serializers.PrimaryKeyRelatedField(
+        queryset=TopicType.objects.all(),
+        source='parent',
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = TopicType
-        fields = ["id", "name", "slug", "description", "updated_at", "topics_count"]
+        fields = ["id", "name", "slug", "description", "parent", "parent_id", "is_swot", "updated_at", "topics_count"]
+
+    def get_parent(self, obj):
+        if obj.parent_id is None:
+            return None
+        return {"id": obj.parent.id, "name": obj.parent.name}
 
 class TopicSerializer(serializers.ModelSerializer):
     related_count = serializers.IntegerField(source='related_topics.count', read_only=True)
@@ -24,6 +50,8 @@ class TopicSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True
     )
+    swot_category = serializers.SerializerMethodField()
+    pestel_categories = serializers.SerializerMethodField()
 
     class Meta:
         model = Topic
@@ -32,13 +60,29 @@ class TopicSerializer(serializers.ModelSerializer):
             "wikipedia_url", "is_placeholder", "updated_at",
             "related_count", "keywords_count",
             "related_topics", "schools_of_thought", "topics_in_school",
-            "topic_type", "topic_type_id"
+            "topic_type", "topic_type_id",
+            "swot_category", "pestel_categories",
         ]
 
     def get_topic_type(self, obj):
         if obj.topic_type:
             return {"id": obj.topic_type.id, "name": obj.topic_type.name}
         return None
+
+    def get_swot_category(self, obj):
+        link = obj.analytical_categories.filter(
+            analytical_category__framework__slug="swot",
+        ).select_related("analytical_category").first()
+        if link:
+            c = link.analytical_category
+            return {"id": c.id, "name": c.name}
+        return None
+
+    def get_pestel_categories(self, obj):
+        links = obj.analytical_categories.filter(
+            analytical_category__framework__slug="pestel",
+        ).select_related("analytical_category").order_by("analytical_category__name")
+        return [{"id": l.analytical_category.id, "name": l.analytical_category.name} for l in links]
 
     def get_keywords_count(self, obj):
         try:
@@ -67,12 +111,49 @@ class TopicSerializer(serializers.ModelSerializer):
         except:
             return []
 
+    def validate_keywords(self, value):
+        if not isinstance(value, list):
+            return value
+        result = []
+        for entry in value:
+            if isinstance(entry, str):
+                s = entry.strip()
+                if s and (s.startswith('"') or s.startswith("'") or s.startswith('!')):
+                    spec = parse_keyword_spec(entry)
+                    if spec.get('keyword'):
+                        result.append(spec)
+                else:
+                    result.append(entry)
+            else:
+                result.append(entry)
+        return result
+
+    def validate_weak_keywords(self, value):
+        if not isinstance(value, list):
+            return value
+        result = []
+        for obj in value:
+            if not isinstance(obj, dict):
+                result.append(obj)
+                continue
+            kw = obj.get('keyword')
+            if isinstance(kw, str):
+                s = kw.strip()
+                if s and (s.startswith('"') or s.startswith("'") or s.startswith('!')):
+                    spec = parse_keyword_spec(kw)
+                    result.append({**obj, 'keyword': spec.get('keyword', kw), 'whole_word_only': spec.get('whole_word_only', True), 'case_sensitive': spec.get('case_sensitive', False)})
+                else:
+                    result.append(obj)
+            else:
+                result.append(obj)
+        return result
+
 class PendingTopicSerializer(serializers.ModelSerializer):
     topic_name = serializers.CharField(source='topic.name', read_only=True)
 
     class Meta:
         model = PendingTopic
-        fields = ["id", "topic", "topic_name", "matched_keyword", "is_weak", "found_context_words", "context", "status", "created_at"]
+        fields = ["id", "topic", "topic_name", "matched_keyword", "is_weak", "found_context_words", "context", "status", "found_in", "weight", "swot_analysis", "created_at"]
         read_only_fields = ["id", "created_at"]
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -115,11 +196,12 @@ class SourceSerializer(serializers.ModelSerializer):
             # Default weight is 1 (content)
             weight = 1
             
-            # Check if this topic should get title weight for this article
+            # Title weight uses same rules as content (whole_word_only / case_sensitive from topic keywords)
             if (rawtext_id, topic_id) not in title_weight_given:
-                title = (pt.rawtext.title or "").lower()
-                matched = (pt.matched_keyword or topic_name).lower()
-                if matched and matched in title:
+                title = pt.rawtext.title or ""
+                matched = pt.matched_keyword or topic_name
+                topic_obj = pt.topic
+                if matched and topic_title_matches_keyword(topic_obj, matched, title):
                     weight = 10
                     title_weight_given.add((rawtext_id, topic_id))
             
@@ -156,6 +238,7 @@ class RawTextSerializer(serializers.ModelSerializer):
     genre = serializers.SerializerMethodField()
     published_at = serializers.DateTimeField(required=False, allow_null=True)
     pending_topics = PendingTopicSerializer(many=True, read_only=True)
+    topic_weights = serializers.SerializerMethodField()
 
     class Meta:
         model = RawText
@@ -164,9 +247,31 @@ class RawTextSerializer(serializers.ModelSerializer):
             "content", "slug", "content_fingerprint", "source", "genre",
             "categorization_status", "categorization_version", "current_system_version", "last_categorized_at",
             "is_new", "is_updated", "created_at", "source_url",
-            "pending_topics", "ai_suggestions"
+            "pending_topics", "topic_weights", "ai_suggestions"
         ]
-        read_only_fields = ["id", "slug", "content_fingerprint", "categorization_status", "categorization_version", "current_system_version", "last_categorized_at", "is_new", "is_updated", "created_at"]
+
+    def get_topic_weights(self, obj):
+        """Weights per topic for this rawtext (title bonus uses same rules as content)."""
+        from narratives.models import PendingTopic
+        pending_topics = PendingTopic.objects.filter(rawtext=obj, status="approved").select_related("topic")
+        if not pending_topics.exists():
+            return []
+        title_weight_given = set()
+        topic_weights = {}
+        for pt in pending_topics:
+            topic_id = pt.topic_id
+            topic_name = pt.topic.name
+            weight = 1
+            if (obj.id, topic_id) not in title_weight_given:
+                title = obj.title or ""
+                matched = pt.matched_keyword or topic_name
+                if matched and topic_title_matches_keyword(pt.topic, matched, title):
+                    weight = 10
+                    title_weight_given.add((obj.id, topic_id))
+            if topic_id not in topic_weights:
+                topic_weights[topic_id] = {"id": topic_id, "name": topic_name, "weight": 0}
+            topic_weights[topic_id]["weight"] += weight
+        return list(topic_weights.values())
 
     def get_current_system_version(self, obj):
         from ..models.categories import AppConfiguration
@@ -203,3 +308,15 @@ class DeclinedTopicSerializer(serializers.ModelSerializer):
             "target_field", "reason", "reason_detail", "created_at"
         ]
         read_only_fields = ["id", "created_at"]
+
+class EpochSerializer(serializers.ModelSerializer):
+    topic_id = serializers.IntegerField(source='topic.id', read_only=True)
+    class Meta:
+        model = Epoch
+        fields = [
+            "id", "name", "slug", "description", 
+            "notes_on_periodization", "source_summary", "topic_id",
+            "earliest_start_date", "typical_start_date", "core_start_date",
+            "core_end_date", "typical_end_date", "latest_end_date"
+        ]
+        read_only_fields = ["id", "slug"]

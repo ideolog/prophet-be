@@ -1,0 +1,24 @@
+# Блокчейн/технология: авторские каналы про технологию, смарт-контракты, Web3, не про цену/трейдинг
+# One URL per line; lines starting with # are ignored.
+# Add via: python manage.py add_crypto_youtube_channels --file data/blockchain_tech_youtube_channels.txt
+
+https://www.youtube.com/@PatrickCollins
+https://www.youtube.com/@DappUniversity
+https://www.youtube.com/@soliditylang
+https://www.youtube.com/@EatTheBlocks
+https://www.youtube.com/@CyfrinUpdraft
+https://www.youtube.com/@naderdabit
+https://www.youtube.com/@austingriffith3550
+https://www.youtube.com/@aantonop
+https://www.youtube.com/@SmartContractProgrammer
+https://www.youtube.com/@EthereumFoundation
+https://www.youtube.com/@Chainlink
+https://www.youtube.com/@Finematics
+https://www.youtube.com/@TokenTerminal
+https://www.youtube.com/@DeveloperAlchemy
+https://www.youtube.com/@OpenZeppelin
+https://www.youtube.com/@BlockchainAtBerkeley
+https://www.youtube.com/@EpicenterPodcast
+https://www.youtube.com/@Uniswap
+https://www.youtube.com/@IPFS
+https://www.youtube.com/@Alchemy

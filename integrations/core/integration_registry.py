@@ -1,7 +1,16 @@
 from .whitehouse_scraper import WhiteHouseScraper
 from .coindesk_scraper import CoinDeskIntegration
 from .vitalik_scraper import VitalikIntegration
-from .crypto_news_integrations import TheBlockIntegration, DecryptIntegration, CoinTelegraphIntegration
+from .crypto_news_integrations import (
+    TheBlockIntegration,
+    DecryptIntegration,
+    CoinTelegraphIntegration,
+    BitcoinMagazineIntegration,
+    BeInCryptoIntegration,
+    CryptoSlateIntegration,
+    TheDefiantIntegration,
+    BlockworksIntegration,
+)
 from integrations.sources.youtube import YouTubeIntegration
 
 INTEGRATION_REGISTRY = {
@@ -12,5 +21,10 @@ INTEGRATION_REGISTRY = {
     "the-block": TheBlockIntegration(),
     "decrypt": DecryptIntegration(),
     "cointelegraph": CoinTelegraphIntegration(),
+    "bitcoinmagazine": BitcoinMagazineIntegration(),
+    "beincrypto": BeInCryptoIntegration(),
+    "cryptoslate": CryptoSlateIntegration(),
+    "thedefiant": TheDefiantIntegration(),
+    "blockworks": BlockworksIntegration(),
 }
 # must exactly match your Source.slug

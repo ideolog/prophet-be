@@ -115,6 +115,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Gentle fetcher: background thread fetches 1 video/article per source, then waits 30s–5min (random).
+# Runs only when starting runserver/gunicorn. Set to False to disable.
+GENTLE_FETCHER_AUTO_START = env.bool("GENTLE_FETCHER_AUTO_START", default=True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

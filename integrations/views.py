@@ -5,20 +5,20 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from integrations.core.integration_registry import INTEGRATION_REGISTRY
-from narratives.models import Source, RawText, Genre, Topic
-from narratives.utils.text import generate_fingerprint
+from integrations.run_integration import run_integration_for_source
+from narratives.models import Source
 
 
 class IntegrationRunView(APIView):
     def post(self, request, source_slug, page=1):
         try:
-            source = Source.objects.get(slug=source_slug)
-        except Source.DoesNotExist:
-            # Try to find by ID if slug doesn't match
-            try:
-                source = Source.objects.get(id=source_slug)
-            except (Source.DoesNotExist, ValueError):
-                return Response({"error": "Invalid source slug or ID."}, status=status.HTTP_400_BAD_REQUEST)
+            source = Source.objects.filter(slug=source_slug).first()
+            if not source:
+                source = Source.objects.filter(id=source_slug).first()
+            if not source:
+                return Response({"error": f"Source '{source_slug}' not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception:
+            return Response({"error": "Invalid source slug or ID format."}, status=status.HTTP_400_BAD_REQUEST)
 
         integration_name = "youtube" if source.platform == "youtube" else source.slug
         if integration_name not in INTEGRATION_REGISTRY:
@@ -27,105 +27,20 @@ class IntegrationRunView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        integration = INTEGRATION_REGISTRY[integration_name]
-
-        # Allow both "page" and "limit" patterns (RSS integrations typically use "limit")
         request_payload = request.data or {}
         limit = request_payload.get("limit", 10)
 
-        source_config = {
-            "timezone": source.timezone,
-            "page": page,
-            "limit": limit,
-            **request_payload,
-        }
-
         try:
-            raw_data = integration.fetch_content(source=source, source_config=source_config)
-            rawtexts = integration.normalize_to_rawtext(raw_data, source=source, source_config=source_config)
+            imported_count, imported_ids = run_integration_for_source(
+                source, limit=limit, page=page, mark_all_not_new=True
+            )
         except Exception as e:
             return Response(
                 {"error": "Integration failed.", "details": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        # Mark all existing as not new/updated across all sources
-        RawText.objects.all().update(is_new=False, is_updated=False)
-
-        imported = []
-        for raw in rawtexts:
-            content = (raw.get("content") or "").strip()
-            source_url = raw.get("source_url")
-            if not content:
-                continue
-
-            fingerprint = generate_fingerprint(content)
-            
-            # NEW LOGIC: Check by URL first to avoid duplicates with different content (edits)
-            existing_by_url = None
-            if source_url:
-                existing_by_url = RawText.objects.filter(source_url=source_url).first()
-            
-            if existing_by_url:
-                # If URL exists, check if content changed
-                if existing_by_url.content_fingerprint != fingerprint:
-                    # Content changed - update it
-                    existing_by_url.content = content
-                    existing_by_url.content_fingerprint = fingerprint
-                    # Also update title/subtitle if they changed
-                    new_title = (raw.get("title") or "").strip()
-                    if new_title:
-                        existing_by_url.title = new_title
-                    new_subtitle = (raw.get("subtitle") or "").strip()
-                    if new_subtitle:
-                        existing_by_url.subtitle = new_subtitle
-                    
-                    existing_by_url.is_updated = True
-                    existing_by_url.is_new = False
-                    existing_by_url.save()
-                    imported.append(existing_by_url.id)
-                continue
-
-            # If no URL match, check by fingerprint (just in case same content on different URL)
-            existing_rawtext = RawText.objects.filter(content_fingerprint=fingerprint).first()
-            
-            if existing_rawtext:
-                # Check if we can update something (e.g. title if it was generic before)
-                new_title = (raw.get("title") or "").strip()
-                if new_title and (not existing_rawtext.title or existing_rawtext.title.startswith("YouTube video")):
-                    existing_rawtext.title = new_title
-                    existing_rawtext.is_updated = True
-                    existing_rawtext.save()
-                    imported.append(existing_rawtext.id)
-                continue
-
-            genre_name = (raw.get("genre") or "speech").strip().lower()
-            genre, _ = Genre.objects.get_or_create(name=genre_name)
-
-            author_name = (raw.get("author") or "").strip()
-            author = None
-            if author_name:
-                author, _ = Topic.objects.get_or_create(name=author_name)
-                # Ensure it has Person parent
-                person_root, _ = Topic.objects.get_or_create(name="Person")
-                author.parents.add(person_root)
-
-            rawtext = RawText.objects.create(
-                title=(raw.get("title") or "").strip() or None,
-                subtitle=(raw.get("subtitle") or "").strip() or None,
-                author=author,
-                content=content,
-                published_at=raw.get("published_at"),
-                source_url=raw.get("source_url"),
-                source=source,
-                genre=genre,
-                content_fingerprint=fingerprint,
-                is_new=True,
-                is_updated=False,
-            )
-            imported.append(rawtext.id)
-
         return Response(
-            {"imported_count": len(imported), "imported_rawtext_ids": imported},
+            {"imported_count": imported_count, "imported_rawtext_ids": imported_ids},
             status=status.HTTP_200_OK,
         )

@@ -102,3 +102,33 @@ class CoinTelegraphIntegration(BaseCryptoIntegration):
     name = "CoinTelegraphIntegration"
     site_key = "cointelegraph"
     default_rss = "https://cointelegraph.com/rss"
+
+
+class BitcoinMagazineIntegration(BaseCryptoIntegration):
+    name = "BitcoinMagazineIntegration"
+    site_key = "bitcoinmagazine"
+    default_rss = "https://bitcoinmagazine.com/feed"
+
+
+class BeInCryptoIntegration(BaseCryptoIntegration):
+    name = "BeInCryptoIntegration"
+    site_key = "beincrypto"
+    default_rss = "https://beincrypto.com/feed/"
+
+
+class CryptoSlateIntegration(BaseCryptoIntegration):
+    name = "CryptoSlateIntegration"
+    site_key = "cryptoslate"
+    default_rss = "https://cryptoslate.com/feed/"
+
+
+class TheDefiantIntegration(BaseCryptoIntegration):
+    name = "TheDefiantIntegration"
+    site_key = "thedefiant"
+    default_rss = "https://thedefiant.io/feed"
+
+
+class BlockworksIntegration(BaseCryptoIntegration):
+    name = "BlockworksIntegration"
+    site_key = "blockworks"
+    default_rss = "https://blockworks.co/feed"
