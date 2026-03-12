@@ -1,13 +1,17 @@
 import re
+from collections import defaultdict
+from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q
+from django.db.models.functions import Coalesce, Length, Least, TruncDate
+from django.utils import timezone
 from django.contrib.postgres.search import TrigramSimilarity
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
-from ..models import RawText, Source, Topic, PendingTopic, TopicType, Epoch
+from ..models import RawText, Source, Topic, PendingTopic, TopicMentionDay, TopicType, Epoch
 from ..serializers import (
     RawTextSerializer,
     SourceSerializer,
@@ -79,6 +83,87 @@ class YouTubeSourceAddView(APIView):
             print(traceback.format_exc())
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class RawTextsByTopicsPagination(PageNumberPagination):
+    """Paginate by topic: 5 topics per page."""
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 20
+
+
+class RawTextsByTopicsView(APIView):
+    """
+    List rawtexts grouped by topic. Topics ordered by total mention count (desc).
+    Each page: 5 topics; per topic: up to 10 articles, sorted by mention count in that article (desc).
+    For quality control: shows total mentions per topic and per-article mention counts.
+    """
+    pagination_class = RawTextsByTopicsPagination
+
+    def get(self, request):
+        from django.db.models import Count
+
+        # Topics that have at least one approved mention, with total_mentions
+        topics_qs = (
+            Topic.objects.filter(pending_rawtexts__status="approved")
+            .distinct()
+            .annotate(total_mentions=Count("pending_rawtexts", filter=Q(pending_rawtexts__status="approved")))
+            .order_by("-total_mentions")
+        )
+        total_topics = topics_qs.count()
+
+        paginator = self.pagination_class()
+        paginator.page_size = 5
+        page = paginator.paginate_queryset(topics_qs, request)
+        if page is None:
+            page = list(topics_qs[:5])
+            page_number = request.query_params.get("page", "1")
+            try:
+                page_number = int(page_number)
+            except ValueError:
+                page_number = 1
+            next_page = page_number + 1 if total_topics > page_number * 5 else None
+            previous_page = page_number - 1 if page_number > 1 else None
+        else:
+            page_number = paginator.page.number
+            next_page = page_number + 1 if paginator.page.has_next() else None
+            previous_page = page_number - 1 if paginator.page.has_previous() else None
+
+        results = []
+        for topic in page:
+            # Top 10 rawtexts for this topic by mention count in that rawtext
+            rawtexts_with_count = (
+                RawText.objects.filter(
+                    pending_topics__topic_id=topic.id,
+                    pending_topics__status="approved",
+                )
+                .annotate(mention_count=Count("pending_topics"))
+                .order_by("-mention_count")[:10]
+                .select_related("source")
+            )
+            articles = []
+            for rt in rawtexts_with_count:
+                articles.append({
+                    "id": rt.id,
+                    "title": rt.title,
+                    "subtitle": rt.subtitle,
+                    "slug": rt.slug,
+                    "source": {"id": rt.source.id, "name": rt.source.name} if rt.source else None,
+                    "mention_count": getattr(rt, "mention_count", 1),
+                })
+            results.append({
+                "topic": {"id": topic.id, "name": topic.name, "slug": topic.slug},
+                "total_mentions": topic.total_mentions,
+                "articles": articles,
+            })
+
+        return Response({
+            "count": total_topics,
+            "next": next_page,
+            "previous": previous_page,
+            "page": page_number,
+            "results": results,
+        })
+
+
 class RawTextListView(generics.ListAPIView):
     queryset = RawText.objects.all().order_by("-id")
     serializer_class = RawTextSerializer
@@ -92,6 +177,16 @@ class RawTextListView(generics.ListAPIView):
         search = self.request.query_params.get("search", "").strip()
         if search:
             queryset = queryset.filter(title__icontains=search)
+        ids_param = self.request.query_params.get("ids", "").strip()
+        if ids_param:
+            try:
+                id_list = [int(x) for x in ids_param.split(",") if x.strip()]
+                if id_list:
+                    queryset = queryset.filter(id__in=id_list).order_by("id")
+            except ValueError:
+                pass
+        if self.request.query_params.get("recently_recategorized") == "1":
+            queryset = queryset.filter(recently_recategorized_at__isnull=False)
         return queryset
 
 class RawTextListCreateView(generics.ListCreateAPIView):
@@ -129,34 +224,23 @@ class RawTextFindTopicsView(APIView):
 
 
 class RawTextCategorizeAllView(APIView):
-    """Run Find Topics on all RawTexts (not yet Done, or all if ?all=1)."""
+    """Run Find Topics on all RawTexts from scratch: delete existing categorization, then re-run on every RawText."""
 
     def post(self, request):
-        from narratives.models.categories import AppConfiguration
-
-        run_all = request.data.get("all", False) if request.data else False
-        current_version = AppConfiguration.get_version("categorization_version")
-
-        if run_all:
-            qs = RawText.objects.all().order_by("id")
-        else:
-            qs = RawText.objects.filter(
-                Q(categorization_version__isnull=True)
-                | ~Q(categorization_version=current_version)
-            ).order_by("id")
-
+        qs = RawText.objects.all().order_by("id")
         total = qs.count()
         if total == 0:
             return Response({
                 "processed": 0,
                 "created": 0,
-                "message": "No RawTexts to process. All are already categorized. Send { \"all\": true } to run on every RawText.",
+                "total": 0,
+                "message": "No RawTexts to process.",
             }, status=status.HTTP_200_OK)
 
         created_total = 0
         for rawtext in qs:
             try:
-                _, created = run_find_topics_for_rawtext(rawtext, reset=False)
+                _, created = run_find_topics_for_rawtext(rawtext, reset=True)
                 created_total += created
             except Exception:
                 pass
@@ -164,8 +248,81 @@ class RawTextCategorizeAllView(APIView):
         return Response({
             "processed": total,
             "created": created_total,
-            "message": f"Processed {total} RawTexts, created {created_total} PendingTopics.",
+            "total": total,
+            "message": f"Re-categorized {total} RawTexts from scratch, created {created_total} PendingTopics.",
         }, status=status.HTTP_200_OK)
+
+
+class RawTextCategorizeByTopicView(APIView):
+    """Re-categorize from scratch only the RawTexts that currently have this topic (approved). For fixing keyword rules for one topic."""
+
+    def post(self, request):
+        topic_id = request.data.get("topic_id") if request.data else None
+        if topic_id is None:
+            return Response({"error": "topic_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            topic_id = int(topic_id)
+        except (TypeError, ValueError):
+            return Response({"error": "topic_id must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+
+        rawtext_ids = list(
+            PendingTopic.objects.filter(topic_id=topic_id, status="approved")
+            .values_list("rawtext_id", flat=True)
+            .distinct()
+        )
+        if not rawtext_ids:
+            return Response({
+                "processed": 0,
+                "created": 0,
+                "total": 0,
+                "articles": [],
+                "message": f"No articles found with this topic (id={topic_id}).",
+            }, status=status.HTTP_200_OK)
+
+        RawText.objects.all().update(recently_recategorized_at=None)
+
+        qs = RawText.objects.filter(id__in=rawtext_ids).order_by("id").select_related("source")
+        total = qs.count()
+        created_total = 0
+        articles = []
+        now = timezone.now()
+        for rawtext in qs:
+            try:
+                _, created = run_find_topics_for_rawtext(rawtext, reset=True)
+                created_total += created
+                rawtext.recently_recategorized_at = now
+                rawtext.save(update_fields=["recently_recategorized_at"])
+                articles.append({
+                    "id": rawtext.id,
+                    "title": rawtext.title or "",
+                    "source_name": rawtext.source.name if rawtext.source else "",
+                })
+            except Exception:
+                pass
+
+        return Response({
+            "processed": total,
+            "created": created_total,
+            "total": total,
+            "articles": articles,
+            "message": f"Re-categorized {total} articles (that had this topic) from scratch, created {created_total} PendingTopics.",
+        }, status=status.HTTP_200_OK)
+
+
+class RawTextRemoveTopicView(APIView):
+    """Remove a topic from this article: delete all PendingTopic rows for this rawtext + topic."""
+
+    def post(self, request, id):
+        rawtext = get_object_or_404(RawText, id=id)
+        topic_id = request.data.get("topic_id") if request.data else None
+        if topic_id is None:
+            return Response({"error": "topic_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            topic_id = int(topic_id)
+        except (TypeError, ValueError):
+            return Response({"error": "topic_id must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+        deleted, _ = PendingTopic.objects.filter(rawtext=rawtext, topic_id=topic_id).delete()
+        return Response({"deleted": deleted, "message": f"Removed {deleted} occurrence(s) of this topic from the article."}, status=status.HTTP_200_OK)
 
 
 class PendingTopicActionView(APIView):
@@ -294,10 +451,43 @@ class TopicListView(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        queryset = Topic.objects.all().order_by('-updated_at')
-        search = self.request.query_params.get('search')
+        queryset = (
+            Topic.objects.all()
+            .annotate(mentions_count=Count("pending_rawtexts", filter=Q(pending_rawtexts__status="approved")))
+            .order_by("-updated_at")
+        )
+        search = self.request.query_params.get("search")
         if search:
-            queryset = queryset.filter(name__icontains=search)
+            search_pattern = f"%{search}%"
+            queryset = queryset.extra(
+                where=[
+                    """(
+                        name ILIKE %s OR alternative_name ILIKE %s
+                        OR EXISTS (
+                            SELECT 1 FROM jsonb_array_elements(keywords) e
+                            WHERE POSITION(LOWER(%s) IN LOWER(COALESCE(NULLIF(e->>'keyword', ''), e::text))) > 0
+                        )
+                        OR EXISTS (
+                            SELECT 1 FROM jsonb_array_elements(weak_keywords) e
+                            WHERE (e->>'keyword') IS NOT NULL AND POSITION(LOWER(%s) IN LOWER(e->>'keyword')) > 0
+                        )
+                    )"""
+                ],
+                params=[search_pattern, search_pattern, search, search],
+            )
+        max_name_length = self.request.query_params.get("max_name_length")
+        if max_name_length is not None:
+            try:
+                n = int(max_name_length)
+                if n >= 0:
+                    queryset = queryset.annotate(
+                        min_title_length=Least(
+                            Length("name"),
+                            Coalesce(Length("alternative_name"), Length("name")),
+                        )
+                    ).filter(min_title_length__lte=n)
+            except (ValueError, TypeError):
+                pass
         return queryset
 
 class TopicTypeListView(generics.ListCreateAPIView):
@@ -377,6 +567,24 @@ class TopicCreateView(generics.CreateAPIView):
         instance = serializer.save()
         if related_ids:
             instance.related_topics.set(related_ids)
+        # For City / State/Province: set weak_keywords with required_context (country, optionally state) for disambiguation
+        context_country = (self.request.data.get("context_country") or "").strip() or None
+        context_state_province = (self.request.data.get("context_state_province") or "").strip() or None
+        if context_country and instance.topic_type:
+            type_name = (instance.topic_type.name or "").strip()
+            if type_name in ("City", "State/Province"):
+                required_context = [context_country]
+                if context_state_province:
+                    required_context.append(context_state_province)
+                weak = list(instance.weak_keywords or [])
+                weak.append({
+                    "keyword": instance.name,
+                    "required_context": required_context,
+                    "distance": 50,
+                    "requires_context": True,
+                })
+                instance.weak_keywords = weak
+                instance.save(update_fields=["weak_keywords"])
         swot_category_id = self.request.data.get("swot_category_id")
         if swot_category_id is not None:
             cat = AnalyticalCategory.objects.filter(
@@ -564,15 +772,20 @@ class RawTextAISuggestTopicsView(APIView):
                 "is_ner": True
             }
         
-        # Add AI suggestions (support both list of objects {name, type_name} and legacy list of strings)
+        from narratives.utils.topic_name_censor import is_forbidden_topic_name as _is_forbidden_topic_name
+        # Add AI suggestions (support both list of objects {name, type_name, context_*} and legacy list of strings)
         for item in ai_suggestions:
             if isinstance(item, str):
                 name = item.strip()
                 type_name = None
+                context_country = context_region = context_state_province = None
             else:
                 name = (item.get("name") or "").strip()
                 type_name = item.get("type_name")
-            if not name:
+                context_country = (item.get("context_country") or "").strip() or None
+                context_region = (item.get("context_region") or "").strip() or None
+                context_state_province = (item.get("context_state_province") or "").strip() or None
+            if not name or _is_forbidden_topic_name(name):
                 continue
             name_lower = name.lower()
             if name_lower not in merged_suggestions:
@@ -587,7 +800,10 @@ class RawTextAISuggestTopicsView(APIView):
                     "name": name,
                     "suggested_type_id": suggested_type_id,
                     "suggested_type_name": suggested_type_name,
-                    "is_ner": False
+                    "is_ner": False,
+                    "context_country": context_country,
+                    "context_region": context_region,
+                    "context_state_province": context_state_province,
                 }
         
         valid_suggestions = []
@@ -601,6 +817,16 @@ class RawTextAISuggestTopicsView(APIView):
         for name_lower, info in merged_suggestions.items():
             name = info["name"]
             if len(name) < 2: continue
+            if _is_forbidden_topic_name(name):
+                DeclinedTopic.objects.create(
+                    name=name,
+                    source_topic=None,
+                    target_field="ai_suggest",
+                    reason="other",
+                    reason_detail="Forbidden topic name pattern (e.g. source byline like 'Cointelegraph by …').",
+                )
+                rejected_suggestions.append({"name": name, "reason": "Forbidden topic name pattern"})
+                continue
             
             # Check if already linked to THIS article (by name or by topic we'll resolve to)
             is_already_linked = name_lower in existing_topics_map
@@ -643,15 +869,22 @@ class RawTextAISuggestTopicsView(APIView):
                 # Use canonical topic name so UI shows "Donald Trump" not "Donald J Trump"
                 name = topic_obj.name
 
-            valid_suggestions.append({
+            out = {
                 "name": name,
                 "exists_in_db": topic_obj is not None,
                 "topic_id": topic_obj.id if topic_obj else None,
                 "is_already_linked": is_already_linked,
-                "suggested_type_id": info["suggested_type_id"],
-                "suggested_type_name": info["suggested_type_name"],
-                "summary": summary
-            })
+                "suggested_type_id": info.get("suggested_type_id"),
+                "suggested_type_name": info.get("suggested_type_name"),
+                "summary": summary,
+            }
+            if info.get("context_country"):
+                out["context_country"] = info["context_country"]
+            if info.get("context_region"):
+                out["context_region"] = info["context_region"]
+            if info.get("context_state_province"):
+                out["context_state_province"] = info["context_state_province"]
+            valid_suggestions.append(out)
             
         # 4. Save to cache
         rawtext.ai_suggestions = valid_suggestions
@@ -752,6 +985,19 @@ class TopicEnhanceWikipediaView(APIView):
             existing = Topic.objects.filter(name__iexact=name).first()
             if existing:
                 return existing
+
+            # 0b. Forbidden name patterns (e.g. "Cointelegraph by ...")
+            from narratives.utils.topic_name_censor import is_forbidden_topic_name
+            if is_forbidden_topic_name(name):
+                DeclinedTopic.objects.create(
+                    name=name,
+                    source_topic=topic,
+                    target_field=target_field,
+                    reason='other',
+                    reason_detail='Forbidden topic name pattern (e.g. source byline).'
+                )
+                rejected_count += 1
+                return None
 
             # 1. Basic length check
             if len(name) < 2:
@@ -959,26 +1205,28 @@ class TopicMergeView(APIView):
 class TopicAggregatedDetailView(APIView):
     """
     Returns a combined payload for the Topic Detail page to reduce round-trips.
-    Includes: topic details, distribution data, and latest mentions.
+    Includes: topic details, distribution data, and latest articles (10 distinct rawtexts).
     """
     def get(self, request, id):
         topic = get_object_or_404(Topic, id=id)
         
-        # 1. Topic basic data
-        topic_data = TopicSerializer(topic).data
-        
-        # 2. Distribution data (logic from TopicDistributionView)
+        # 1. Topic basic data (need to annotate mentions_count for serializer)
+        topic_qs = Topic.objects.filter(pk=topic.pk).annotate(
+            mentions_count=Count("pending_rawtexts", filter=Q(pending_rawtexts__status="approved"))
+        )
+        topic_data = TopicSerializer(topic_qs.first()).data
+
+        # 2. Distribution data and latest articles (last 10 distinct rawtexts)
         pending_topics = PendingTopic.objects.filter(
             topic=topic,
             status="approved",
-        ).select_related('rawtext', 'topic')
+        ).select_related("rawtext", "topic").order_by("-id")
 
         total_weight = 0
         title_weight_given = set()
-        
-        # Mentions for the UI
-        mentions = []
-        
+        seen_rawtext_ids = set()
+        latest_articles = []
+
         for pt in pending_topics:
             rawtext_id = pt.rawtext_id
             weight = 1
@@ -988,17 +1236,16 @@ class TopicAggregatedDetailView(APIView):
                 if matched and topic_title_matches_keyword(topic, matched, title):
                     weight = 10
                     title_weight_given.add((rawtext_id, topic.id))
-            
             total_weight += weight
-            
-            # Add to mentions list (limit to latest 10 for the aggregated view)
-            if len(mentions) < 10:
-                mentions.append({
+
+            if rawtext_id not in seen_rawtext_ids and len(latest_articles) < 10:
+                seen_rawtext_ids.add(rawtext_id)
+                latest_articles.append({
                     "id": pt.rawtext.id,
                     "title": pt.rawtext.title,
                     "published_at": pt.rawtext.published_at,
                     "matched_keyword": pt.matched_keyword,
-                    "context": pt.context
+                    "context": pt.context,
                 })
 
         return Response({
@@ -1009,8 +1256,118 @@ class TopicAggregatedDetailView(APIView):
                 "total_weight": total_weight,
                 "breakdown": [{"id": None, "name": "Direct Mentions", "weight": total_weight}]
             },
-            "latest_mentions": mentions
+            "latest_articles": latest_articles,
         })
+
+
+class TopicMentionsByDayView(APIView):
+    """
+    GET ?from=YYYY-MM-DD&to=YYYY-MM-DD (optional). Returns mention count per day for this topic.
+    Date is taken from RawText: published_at if set, else created_at. Default range: last 90 days.
+    Also returns series_by_platform: { "youtube": [...], "direct": [...], ... } for channel-type breakdown.
+    """
+    def get(self, request, id):
+        topic = get_object_or_404(Topic, id=id)
+        to_param = request.query_params.get("to")
+        from_param = request.query_params.get("from")
+        try:
+            to_date = (
+                datetime.strptime(to_param, "%Y-%m-%d").date()
+                if to_param
+                else timezone.now().date()
+            )
+            from_date = (
+                datetime.strptime(from_param, "%Y-%m-%d").date()
+                if from_param
+                else to_date - timedelta(days=90)
+            )
+        except ValueError:
+            return Response(
+                {"error": "Invalid date; use YYYY-MM-DD"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if from_date > to_date:
+            from_date, to_date = to_date, from_date
+
+        # Prefer pre-aggregated TopicMentionDay when we have data in range (total only)
+        has_aggregate = TopicMentionDay.objects.filter(
+            topic=topic, date__gte=from_date, date__lte=to_date
+        ).exists()
+        if has_aggregate:
+            rows = (
+                TopicMentionDay.objects.filter(
+                    topic=topic, date__gte=from_date, date__lte=to_date
+                )
+                .order_by("date")
+                .values_list("date", "count")
+            )
+            series = [{"date": d.isoformat(), "count": c} for d, c in rows]
+        else:
+            rows = (
+                PendingTopic.objects.filter(topic=topic, status="approved")
+                .annotate(
+                    mention_date=TruncDate(
+                        Coalesce(F("rawtext__published_at"), F("rawtext__created_at"))
+                    )
+                )
+                .filter(
+                    mention_date__gte=from_date,
+                    mention_date__lte=to_date,
+                    mention_date__isnull=False,
+                )
+                .values("mention_date")
+                .annotate(count=Count("id"))
+                .order_by("mention_date")
+            )
+            series = [{"date": str(r["mention_date"]), "count": r["count"]} for r in rows]
+
+        # Breakdown by channel type (Source.platform): always from PendingTopic + RawText + Source
+        platform_rows = (
+            PendingTopic.objects.filter(topic=topic, status="approved")
+            .annotate(
+                mention_date=TruncDate(
+                    Coalesce(F("rawtext__published_at"), F("rawtext__created_at"))
+                ),
+                platform=F("rawtext__source__platform"),
+            )
+            .filter(
+                mention_date__gte=from_date,
+                mention_date__lte=to_date,
+                mention_date__isnull=False,
+            )
+            .values("mention_date", "platform")
+            .annotate(count=Count("id"))
+            .order_by("mention_date", "platform")
+        )
+        # Normalize platform: map to "youtube" / "direct" (others as-is, e.g. twitter, telegram)
+        by_platform = defaultdict(dict)  # platform -> { date_str: count }
+        all_dates = set()
+        for r in platform_rows:
+            d = str(r["mention_date"])
+            plat = (r["platform"] or "direct").lower()
+            if plat not in ("youtube", "direct", "twitter", "telegram"):
+                plat = "direct"
+            by_platform[plat][d] = r["count"]
+            all_dates.add(d)
+        # Fill missing dates with 0 and sort; always include youtube and direct
+        all_dates_sorted = sorted(all_dates) if all_dates else []
+        series_by_platform = {
+            "youtube": [{"date": d, "count": by_platform.get("youtube", {}).get(d, 0)} for d in all_dates_sorted],
+            "direct": [{"date": d, "count": by_platform.get("direct", {}).get(d, 0)} for d in all_dates_sorted],
+        }
+        for plat in ("twitter", "telegram"):
+            if by_platform.get(plat):
+                series_by_platform[plat] = [
+                    {"date": d, "count": by_platform[plat].get(d, 0)} for d in all_dates_sorted
+                ]
+
+        return Response({
+            "series": series,
+            "series_by_platform": series_by_platform,
+            "from": from_date.isoformat(),
+            "to": to_date.isoformat(),
+        })
+
 
 class TopicSuggestMergeView(APIView):
     """

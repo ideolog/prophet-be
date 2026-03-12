@@ -43,6 +43,26 @@ class CryptoNewsTranslator:
             "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
             "cleanup": ["Read more:", "Blockworks"]
         },
+        "cryptopotato": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "CryptoPotato"]
+        },
+        "utoday": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "U.Today"]
+        },
+        "coinjournal": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "CoinJournal"]
+        },
+        "newsbtc": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "NewsBTC"]
+        },
+        "cryptonews": {
+            "selectors": [".article-content", ".post-content", ".entry-content", "article", "main"],
+            "cleanup": ["Read more:", "CryptoNews"]
+        },
     }
 
     def parse_articles(self, articles: List[Any], site_key: str) -> List[Dict[str, Any]]:

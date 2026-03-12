@@ -62,11 +62,23 @@ def analyze_topic_with_ai(topic_name: str, knowledge_dossier: str):
     
     return prompt_local_ai(prompt, system_prompt)
 
+GEOGRAPHIC_ENTITY_RULES = """
+    GEOGRAPHIC ENTITIES (when type_name is Region, State/Province, or City):
+    - REGION: Identify geographic regions that appear in the text (e.g. Middle East, Far East, Southeast Asia, Latin America, Sub-Saharan Africa). Use common English names; no leading "The", no commas.
+    - STATE/PROVINCE: Identify states, provinces, or first-level administrative regions (e.g. California, Texas, Ontario, Bavaria). For ambiguous names include context.
+    - CITY: Always identify the COUNTRY (and when helpful the state/province) as context for disambiguation. Output format for cities (and for ambiguous states) must include:
+      "context_country": "Country Name" (required for City),
+      "context_region": "Region Name" (optional, e.g. Middle East),
+      "context_state_province": "State or Province" (optional, for cities with same name in different states).
+    - Use common names only (e.g. North Korea not Korea Democratic People's Republic). No commas in names. Do not start names with "The".
+"""
+
+
 def suggest_new_topics_with_ai(text: str, existing_topics: list, topic_types: list = None):
     """
     Analyzes a text to suggest new topics that are not in the existing_topics list.
     topic_types: optional list of {"id": int, "name": str} so the AI can suggest a valid type per topic.
-    Returns: {"suggested_topics": [{"name": "...", "type_name": "..." or null}, ...]} or legacy [{"name": "..."}] / list of strings.
+    Returns: {"suggested_topics": [{"name": "...", "type_name": "..." or null, "context_country"?: "...", "context_region"?: "...", "context_state_province"?: "..."}, ...]} or legacy.
     """
     topic_types = topic_types or []
     type_list_str = ""
@@ -75,7 +87,7 @@ def suggest_new_topics_with_ai(text: str, existing_topics: list, topic_types: li
         type_list_str = (
             "\n\nAVAILABLE TOPIC TYPES (use exact name for type_name when relevant; or null if none fit):\n"
             + ", ".join(sorted(set(names)))
-            + "\nFor each suggested topic, choose the most appropriate type from this list if one fits (e.g. Person, Organization, Process, Theory, or a threat category like Economic threat, Technological threat). Use the exact type name."
+            + "\nFor each suggested topic, choose the most appropriate type from this list if one fits (e.g. Person, Organization, COUNTRY, Region, State/Province, City, Process, Theory). Use the exact type name."
         )
 
     system_prompt = """
@@ -92,9 +104,9 @@ def suggest_new_topics_with_ai(text: str, existing_topics: list, topic_types: li
        - Specific Names of People and Organizations are handled by a separate system, so you can skip them unless they are extremely critical to the ontology itself.
     8. NO DUPLICATES: Do not suggest topics that are already in the provided 'Existing Topics' list.
     9. ENCYCLOPEDIC: Only suggest things that likely have their own Wikipedia page or a dedicated entry in a crypto glossary.
-    10. Output MUST be a valid JSON object: "suggested_topics" = list of objects, each with "name" (string) and optionally "type_name" (string from the available types list, or null).
+    10. Output MUST be a valid JSON object: "suggested_topics" = list of objects. Each object: "name" (string), optionally "type_name" (string from the available types list, or null). For type_name City (and for ambiguous State/Province) also include "context_country", and optionally "context_region", "context_state_province".
     11. Use English only. Be conservative.
-    """ + type_list_str
+    """ + type_list_str + GEOGRAPHIC_ENTITY_RULES
 
     existing_str = ", ".join(existing_topics)
     prompt = f"Identify new important topics in the following text.\n\nEXISTING TOPICS (DO NOT SUGGEST THESE): {existing_str}\n\nTEXT:\n{text}"

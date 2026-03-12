@@ -132,3 +132,33 @@ class BlockworksIntegration(BaseCryptoIntegration):
     name = "BlockworksIntegration"
     site_key = "blockworks"
     default_rss = "https://blockworks.co/feed"
+
+
+class CryptoPotatoIntegration(BaseCryptoIntegration):
+    name = "CryptoPotatoIntegration"
+    site_key = "cryptopotato"
+    default_rss = "https://cryptopotato.com/feed/"
+
+
+class UTodayIntegration(BaseCryptoIntegration):
+    name = "UTodayIntegration"
+    site_key = "utoday"
+    default_rss = "https://u.today/rss"
+
+
+class CoinJournalIntegration(BaseCryptoIntegration):
+    name = "CoinJournalIntegration"
+    site_key = "coinjournal"
+    default_rss = "https://coinjournal.net/news/feed/"
+
+
+class NewsBTCIntegration(BaseCryptoIntegration):
+    name = "NewsBTCIntegration"
+    site_key = "newsbtc"
+    default_rss = "https://www.newsbtc.com/feed/"
+
+
+class CryptoNewsIntegration(BaseCryptoIntegration):
+    name = "CryptoNewsIntegration"
+    site_key = "cryptonews"
+    default_rss = "https://cryptonews.com/news/feed/"

@@ -67,6 +67,10 @@ class RawText(models.Model):
     # Categorization Versioning
     categorization_version = models.CharField(max_length=20, blank=True, null=True, help_text="The version of the categorization logic used")
     last_categorized_at = models.DateTimeField(blank=True, null=True)
+    recently_recategorized_at = models.DateTimeField(
+        blank=True, null=True,
+        help_text="Set when this rawtext was in the last 'Re-categorize these articles' batch; cleared on next such run.",
+    )
 
     @property
     def categorization_status(self):
@@ -86,6 +90,21 @@ class RawText(models.Model):
     def save(self, *args, **kwargs):
         if self.content:
             self.content_fingerprint = generate_fingerprint(self.content)
+        # When title changes, regenerate slug to match the new name
+        if self.title and self.title.strip():
+            if self.pk:
+                try:
+                    old_title = RawText.objects.filter(pk=self.pk).values_list("title", flat=True).first()
+                    if old_title != self.title:
+                        self.slug = make_unique_rawtext_slug(
+                            self.title, self.content or "", exclude_rawtext_id=self.pk
+                        )
+                except Exception:
+                    pass
+            elif not self.slug:
+                self.slug = make_unique_rawtext_slug(
+                    self.title, self.content or "", exclude_rawtext_id=None
+                )
         super().save(*args, **kwargs)
 
 
@@ -139,15 +158,65 @@ class PendingTopic(models.Model):
         return f"{self.rawtext.id} -> {self.topic.name} ({self.status})"
 
 
+class TopicMentionDay(models.Model):
+    """
+    Pre-aggregated mention count per topic per calendar day.
+    Date is taken from RawText: published_at if set, else created_at (date only).
+    Used for stats by day/week/month without querying PendingTopic + RawText every time.
+    """
+    topic = models.ForeignKey(
+        "narratives.Topic",
+        on_delete=models.CASCADE,
+        related_name="mention_days",
+    )
+    date = models.DateField(db_index=True, help_text="Calendar day (from article published_at or rawtext created_at)")
+    count = models.PositiveIntegerField(default=0, help_text="Number of approved mentions on this day")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["topic", "date"], name="narratives_topicmentionday_topic_date_uniq"),
+        ]
+        ordering = ["topic", "date"]
+        indexes = [
+            models.Index(fields=["topic", "date"]),
+        ]
+
+    def __str__(self):
+        return f"{self.topic_id} @ {self.date}: {self.count}"
+
+
+def make_unique_rawtext_slug(title=None, content="", exclude_rawtext_id=None):
+    """Generate a unique slug for RawText from title (or content fallback)."""
+    base = (title or "").strip() or (content[:50] if content else "")
+    base_slug = slugify(base) or "article"
+    base_slug = base_slug[:250]
+    unique_slug = base_slug
+    qs = RawText.objects.filter(slug=unique_slug)
+    if exclude_rawtext_id is not None:
+        qs = qs.exclude(pk=exclude_rawtext_id)
+    while qs.exists():
+        unique_slug = f"{base_slug}-{get_random_string(5)}"[:300]
+        qs = RawText.objects.filter(slug=unique_slug)
+        if exclude_rawtext_id is not None:
+            qs = qs.exclude(pk=exclude_rawtext_id)
+    return unique_slug
+
+
 # Slug creation signal (safely updated)
 @receiver(pre_save, sender=Source)
 @receiver(pre_save, sender=RawText)
 def create_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
-        base_slug = slugify(getattr(instance, "title", None) or getattr(instance, "name", None) or instance.content[:50])
-        base_slug = base_slug[:250]  # Limit base slug length safely
-        unique_slug = base_slug
-        while sender.objects.filter(slug=unique_slug).exists():
-            unique_slug = f"{base_slug}-{get_random_string(5)}"
-            unique_slug = unique_slug[:300]  # Fully limit to DB field
-        instance.slug = unique_slug
+        if sender == RawText:
+            instance.slug = make_unique_rawtext_slug(
+                getattr(instance, "title", None),
+                getattr(instance, "content", None) or "",
+                exclude_rawtext_id=getattr(instance, "pk", None),
+            )
+        else:
+            base_slug = slugify(getattr(instance, "title", None) or getattr(instance, "name", None) or (getattr(instance, "content", "")[:50] if hasattr(instance, "content") else ""))
+            base_slug = base_slug[:250] or "item"
+            unique_slug = base_slug
+            while sender.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{get_random_string(5)}"[:300]
+            instance.slug = unique_slug

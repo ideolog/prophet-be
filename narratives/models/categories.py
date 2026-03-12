@@ -132,14 +132,23 @@ class DeclinedTopic(models.Model):
     ]
 
     name = models.CharField(max_length=500, help_text="The rejected topic name")
-    source_topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="rejected_suggestions")
-    target_field = models.CharField(max_length=50, help_text="Field it was intended for (parents, functions, etc.)")
+    source_topic = models.ForeignKey(
+        Topic, on_delete=models.CASCADE, related_name="rejected_suggestions",
+        null=True, blank=True,
+        help_text="Topic that was being enhanced (null if declined from API or AI suggest)."
+    )
+    target_field = models.CharField(
+        max_length=50, blank=True,
+        help_text="Context: e.g. schools, related, api_create, ai_suggest."
+    )
     reason = models.CharField(max_length=50, choices=REASON_CHOICES, default='other')
-    reason_detail = models.TextField(blank=True, null=True)
+    reason_detail = models.TextField(blank=True, null=True, help_text="Explanation for the decline.")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} (Rejected for {self.source_topic.name})"
+        if self.source_topic_id:
+            return f"{self.name} (Rejected for {self.source_topic.name})"
+        return f"{self.name} ({self.reason}: {self.reason_detail or '—'})"
 
 
 # Signal receivers for slugs

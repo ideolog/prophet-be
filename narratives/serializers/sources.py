@@ -3,6 +3,7 @@ from rest_framework import serializers
 from ..models import RawText, Source, Topic, PendingTopic, TopicType, Epoch, AnalyticalFramework, AnalyticalCategory
 from narratives.models.categories import DeclinedTopic
 from narratives.utils.text import generate_fingerprint, title_contains_keyword_as_word, topic_title_matches_keyword, parse_keyword_spec
+from narratives.utils.topic_name_censor import is_forbidden_topic_name
 
 class AnalyticalFrameworkSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,6 +41,7 @@ class TopicTypeSerializer(serializers.ModelSerializer):
 class TopicSerializer(serializers.ModelSerializer):
     related_count = serializers.IntegerField(source='related_topics.count', read_only=True)
     keywords_count = serializers.SerializerMethodField()
+    mentions_count = serializers.IntegerField(read_only=True, default=0)
     related_topics = serializers.SerializerMethodField()
     schools_of_thought = serializers.SerializerMethodField()
     topics_in_school = serializers.SerializerMethodField()
@@ -58,7 +60,7 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = [
             "id", "name", "alternative_name", "slug", "description", "keywords", "weak_keywords", "metadata",
             "wikipedia_url", "is_placeholder", "updated_at",
-            "related_count", "keywords_count",
+            "related_count", "keywords_count", "mentions_count",
             "related_topics", "schools_of_thought", "topics_in_school",
             "topic_type", "topic_type_id",
             "swot_category", "pestel_categories",
@@ -110,6 +112,24 @@ class TopicSerializer(serializers.ModelSerializer):
             return [{"id": t.id, "name": t.name} for t in obj.topics_in_school.all()]
         except:
             return []
+
+    def validate_name(self, value):
+        if not value:
+            return value
+        name = value.strip()
+        if is_forbidden_topic_name(name):
+            from ..models.categories import DeclinedTopic
+            DeclinedTopic.objects.create(
+                name=name,
+                source_topic=None,
+                target_field="api_create",
+                reason="other",
+                reason_detail="Forbidden topic name pattern (e.g. source byline like 'Cointelegraph by …'). Topic not created.",
+            )
+            raise serializers.ValidationError(
+                "Topic name is not allowed (forbidden pattern, e.g. source byline)."
+            )
+        return name
 
     def validate_keywords(self, value):
         if not isinstance(value, list):

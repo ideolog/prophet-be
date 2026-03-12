@@ -41,11 +41,46 @@ DIRECT_SOURCES = [
         "rss_url": "https://blockworks.co/feed",
         "platform": "direct",
     },
+    {
+        "name": "CryptoPotato",
+        "slug": "cryptopotato",
+        "url": "https://cryptopotato.com/",
+        "rss_url": "https://cryptopotato.com/feed/",
+        "platform": "direct",
+    },
+    {
+        "name": "U.Today",
+        "slug": "utoday",
+        "url": "https://u.today/",
+        "rss_url": "https://u.today/rss",
+        "platform": "direct",
+    },
+    {
+        "name": "CoinJournal",
+        "slug": "coinjournal",
+        "url": "https://coinjournal.net/",
+        "rss_url": "https://coinjournal.net/news/feed/",
+        "platform": "direct",
+    },
+    {
+        "name": "NewsBTC",
+        "slug": "newsbtc",
+        "url": "https://www.newsbtc.com/",
+        "rss_url": "https://www.newsbtc.com/feed/",
+        "platform": "direct",
+    },
+    {
+        "name": "CryptoNews",
+        "slug": "cryptonews",
+        "url": "https://cryptonews.com/",
+        "rss_url": "https://cryptonews.com/news/feed/",
+        "platform": "direct",
+    },
 ]
 
 
 class Command(BaseCommand):
-    help = "Add Direct/RSS sources (Bitcoin Magazine, BeInCrypto, CryptoSlate, The Defiant, Blockworks)"
+    help = "Add Direct/RSS sources (Bitcoin Magazine, BeInCrypto, CryptoSlate, The Defiant, Blockworks, CryptoPotato, U.Today, CoinJournal, NewsBTC, CryptoNews)"
 
     def handle(self, *args, **options):
         for src in DIRECT_SOURCES:

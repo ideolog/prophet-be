@@ -26,6 +26,9 @@ venv.bak/
 /media/
 .static/
 
+# DB backups
+backups/
+
 # IDE/editor-specific files
 .vscode/
 .idea/

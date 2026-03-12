@@ -10,6 +10,11 @@ from .crypto_news_integrations import (
     CryptoSlateIntegration,
     TheDefiantIntegration,
     BlockworksIntegration,
+    CryptoPotatoIntegration,
+    UTodayIntegration,
+    CoinJournalIntegration,
+    NewsBTCIntegration,
+    CryptoNewsIntegration,
 )
 from integrations.sources.youtube import YouTubeIntegration
 
@@ -26,5 +31,10 @@ INTEGRATION_REGISTRY = {
     "cryptoslate": CryptoSlateIntegration(),
     "thedefiant": TheDefiantIntegration(),
     "blockworks": BlockworksIntegration(),
+    "cryptopotato": CryptoPotatoIntegration(),
+    "utoday": UTodayIntegration(),
+    "coinjournal": CoinJournalIntegration(),
+    "newsbtc": NewsBTCIntegration(),
+    "cryptonews": CryptoNewsIntegration(),
 }
 # must exactly match your Source.slug

@@ -118,6 +118,13 @@ import hashlib
 
 from narratives.utils.text import get_keyword_spec_from_entry
 
+# Single-word topic names that must NOT be used as keyword (cause too many false positives).
+# Only applies when the topic name is exactly one word. Topic still matches via other keywords.
+NAME_AS_KEYWORD_SKIP = frozenset({
+    "gate", "ok", "bit", "coin", "one", "hot", "key", "max", "orange", "fluid", "native",
+    "phoenix", "manifest", "project", "aster", "luna", "sol", "change", "dex", "cex",
+})
+
 # -------------------------
 # KEYWORD ENGINE CACHING
 # -------------------------
@@ -176,10 +183,12 @@ def _get_keyword_processor(topics_data: list):
 
         name = (t.get('name') or '').strip()
         if name and name.lower() not in explicit_keyword_texts:
-            add_flashtext(name, (topic_id, name, False, None))
+            if " " in name or name.lower() not in NAME_AS_KEYWORD_SKIP:
+                add_flashtext(name, (topic_id, name, False, None))
         alt_name = (t.get('alternative_name') or '').strip()
         if alt_name and alt_name.lower() not in explicit_keyword_texts:
-            add_flashtext(alt_name, (topic_id, alt_name, False, None))
+            if " " in alt_name or alt_name.lower() not in NAME_AS_KEYWORD_SKIP:
+                add_flashtext(alt_name, (topic_id, alt_name, False, None))
 
         for kw in t.get('keywords', []):
             kw_text, whole_word, case_sens = get_keyword_spec_from_entry(kw)
